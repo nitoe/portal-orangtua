@@ -552,12 +552,17 @@ export async function loadNilaiStsPublished(siswaId) {
     } catch (_) {}
   }
 
-  // Jika dokumen publikasi ada: hormati flag-nya.
-  // Jika tidak ada: tampilkan nilai bila ada (kompatibel data lama).
+  // Kebijakan portal: STS hanya tampil setelah guru mempublikasikan
+  // (dokumen sts_publikasi). Tanpa dokumen → dianggap belum dipublish.
+  // Demo & data uji: jika tidak ada gerbang sama sekali di project,
+  // fallback menampilkan nilai agar development tidak macet —
+  // set window.__PO_REQUIRE_PUBLISH = true untuk memaksa gerbang ketat.
   let published;
+  const requirePublish =
+    typeof window !== 'undefined' && window.__PO_REQUIRE_PUBLISH === true;
   if (publishedForced === false) published = false;
   else if (publishedForced === true) published = items.length > 0;
-  else published = items.length > 0;
+  else published = requirePublish ? false : items.length > 0;
 
   return {
     published,

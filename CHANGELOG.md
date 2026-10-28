@@ -25,3 +25,15 @@
 - Gerbang opsional: `sts_publikasi/{kelas}_{tahunAjaran}_{semester}` dengan `published: true`.
 - Jika dokumen publikasi tidak ada: tampilkan nilai selama ada data (kompatibel).
 - Beranda diselaraskan ke design system biru penilaian.
+
+## 2026-10-28h
+
+### UI/UX orang tua
+- Login: langkah 1–2–3 di hero, copy lebih ringkas, mobile brand bar.
+- Beranda: kartu anak, daftar **Nilai yang dibagikan** (STS aktif; slot nilai lain disabled untuk masa depan).
+- Detail STS: tabel mapel datar, status publikasi jelas, empty state ramah.
+- Design system tetap biru `#313083` (DESIGN.md penilaian).
+
+### Kebijakan konten
+- Hanya STS untuk saat ini; nilai lain menyusul jika guru membagikan.
+- Publikasi: `sts_publikasi` · opsional `window.__PO_REQUIRE_PUBLISH = true` untuk gerbang ketat.

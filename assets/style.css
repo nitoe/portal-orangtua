@@ -1,5 +1,4 @@
-/* Portal Orang Tua — token selaras SDM01Penilaian (DESIGN.md)
-   Merek: biru lambang #313083 · datar · Inter · tanpa gradient */
+/* Portal Orang Tua — design system selaras SDM01Penilaian (DESIGN.md) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
@@ -23,16 +22,13 @@
   --radius-control: 8px;
   --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 
-  /* alias lama agar halaman yang belum diubah tidak pecah total */
   --green-deep: var(--brand-sidebar);
   --green-dark: var(--brand);
   --green-mid: var(--brand-hover);
-  --green-light: #6a70bd;
   --green-pale: var(--brand-tint);
   --green-ghost: var(--brand-tint);
   --gold: var(--attention);
   --gold-light: var(--attention-tint);
-  --gold-accent: #f59e0b;
   --red: var(--danger);
   --red-light: var(--danger-tint);
   --ink-mid: var(--ink-mute);
@@ -43,13 +39,10 @@
   --radius-md: var(--radius-card);
   --radius-sm: var(--radius-control);
   --shadow-soft: none;
-  --shadow-card: none;
   --header-gradient: var(--brand);
-  --green-accent: var(--brand);
-  --green-accent-dark: var(--brand-hover);
 }
 
-* { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
   font-family: var(--font);
@@ -58,12 +51,16 @@ body {
   color: var(--ink);
   background: var(--canvas-app);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
-button, input, select { font-family: inherit; }
+button, input, select { font-family: inherit; font-size: inherit; }
 .hidden { display: none !important; }
 .tabular { font-variant-numeric: tabular-nums; }
 
-/* Tombol */
+a { color: var(--brand); font-weight: 500; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---- Buttons ---- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -75,32 +72,42 @@ button, input, select { font-family: inherit; }
   padding: 10px 16px;
   border: 1px solid transparent;
   cursor: pointer;
+  line-height: 1.25;
 }
-.btn:disabled { opacity: 0.55; cursor: not-allowed; }
-.btn-primary-solid,
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary {
   background: var(--brand);
   color: #fff;
   border-color: var(--brand);
   width: 100%;
 }
-.btn-primary-solid:hover:not(:disabled),
-.btn-primary:hover:not(:disabled) {
-  background: var(--brand-hover);
+.btn-primary:hover:not(:disabled) { background: var(--brand-hover); }
+.btn-primary-solid { /* alias */
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-control);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+  border: 1px solid var(--brand);
+  cursor: pointer;
 }
+.btn-primary-solid:hover:not(:disabled) { background: var(--brand-hover); }
+.btn-primary-solid:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-ghost {
   background: #fff;
   border-color: var(--hairline);
   color: var(--ink);
 }
 .btn-ghost:hover { background: var(--canvas-app); }
-.btn-danger {
-  background: #fff;
-  border-color: #fecaca;
-  color: var(--danger);
-}
 
-/* Form */
+/* ---- Form ---- */
 .field { margin-bottom: 14px; }
 .field label {
   display: block;
@@ -118,6 +125,13 @@ button, input, select { font-family: inherit; }
   font-size: 14px;
   color: var(--ink);
   background: #fff;
+  appearance: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%255b6275' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
 }
 .field input:focus,
 .field select:focus {
@@ -131,6 +145,7 @@ button, input, select { font-family: inherit; }
   margin-top: 6px;
   font-size: 12px;
   color: var(--ink-mute);
+  line-height: 1.4;
 }
 .field-error-msg {
   display: flex;
@@ -148,22 +163,48 @@ button, input, select { font-family: inherit; }
 .password-wrap input { padding-right: 42px; }
 .toggle-visibility {
   position: absolute;
-  right: 8px;
+  right: 6px;
   top: 50%;
   transform: translateY(-50%);
   border: none;
   background: transparent;
   color: var(--ink-mute);
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   display: flex;
+  border-radius: 6px;
+}
+.toggle-visibility:hover { background: var(--canvas-app); color: var(--ink); }
+
+/* ---- Badge ---- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  line-height: 1.3;
+}
+.badge-ok { background: var(--ok-tint); color: var(--ok); }
+.badge-pending { background: var(--attention-tint); color: var(--attention); }
+.badge-off { background: var(--danger-tint); color: var(--danger); }
+.badge-neutral { background: var(--canvas-app); color: var(--ink-mute); }
+.badge-brand { background: var(--brand-tint); color: var(--brand); }
+
+/* ---- Card ---- */
+.card-soft {
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-card);
+  padding: 16px;
 }
 
-/* Toast */
+/* ---- Toast ---- */
 .toast {
   position: fixed;
   left: 50%;
-  bottom: 24px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
   transform: translateX(-50%) translateY(120%);
   background: var(--ink);
   color: #fff;
@@ -174,8 +215,9 @@ button, input, select { font-family: inherit; }
   z-index: 100;
   opacity: 0;
   transition: transform 0.2s ease, opacity 0.2s ease;
-  max-width: min(92vw, 420px);
+  max-width: min(92vw, 400px);
   text-align: center;
+  box-shadow: 0 8px 24px rgba(26, 29, 51, 0.18);
 }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 .toast.error { background: var(--danger); }
@@ -183,30 +225,11 @@ button, input, select { font-family: inherit; }
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255,255,255,.35);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: #fff;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: spin 0.65s linear infinite;
   display: inline-block;
+  vertical-align: middle;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* Kartu datar */
-.card-soft {
-  background: var(--canvas);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-card);
-  padding: 16px;
-}
-
-.badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
-}
-.badge-ok { background: var(--ok-tint); color: var(--ok); }
-.badge-pending { background: var(--attention-tint); color: var(--attention); }
-.badge-off { background: var(--danger-tint); color: var(--danger); }
-.badge-neutral { background: var(--canvas-app); color: var(--ink-mute); }

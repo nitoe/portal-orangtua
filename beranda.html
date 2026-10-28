@@ -4,128 +4,349 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#313083">
-  <title>Nilai STS — Portal Orang Tua</title>
+  <title>Beranda — Portal Orang Tua</title>
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    body { background: var(--canvas-app); min-height: 100vh; }
-    .topbar {
+    body {
+      background: var(--canvas-app);
+      min-height: 100vh;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+
+    .appbar {
       background: var(--canvas);
       border-bottom: 1px solid var(--hairline);
-      padding: calc(env(safe-area-inset-top) + 12px) 16px 12px;
+      padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
-    .topbar-inner {
-      max-width: 640px; margin: 0 auto;
-      display: flex; align-items: center; gap: 12px;
+    .appbar-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .topbar img {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: var(--brand-tint); padding: 4px; object-fit: contain;
+    .appbar-logo {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--brand-tint);
+      padding: 4px;
+      object-fit: contain;
     }
-    .topbar h1 {
-      margin: 0; font-size: 15px; font-weight: 600;
-      letter-spacing: -0.01em; flex: 1;
+    .appbar-title {
+      flex: 1;
+      min-width: 0;
     }
-    .topbar .sub { font-size: 12px; color: var(--ink-mute); font-weight: 500; }
+    .appbar-title strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .appbar-title span {
+      font-size: 12px;
+      color: var(--ink-mute);
+      font-weight: 500;
+    }
     .btn-out {
-      border: 1px solid var(--hairline); background: #fff;
-      border-radius: 8px; padding: 8px 12px;
-      font-size: 13px; font-weight: 600; color: var(--ink); cursor: pointer;
+      border: 1px solid var(--hairline);
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
     }
-    .page { max-width: 640px; margin: 0 auto; padding: 16px 14px 40px; }
+    .btn-out:hover { background: var(--canvas-app); }
 
-    .profile {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--canvas); border: 1px solid var(--hairline);
-      border-radius: var(--radius-card); padding: 14px 16px; margin-bottom: 16px;
-    }
-    .avatar {
-      width: 44px; height: 44px; border-radius: 999px;
-      background: var(--brand-tint); color: var(--brand);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600; font-size: 14px; flex-shrink: 0;
-    }
-    .profile .nama { font-size: 15px; font-weight: 600; }
-    .profile .meta { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
-    .kelas-pill {
-      margin-left: auto; font-size: 12px; font-weight: 600;
-      background: var(--brand-tint); color: var(--brand);
-      padding: 5px 10px; border-radius: 999px;
+    .wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 16px 14px 0;
     }
 
-    .period {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
+    /* Profil anak */
+    .child-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
     }
-    .period-label { font-size: 13px; font-weight: 600; color: var(--ink-mute); }
-    .section-h {
-      font-size: 12px; font-weight: 600; color: var(--ink-mute);
-      text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 10px;
+    .child-av {
+      width: 48px; height: 48px;
+      border-radius: 999px;
+      background: var(--brand-tint);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .child-info { flex: 1; min-width: 0; }
+    .child-name {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .child-meta {
+      font-size: 13px;
+      color: var(--ink-mute);
+      margin-top: 2px;
+    }
+    .child-kelas {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--brand);
+      background: var(--brand-tint);
+      padding: 5px 10px;
+      border-radius: 999px;
+      flex-shrink: 0;
     }
 
-    .nilai-list { display: flex; flex-direction: column; gap: 8px; }
-    .nilai-row {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--canvas); border: 1px solid var(--hairline);
-      border-radius: var(--radius-card); padding: 12px 14px;
-    }
-    .nilai-row .mapel { flex: 1; min-width: 0; }
-    .nilai-row .mapel-name { font-size: 14px; font-weight: 600; }
-    .nilai-row .mapel-sub { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
-    .nilai-row .skor {
-      font-size: 22px; font-weight: 600; color: var(--brand);
-      font-variant-numeric: tabular-nums; line-height: 1;
-    }
-    .nilai-row .pred {
-      font-size: 11px; font-weight: 600; color: var(--ink-mute);
-      text-align: right; margin-top: 3px;
+    .block-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 0 0 10px;
     }
 
-    .state {
-      background: var(--canvas); border: 1px solid var(--hairline);
-      border-radius: var(--radius-card); padding: 28px 18px; text-align: center;
+    /* Menu nilai yang dibagikan — sekarang hanya STS */
+    .share-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 22px;
     }
-    .state h3 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
-    .state p { margin: 0; font-size: 13px; color: var(--ink-mute); line-height: 1.5; }
-    .foot {
-      margin-top: 20px; text-align: center;
-      font-size: 12px; color: var(--ink-mute); line-height: 1.5;
+    .share-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      padding: 14px 14px;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+      transition: border-color 0.12s ease, background 0.12s ease;
     }
-    .loading { text-align: center; padding: 32px; color: var(--ink-mute); font-size: 13px; }
+    .share-item:hover {
+      border-color: var(--brand-line);
+      background: #fafbff;
+    }
+    .share-item.is-active {
+      border-color: var(--brand-line);
+      background: var(--brand-tint);
+    }
+    .share-item.is-disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+    .share-item.is-disabled:hover {
+      border-color: var(--hairline);
+      background: var(--canvas);
+    }
+    .share-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--brand-tint);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .share-item.is-disabled .share-icon {
+      background: var(--canvas-app);
+      color: var(--ink-mute);
+    }
+    .share-body { flex: 1; min-width: 0; }
+    .share-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .share-desc {
+      font-size: 12px;
+      color: var(--ink-mute);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+    .share-chevron {
+      color: var(--ink-mute);
+      flex-shrink: 0;
+    }
+
+    /* Panel detail STS */
+    .detail-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .detail-period {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-mute);
+    }
+
+    .nilai-table {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .nilai-tr {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 16px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--hairline);
+      align-items: center;
+    }
+    .nilai-tr:last-child { border-bottom: none; }
+    .nilai-mapel {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nilai-sub {
+      font-size: 12px;
+      color: var(--ink-mute);
+      margin-top: 2px;
+    }
+    .nilai-right { text-align: right; }
+    .nilai-angka {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--brand);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    .nilai-pred {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-mute);
+      margin-top: 3px;
+    }
+
+    .state-box {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-card);
+      padding: 28px 18px;
+      text-align: center;
+    }
+    .state-box h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .state-box p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--ink-mute);
+      line-height: 1.55;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .foot-note {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-mute);
+      line-height: 1.5;
+    }
+
+    .loading-line {
+      padding: 28px;
+      text-align: center;
+      color: var(--ink-mute);
+      font-size: 13px;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
-      <div style="flex:1;min-width:0">
-        <h1>Portal Orang Tua</h1>
-        <div class="sub" id="headerNama">—</div>
+  <header class="appbar">
+    <div class="appbar-inner">
+      <img class="appbar-logo" src="assets/logo.png" alt="" onerror="this.style.display='none'">
+      <div class="appbar-title">
+        <strong>Portal Orang Tua</strong>
+        <span id="headerSub">SD Muhammadiyah 01 Kukusan</span>
       </div>
       <button type="button" class="btn-out" id="btnLogout">Keluar</button>
     </div>
   </header>
 
-  <main class="page">
-    <div class="profile" id="profileCard">
-      <div class="avatar" id="avatarInisial">—</div>
-      <div style="min-width:0;flex:1">
-        <div class="nama" id="profilNama">—</div>
-        <div class="meta" id="profilMeta">—</div>
+  <main class="wrap">
+    <section class="child-card" aria-label="Profil anak">
+      <div class="child-av" id="avatarInisial">—</div>
+      <div class="child-info">
+        <div class="child-name" id="profilNama">—</div>
+        <div class="child-meta" id="profilMeta">—</div>
       </div>
-      <div class="kelas-pill" id="profilKelas">—</div>
+      <div class="child-kelas" id="profilKelas">—</div>
+    </section>
+
+    <p class="block-label">Nilai yang dibagikan</p>
+    <div class="share-list" id="shareList">
+      <button type="button" class="share-item is-active" id="btnShareSts" data-kind="sts">
+        <div class="share-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg>
+        </div>
+        <div class="share-body">
+          <div class="share-title">Sumatif Tengah Semester (STS)</div>
+          <div class="share-desc" id="stsShareDesc">Memuat status…</div>
+        </div>
+        <svg class="share-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+
+      <!-- Slot masa depan: nilai lain yang dibagikan guru -->
+      <div class="share-item is-disabled" aria-disabled="true">
+        <div class="share-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+        </div>
+        <div class="share-body">
+          <div class="share-title">Nilai lainnya</div>
+          <div class="share-desc">Belum tersedia · akan muncul jika guru membagikan</div>
+        </div>
+      </div>
     </div>
 
-    <div class="section-h">Nilai STS</div>
-    <div class="period">
-      <span class="period-label" id="periodText">Semester berjalan</span>
-      <span class="badge badge-pending" id="statusChip">Memuat…</span>
+    <div id="detailPanel">
+      <div class="detail-head">
+        <span class="detail-period" id="periodText">—</span>
+        <span class="badge badge-pending" id="statusChip">Memuat</span>
+      </div>
+      <div id="nilaiArea">
+        <div class="loading-line">Memuat nilai STS…</div>
+      </div>
     </div>
-    <div id="nilaiArea"><div class="loading">Memuat nilai…</div></div>
-    <p class="foot">
-      Nilai tampil setelah guru mengisi STS
-      (dan publikasi kelas, bila diaktifkan).<br>
-      Hubungi wali kelas jika ada pertanyaan.
+
+    <p class="foot-note">
+      Hanya nilai yang sudah dipublikasikan guru yang ditampilkan di sini.<br>
+      Hubungi wali kelas jika data tidak sesuai.
     </p>
   </main>
 
@@ -134,11 +355,10 @@
   <script type="module">
     import {
       currentSession,
-      onAuthChange,
       logout,
       loadSiswaByIds,
       loadNilaiStsPublished,
-    } from './assets/firebase.js?v=20261028g';
+    } from './assets/firebase.js?v=20261028h';
 
     const $ = (id) => document.getElementById(id);
 
@@ -158,56 +378,62 @@
     let aktifId = null;
 
     function renderProfil(anak) {
-      if (!anak) return;
       $('avatarInisial').textContent = inisial(anak.nama);
-      $('profilNama').textContent = anak.nama;
+      $('profilNama').textContent = anak.nama || '—';
       $('profilMeta').textContent = [
         anak.nis ? `NIS ${anak.nis}` : null,
-        anak.kelas ? `Kelas ${anak.kelas}` : null,
-      ].filter(Boolean).join(' · ') || '—';
+      ].filter(Boolean).join(' · ') || 'Data siswa';
       $('profilKelas').textContent = anak.kelas ? `Kelas ${anak.kelas}` : '—';
     }
 
-    function renderNilai(result) {
-      $('periodText').textContent = result.periodeLabel || 'Semester berjalan';
+    function renderSts(result) {
+      $('periodText').textContent = result.periodeLabel || 'Periode berjalan';
       const chip = $('statusChip');
+      const desc = $('stsShareDesc');
+
       if (!result.published) {
-        chip.textContent = 'Belum tersedia';
+        chip.textContent = 'Belum dipublikasikan';
         chip.className = 'badge badge-pending';
+        desc.textContent = 'Menunggu publikasi guru kelas';
         $('nilaiArea').innerHTML = `
-          <div class="state">
-            <h3>Nilai STS belum tersedia</h3>
-            <p>Guru belum mengisi atau mempublikasikan nilai STS untuk periode ini.</p>
+          <div class="state-box">
+            <h3>Belum dipublikasikan</h3>
+            <p>Guru belum membagikan nilai STS untuk periode ini. Silakan cek lagi nanti.</p>
           </div>`;
         return;
       }
+
       chip.textContent = result.publishedAt
-        ? `Dipublish ${result.publishedAt}`
-        : 'Tersedia';
+        ? `Dipublikasikan ${result.publishedAt}`
+        : 'Dipublikasikan';
       chip.className = 'badge badge-ok';
+      desc.textContent = result.publishedAt
+        ? `Dipublikasikan ${result.publishedAt}`
+        : 'Sudah dipublikasikan';
 
       const items = result.items || [];
       if (!items.length) {
         $('nilaiArea').innerHTML = `
-          <div class="state">
-            <h3>Belum ada nilai</h3>
-            <p>Tidak ada data STS untuk anak ini pada periode berjalan.</p>
+          <div class="state-box">
+            <h3>Tidak ada nilai</h3>
+            <p>Publikasi sudah ada, tetapi belum ada data nilai untuk anak ini.</p>
           </div>`;
         return;
       }
+
       $('nilaiArea').innerHTML =
-        `<div class="nilai-list">` +
+        `<div class="nilai-table">` +
         items
           .map(
             (n) => `
-          <div class="nilai-row">
-            <div class="mapel">
-              <div class="mapel-name">${escapeHtml(n.mapel)}</div>
-              <div class="mapel-sub">${escapeHtml(n.keterangan || 'Nilai STS')}</div>
-            </div>
+          <div class="nilai-tr">
             <div>
-              <div class="skor">${n.nilai != null ? n.nilai : '—'}</div>
-              <div class="pred">${escapeHtml(n.predikat || '')}</div>
+              <div class="nilai-mapel">${escapeHtml(n.mapel)}</div>
+              <div class="nilai-sub">${escapeHtml(n.keterangan || 'Nilai STS')}</div>
+            </div>
+            <div class="nilai-right">
+              <div class="nilai-angka">${n.nilai != null ? n.nilai : '—'}</div>
+              <div class="nilai-pred">${escapeHtml(n.predikat || '')}</div>
             </div>
           </div>`
           )
@@ -215,48 +441,58 @@
         `</div>`;
     }
 
-    async function boot(s) {
+    async function boot() {
+      const s = currentSession();
       if (!s || s.role !== 'orangtua') {
-        window.location.href = 'index.html';
+        location.href = 'index.html';
         return;
       }
-      $('headerNama').textContent = s.nama || 'Orang tua';
+      $('headerSub').textContent = s.nama || 'Orang tua';
       aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
-        $('nilaiArea').innerHTML = `<div class="state"><h3>Tidak ada data anak</h3></div>`;
+        $('nilaiArea').innerHTML = `<div class="state-box"><h3>Data anak tidak ditemukan</h3></div>`;
         return;
       }
+
       try {
         const list = await loadSiswaByIds([aktifId]);
-        renderProfil(list[0] || { id: aktifId, nama: s.siswaNama || aktifId, kelas: s.siswaKelas || '' });
-      } catch (_) {
-        renderProfil({ id: aktifId, nama: s.siswaNama || aktifId, kelas: s.siswaKelas || '' });
+        renderProfil(
+          list[0] || {
+            id: aktifId,
+            nama: s.siswaNama || aktifId,
+            kelas: s.siswaKelas || '',
+            nis: '',
+          }
+        );
+      } catch {
+        renderProfil({
+          id: aktifId,
+          nama: s.siswaNama || aktifId,
+          kelas: s.siswaKelas || '',
+          nis: '',
+        });
       }
+
       try {
         const result = await loadNilaiStsPublished(aktifId);
-        renderNilai(result);
+        renderSts(result);
       } catch (err) {
         console.error(err);
-        $('nilaiArea').innerHTML = `<div class="state"><h3>Gagal memuat nilai</h3><p>Periksa koneksi atau rules Firestore.</p></div>`;
+        $('stsShareDesc').textContent = 'Gagal memuat';
+        $('statusChip').textContent = 'Error';
+        $('statusChip').className = 'badge badge-off';
+        $('nilaiArea').innerHTML = `
+          <div class="state-box">
+            <h3>Gagal memuat nilai</h3>
+            <p>Periksa koneksi internet atau hubungi admin sekolah.</p>
+          </div>`;
       }
     }
 
-    const existing = currentSession();
-    if (existing) boot(existing);
-    else onAuthChange((s) => boot(s));
-
-    // Ortu NISN session is localStorage-only — onAuthChange may not fire
-    if (!existing) {
-      setTimeout(() => {
-        const s = currentSession();
-        if (s) boot(s);
-        else window.location.href = 'index.html';
-      }, 100);
-    }
-
+    boot();
     $('btnLogout').addEventListener('click', async () => {
       await logout();
-      window.location.href = 'index.html';
+      location.href = 'index.html';
     });
   </script>
 </body>

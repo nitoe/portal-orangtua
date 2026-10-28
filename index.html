@@ -3,184 +3,267 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#313083">
+  <meta name="theme-color" content="#1f1f50">
   <title>Portal Orang Tua — SD Muhammadiyah 01 Kukusan</title>
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
     body { background: var(--canvas-app); min-height: 100vh; }
-    .portal-shell {
+    .shell {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
-    @media (max-width: 860px) {
-      .portal-shell { grid-template-columns: 1fr; }
-      .hero { min-height: 220px; padding: 28px 20px !important; }
-      .hero-lead, .hero-quote, .feature-pills, .hero-footer { display: none; }
-      .hero-title { font-size: 22px !important; }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .hero { display: none; }
+      .panel { padding: 24px 16px 40px; }
+      .mobile-brand { display: flex !important; }
     }
 
     .hero {
       background: var(--brand-sidebar);
       color: #fff;
-      padding: 40px 44px;
+      padding: 48px 40px;
       display: flex;
       flex-direction: column;
       position: relative;
       overflow: hidden;
     }
-    .hero::before {
+    .hero::after {
       content: '';
       position: absolute;
-      inset: 0;
-      background: url('assets/logo.png') center 60% / min(280px, 55%) no-repeat;
-      opacity: 0.06;
+      width: 320px; height: 320px;
+      right: -80px; bottom: -60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
       pointer-events: none;
     }
-    .hero-inner { position: relative; z-index: 1; max-width: 440px; display: flex; flex-direction: column; height: 100%; }
-    .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
-    .brand-mark {
-      width: 44px; height: 44px; border-radius: 10px;
-      background: #fff; padding: 6px;
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 420px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .brand-logo {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      background: #fff;
+      padding: 6px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .brand-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .brand-tag { font-size: 12px; opacity: 0.7; font-weight: 500; margin-top: 2px; }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.3;
+    }
+    .hero p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+    .hero-steps {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .hero-step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .hero-step-num {
+      width: 22px; height: 22px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.12);
       display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600;
+      flex-shrink: 0;
     }
-    .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
-    .brand-text strong { display: block; font-size: 15px; font-weight: 600; }
-    .brand-text span { font-size: 12px; opacity: 0.75; font-weight: 500; }
-    .hero-kicker {
-      font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
-      text-transform: uppercase; color: #bfc3e8; margin-bottom: 10px;
-    }
-    .hero-title {
-      font-size: 28px; font-weight: 600; line-height: 1.25;
-      margin: 0 0 14px; letter-spacing: -0.02em;
-    }
-    .hero-lead {
-      margin: 0; font-size: 14px; line-height: 1.55; opacity: 0.88; font-weight: 400;
-    }
-    .hero-footer {
-      margin-top: auto; padding-top: 32px;
-      font-size: 12px; opacity: 0.65; line-height: 1.5;
+    .hero-foot {
+      margin-top: auto;
+      padding-top: 40px;
+      font-size: 12px;
+      opacity: 0.55;
     }
 
     .panel {
-      display: flex; align-items: center; justify-content: center;
-      padding: 32px 20px;
-      background: var(--canvas-app);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
     }
     .panel-card {
-      width: 100%; max-width: 400px;
+      width: 100%;
+      max-width: 400px;
       background: var(--canvas);
       border: 1px solid var(--hairline);
       border-radius: var(--radius-card);
       padding: 28px 24px 24px;
     }
+    .mobile-brand {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .mobile-brand img {
+      width: 40px; height: 40px;
+      border-radius: 9px;
+      background: var(--brand-tint);
+      padding: 5px;
+      object-fit: contain;
+    }
+    .mobile-brand strong { display: block; font-size: 13px; font-weight: 600; }
+    .mobile-brand span { font-size: 12px; color: var(--ink-mute); }
+
     .tabs {
-      display: flex; gap: 4px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
       background: var(--canvas-app);
       border-radius: var(--radius-control);
       padding: 4px;
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
     .tab {
-      flex: 1; border: none; background: transparent;
-      padding: 9px 10px; border-radius: 6px;
-      font-size: 13px; font-weight: 600; color: var(--ink-mute);
+      border: none;
+      background: transparent;
+      padding: 9px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-mute);
       cursor: pointer;
     }
     .tab.active {
-      background: #fff; color: var(--brand);
+      background: #fff;
+      color: var(--brand);
       box-shadow: 0 0 0 1px var(--hairline);
     }
+
     .panel-title {
-      margin: 0 0 6px; font-size: 18px; font-weight: 600;
-      letter-spacing: -0.015em; color: var(--ink);
+      margin: 0 0 4px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
     }
     .panel-sub {
-      margin: 0 0 20px; font-size: 13px; color: var(--ink-mute); line-height: 1.5;
-    }
-    .form-footer {
-      margin-top: 18px; text-align: center;
-      font-size: 12px; color: var(--ink-mute);
+      margin: 0 0 22px;
+      font-size: 13px;
+      color: var(--ink-mute);
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <div class="portal-shell">
-    <aside class="hero">
+  <div class="shell">
+    <aside class="hero" aria-hidden="false">
       <div class="hero-inner">
         <div class="brand-row">
-          <div class="brand-mark">
-            <img src="assets/logo.png" alt="" onerror="this.parentElement.textContent='SDM'">
-          </div>
-          <div class="brand-text">
-            <strong>SD Muhammadiyah 01 Kukusan</strong>
-            <span>Portal Orang Tua</span>
+          <img class="brand-logo" src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
+          <div>
+            <div class="brand-name">SD Muhammadiyah 01 Kukusan</div>
+            <div class="brand-tag">Portal Orang Tua</div>
           </div>
         </div>
-        <div class="hero-kicker">Nilai STS</div>
-        <h1 class="hero-title">Lihat nilai tengah semester anak Anda.</h1>
-        <p class="hero-lead">
-          Pilih kelas dan nama anak, lalu masukkan NISN sebagai kata sandi.
-          Nilai tampil setelah guru kelas mempublikasikan STS.
+        <h1>Nilai anak, langsung dari sekolah.</h1>
+        <p>
+          Masuk dengan memilih kelas dan nama anak, lalu masukkan NISN.
+          Tidak perlu membuat akun baru.
         </p>
-        <div class="hero-footer">
-          Sistem Penilaian · SD Muhammadiyah 01 Kukusan
+        <div class="hero-steps">
+          <div class="hero-step">
+            <span class="hero-step-num">1</span>
+            <span>Pilih kelas dan nama anak</span>
+          </div>
+          <div class="hero-step">
+            <span class="hero-step-num">2</span>
+            <span>Masukkan NISN anak sebagai kata sandi</span>
+          </div>
+          <div class="hero-step">
+            <span class="hero-step-num">3</span>
+            <span>Lihat nilai yang sudah dibagikan guru</span>
+          </div>
         </div>
+        <div class="hero-foot">Sistem Penilaian internal sekolah</div>
       </div>
     </aside>
 
     <main class="panel">
       <div class="panel-card">
+        <div class="mobile-brand">
+          <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
+          <div>
+            <strong>Portal Orang Tua</strong>
+            <span>SD Muhammadiyah 01 Kukusan</span>
+          </div>
+        </div>
+
         <div class="tabs" role="tablist">
           <button type="button" class="tab active" id="tabOrtu" role="tab" aria-selected="true">Orang Tua</button>
           <button type="button" class="tab" id="tabAdmin" role="tab" aria-selected="false">Admin</button>
         </div>
 
         <div id="formOrtuWrap">
-          <h2 class="panel-title">Masuk sebagai orang tua</h2>
-          <p class="panel-sub">Tidak perlu daftar akun. Gunakan NISN anak sebagai kata sandi.</p>
+          <h2 class="panel-title">Masuk</h2>
+          <p class="panel-sub">Gunakan NISN anak. Nilai hanya tampil setelah guru mempublikasikan.</p>
 
           <form id="formOrtu" novalidate>
             <div class="field" id="fieldKelas">
               <label for="kelas">Kelas</label>
               <select id="kelas" required>
-                <option value="">— Pilih kelas —</option>
+                <option value="">Pilih kelas</option>
               </select>
             </div>
             <div class="field" id="fieldSiswa">
               <label for="siswa">Nama anak</label>
               <select id="siswa" required disabled>
-                <option value="">— Pilih kelas dulu —</option>
+                <option value="">Pilih kelas terlebih dahulu</option>
               </select>
             </div>
             <div class="field" id="fieldPasswordOrtu">
               <label for="passwordOrtu">NISN anak</label>
               <div class="password-wrap">
-                <input type="password" id="passwordOrtu" inputmode="numeric" autocomplete="off" placeholder="Nomor NISN anak" required>
-                <button type="button" class="toggle-visibility" id="togglePwOrtu" aria-label="Tampilkan">
+                <input type="password" id="passwordOrtu" inputmode="numeric" autocomplete="off" placeholder="Contoh: 0123456789" required>
+                <button type="button" class="toggle-visibility" id="togglePwOrtu" aria-label="Tampilkan NISN">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
               </div>
-              <div class="field-hint">NISN tertera di rapor atau kartu siswa. Bukan password email.</div>
+              <div class="field-hint">NISN ada di rapor atau kartu siswa.</div>
             </div>
-
-            <div id="errorOrtu" class="field-error-msg hidden">
-              <span id="errorOrtuText">Data tidak sesuai.</span>
-            </div>
-
-            <button type="submit" class="btn btn-primary-solid" id="btnOrtu">
+            <div id="errorOrtu" class="field-error-msg hidden"><span id="errorOrtuText"></span></div>
+            <button type="submit" class="btn btn-primary" id="btnOrtu">
               <span id="btnOrtuLabel">Masuk</span>
             </button>
           </form>
         </div>
 
         <div id="formAdminWrap" class="hidden">
-          <h2 class="panel-title">Masuk sebagai admin</h2>
+          <h2 class="panel-title">Admin</h2>
           <p class="panel-sub">Akun yang sama dengan aplikasi penilaian.</p>
-
           <form id="formAdmin" novalidate>
             <div class="field" id="fieldEmailAdmin">
               <label for="emailAdmin">Email</label>
@@ -190,15 +273,13 @@
               <label for="passwordAdmin">Password</label>
               <div class="password-wrap">
                 <input type="password" id="passwordAdmin" autocomplete="current-password" required>
-                <button type="button" class="toggle-visibility" id="togglePwAdmin" aria-label="Tampilkan">
+                <button type="button" class="toggle-visibility" id="togglePwAdmin" aria-label="Tampilkan password">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
               </div>
             </div>
-            <div id="errorAdmin" class="field-error-msg hidden">
-              <span id="errorAdminText">Email atau password salah.</span>
-            </div>
-            <button type="submit" class="btn btn-primary-solid" id="btnAdmin">
+            <div id="errorAdmin" class="field-error-msg hidden"><span id="errorAdminText"></span></div>
+            <button type="submit" class="btn btn-primary" id="btnAdmin">
               <span id="btnAdminLabel">Masuk</span>
             </button>
           </form>
@@ -216,10 +297,9 @@
       loginAdmin,
       terjemahkanErrorLogin,
       DEMO_MODE,
-    } from './assets/firebase.js?v=20261028g';
+    } from './assets/firebase.js?v=20261028h';
 
     const $ = (id) => document.getElementById(id);
-
     function showToast(msg, isError = false) {
       const t = $('toast');
       $('toastMsg').textContent = msg;
@@ -227,13 +307,10 @@
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2800);
     }
-
     function bindToggle(btnId, inputId) {
-      const btn = $(btnId);
-      const input = $(inputId);
-      if (!btn || !input) return;
-      btn.addEventListener('click', () => {
-        input.type = input.type === 'password' ? 'text' : 'password';
+      $(btnId)?.addEventListener('click', () => {
+        const el = $(inputId);
+        el.type = el.type === 'password' ? 'text' : 'password';
       });
     }
     bindToggle('togglePwOrtu', 'passwordOrtu');
@@ -243,8 +320,6 @@
       const isOrtu = which === 'ortu';
       $('tabOrtu').classList.toggle('active', isOrtu);
       $('tabAdmin').classList.toggle('active', !isOrtu);
-      $('tabOrtu').setAttribute('aria-selected', isOrtu);
-      $('tabAdmin').setAttribute('aria-selected', !isOrtu);
       $('formOrtuWrap').classList.toggle('hidden', !isOrtu);
       $('formAdminWrap').classList.toggle('hidden', isOrtu);
     }
@@ -252,77 +327,63 @@
     $('tabAdmin').addEventListener('click', () => switchTab('admin'));
 
     let siswaByKelas = {};
-
     async function initKelasSiswa() {
       try {
         siswaByKelas = await loadKelasDanSiswa();
-        const kelasList = Object.keys(siswaByKelas).sort((a, b) =>
-          a.localeCompare(b, 'id', { numeric: true })
-        );
+        const keys = Object.keys(siswaByKelas).sort((a, b) => a.localeCompare(b, 'id', { numeric: true }));
         const sel = $('kelas');
-        sel.innerHTML = '<option value="">— Pilih kelas —</option>';
-        kelasList.forEach((k) => {
-          const opt = document.createElement('option');
-          opt.value = k;
-          opt.textContent = 'Kelas ' + k;
-          sel.appendChild(opt);
+        sel.innerHTML = '<option value="">Pilih kelas</option>';
+        keys.forEach((k) => {
+          const o = document.createElement('option');
+          o.value = k;
+          o.textContent = 'Kelas ' + k;
+          sel.appendChild(o);
         });
-        if (!kelasList.length) {
-          showToast('Daftar siswa belum bisa dimuat. Periksa rules Firestore (lihat README).', true);
+        if (!keys.length) {
+          showToast('Daftar siswa belum dapat dimuat. Periksa rules Firestore.', true);
         }
       } catch (err) {
         console.error(err);
         showToast('Gagal memuat daftar kelas.', true);
       }
     }
-
     $('kelas').addEventListener('change', () => {
-      const kelas = $('kelas').value;
+      const k = $('kelas').value;
       const sel = $('siswa');
-      sel.innerHTML = '';
-      if (!kelas || !siswaByKelas[kelas]) {
+      if (!k || !siswaByKelas[k]) {
         sel.disabled = true;
-        sel.innerHTML = '<option value="">— Pilih kelas dulu —</option>';
+        sel.innerHTML = '<option value="">Pilih kelas terlebih dahulu</option>';
         return;
       }
       sel.disabled = false;
-      sel.innerHTML = '<option value="">— Pilih nama anak —</option>';
-      siswaByKelas[kelas]
-        .slice()
-        .sort((a, b) => a.nama.localeCompare(b.nama, 'id'))
-        .forEach((s) => {
-          const opt = document.createElement('option');
-          opt.value = s.id;
-          opt.textContent = s.nama;
-          sel.appendChild(opt);
-        });
+      sel.innerHTML = '<option value="">Pilih nama anak</option>';
+      siswaByKelas[k].slice().sort((a, b) => a.nama.localeCompare(b.nama, 'id')).forEach((s) => {
+        const o = document.createElement('option');
+        o.value = s.id;
+        o.textContent = s.nama;
+        sel.appendChild(o);
+      });
     });
 
     $('formOrtu').addEventListener('submit', async (e) => {
       e.preventDefault();
       $('errorOrtu').classList.add('hidden');
       ['fieldKelas', 'fieldSiswa', 'fieldPasswordOrtu'].forEach((id) => $(id).classList.remove('error'));
-
       const siswaId = $('siswa').value;
       const password = $('passwordOrtu').value.trim();
       if (!$('kelas').value || !siswaId || !password) {
         $('errorOrtuText').textContent = 'Lengkapi kelas, nama anak, dan NISN.';
         $('errorOrtu').classList.remove('hidden');
-        if (!$('kelas').value) $('fieldKelas').classList.add('error');
-        if (!siswaId) $('fieldSiswa').classList.add('error');
-        if (!password) $('fieldPasswordOrtu').classList.add('error');
         return;
       }
-
       const btn = $('btnOrtu');
       const label = $('btnOrtuLabel');
       btn.disabled = true;
       label.innerHTML = '<span class="spinner"></span>';
-
       try {
         await loginOrangtuaBySiswa({ siswaId, password });
         showToast('Berhasil masuk');
-        setTimeout(() => { window.location.href = 'beranda.html'; }, 500);
+        setTimeout(() => { location.href = 'beranda.html'; }, 450);
       } catch (err) {
         console.error(err);
         $('errorOrtuText').textContent = terjemahkanErrorLogin(err);
@@ -336,8 +397,6 @@
     $('formAdmin').addEventListener('submit', async (e) => {
       e.preventDefault();
       $('errorAdmin').classList.add('hidden');
-      ['fieldEmailAdmin', 'fieldPasswordAdmin'].forEach((id) => $(id).classList.remove('error'));
-
       const email = $('emailAdmin').value.trim();
       const password = $('passwordAdmin').value;
       if (!email || !password) {
@@ -345,17 +404,15 @@
         $('errorAdmin').classList.remove('hidden');
         return;
       }
-
       const btn = $('btnAdmin');
       const label = $('btnAdminLabel');
       btn.disabled = true;
       label.innerHTML = '<span class="spinner"></span>';
-
       try {
         const session = await loginAdmin({ email, password });
         if (session.role !== 'admin') throw new Error('Bukan akun admin.');
-        showToast('Selamat datang, Admin');
-        setTimeout(() => { window.location.href = 'admin.html'; }, 500);
+        showToast('Selamat datang');
+        setTimeout(() => { location.href = 'admin.html'; }, 450);
       } catch (err) {
         console.error(err);
         $('errorAdminText').textContent = terjemahkanErrorLogin(err);
@@ -366,7 +423,6 @@
     });
 
     initKelasSiswa();
-    if (DEMO_MODE) console.info('[Portal] DEMO_MODE aktif');
   </script>
 </body>
 </html>
