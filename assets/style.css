@@ -64,6 +64,7 @@ button, input, select { font-family: inherit; font-size: inherit; }
 .app-frame {
   display: flex;
   min-height: 100%;
+  width: 100%;
   background: var(--surface-2);
 }
 @media (min-width: 768px) {
@@ -72,8 +73,10 @@ button, input, select { font-family: inherit; font-size: inherit; }
 .app-shell {
   display: flex;
   width: 100%;
+  max-width: 100%;
   min-height: 100%;
   background: var(--surface);
+  flex: 1;
 }
 @media (min-width: 768px) {
   .app-shell {
@@ -289,9 +292,16 @@ button, input, select { font-family: inherit; font-size: inherit; }
   .main-body { padding: 20px; }
 }
 .main-inner {
-  max-width: 720px;
-  margin: 0 auto;
+  /* Isi lebar kolom utama — jangan kolom sempit di tengah (ruang kosong kiri/kanan)
+     Selaras Layout penilaian: beranda/hub memakai lebar shell, bukan max-w-xl */
   width: 100%;
+  max-width: none;
+  margin: 0;
+}
+.main-inner.main-inner--narrow {
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Bottom nav mobile */
