@@ -37,3 +37,13 @@
 ### Kebijakan konten
 - Hanya STS untuk saat ini; nilai lain menyusul jika guru membagikan.
 - Publikasi: `sts_publikasi` · opsional `window.__PO_REQUIRE_PUBLISH = true` untuk gerbang ketat.
+
+## 2026-10-28i
+
+### Layout = shell SDM01Penilaian (Layout.tsx)
+- `app-frame` + `app-shell` (putih, border, radius di desktop)
+- Sidebar kiri: brand, menu, banner profil, keluar
+- Header sticky: judul halaman + tanggal + avatar
+- Bottom nav mobile
+- Konten: `page-header`, `stat-strip`, `hub-panel` / `hub-row` seperti modul penilaian
+- Beranda ortu & admin memakai pola yang sama
