@@ -4,97 +4,547 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Beranda — Portal Orang Tua | SD Muhammadiyah 01 Kukusan</title>
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    body { background: var(--bg-light); min-height: 100vh; }
+    body {
+      background: var(--bg-light);
+      min-height: 100vh;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+    }
     .app-header {
       background: var(--header-gradient);
-      padding: calc(env(safe-area-inset-top) + 16px) 20px 20px;
+      padding: calc(env(safe-area-inset-top) + 14px) 18px 18px;
       color: #fff;
     }
-    .app-header-row { display: flex; align-items: center; gap: 12px; }
-    .app-header-title { font-size: 17px; font-weight: 800; flex: 1; }
-    .app-header-sub { font-size: 12px; opacity: 0.8; font-weight: 600; margin-top: 2px; }
+    .app-header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .app-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+    .app-header-brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: #fff;
+      object-fit: contain;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+    .app-header-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      letter-spacing: 0.1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-header-sub {
+      font-size: 11.5px;
+      opacity: 0.8;
+      font-weight: 600;
+      margin-top: 1px;
+    }
     .btn-out {
-      background: rgba(255,255,255,.15);
+      background: rgba(255, 255, 255, 0.15);
       border: none;
       color: #fff;
       font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 9px 14px;
+      border-radius: 11px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .btn-out:hover { background: rgba(255, 255, 255, 0.22); }
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 14px 32px;
+    }
+    .child-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .child-tab {
+      flex-shrink: 0;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 10px;
+      color: var(--ink-mid);
       cursor: pointer;
+      transition: all 0.15s ease;
     }
-    .body { padding: 20px 16px 40px; max-width: 640px; margin: 0 auto; }
-    .card {
+    .child-tab.active {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #fff;
+    }
+    .profile-card {
       background: #fff;
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 20px;
+      padding: 16px;
       box-shadow: var(--shadow-soft);
-      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
     }
-    .card h2 { margin: 0 0 8px; font-size: 16px; font-weight: 800; color: var(--green-dark); }
-    .card p { margin: 0; font-size: 14px; color: var(--ink-muted); line-height: 1.55; }
-    .badge {
-      display: inline-block;
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
       background: var(--green-pale);
       color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .profile-info { flex: 1; min-width: 0; }
+    .profile-nama {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .profile-meta {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+    .profile-kelas {
+      flex-shrink: 0;
+      background: var(--green-ghost);
+      color: var(--green-dark);
       font-size: 12px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
+      font-weight: 800;
+      padding: 6px 11px;
+      border-radius: 10px;
+    }
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin: 0 2px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-label .bar {
+      width: 3px;
+      height: 12px;
+      border-radius: 2px;
+      background: var(--green-mid);
+    }
+    .period-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
       margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .period-text {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink-mid);
+    }
+    .status-chip {
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+    .status-chip.published {
+      background: var(--green-pale);
+      color: var(--green-dark);
+    }
+    .status-chip.pending {
+      background: var(--gold-light);
+      color: #9a6b12;
+    }
+    .nilai-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .nilai-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nilai-mapel { flex: 1; min-width: 0; }
+    .nilai-mapel-nama {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .nilai-mapel-sub {
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .nilai-skor { flex-shrink: 0; text-align: right; }
+    .nilai-angka {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--green-dark);
+      line-height: 1;
+    }
+    .nilai-predikat {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      margin-top: 3px;
+    }
+    .state-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+    }
+    .state-box .icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      border-radius: 14px;
+      background: var(--green-ghost);
+      color: var(--green-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .state-box h3 {
+      margin: 0 0 6px;
+      font-size: 15.5px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .state-box p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      line-height: 1.55;
+      font-weight: 500;
+    }
+    .loading-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 32px;
+      color: var(--ink-muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .footer-note {
+      margin-top: 22px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-weight: 500;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
+
   <header class="app-header">
     <div class="app-header-row">
-      <div>
-        <div class="app-header-title">Portal Orang Tua</div>
-        <div class="app-header-sub" id="subNama">Memuat…</div>
+      <div class="app-header-brand">
+        <img src="assets/logo.png" alt="Logo sekolah" onerror="this.style.display='none'">
+        <div>
+          <div class="app-header-title">Portal Orang Tua</div>
+          <div class="app-header-sub" id="headerNama">Memuat…</div>
+        </div>
       </div>
       <button type="button" class="btn-out" id="btnLogout">Keluar</button>
     </div>
   </header>
 
-  <div class="body">
-    <div class="card">
-      <span class="badge">Segera hadir</span>
-      <h2>Nilai STS anak</h2>
-      <p>
-        Halaman ini akan menampilkan nilai Sumatif Tengah Semester setelah
-        dipublish oleh guru kelas. Konten lengkap akan kita susun bersama.
-      </p>
+  <main class="page">
+    <div class="child-tabs hidden" id="childTabs"></div>
+
+    <div class="profile-card" id="profileCard">
+      <div class="avatar" id="avatarInisial">—</div>
+      <div class="profile-info">
+        <div class="profile-nama" id="profilNama">—</div>
+        <div class="profile-meta" id="profilMeta">—</div>
+      </div>
+      <div class="profile-kelas" id="profilKelas">—</div>
     </div>
-    <div class="card">
-      <h2>Pengaturan akun</h2>
-      <p>
-        Ganti password dan kelola anak yang terhubung akan tersedia di sini.
-      </p>
+
+    <div class="section-label"><span class="bar"></span> Nilai STS</div>
+
+    <div class="period-bar">
+      <span class="period-text" id="periodText">Semester berjalan</span>
+      <span class="status-chip pending" id="statusChip">Memuat…</span>
     </div>
-  </div>
+
+    <div id="nilaiArea">
+      <div class="loading-row">
+        <span class="spinner" style="border-color:rgba(30,77,59,.2);border-top-color:var(--green-mid)"></span>
+        Memuat nilai…
+      </div>
+    </div>
+
+    <p class="footer-note">
+      Nilai hanya tampil setelah guru kelas mempublikasikan STS.<br>
+      Hubungi wali kelas jika ada pertanyaan.
+    </p>
+  </main>
+
+  <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
   <script type="module">
-    import { currentSession, onAuthChange, logout } from './assets/firebase.js';
+    import {
+      currentSession,
+      onAuthChange,
+      logout,
+      loadSiswaByIds,
+      loadNilaiStsPublished,
+    } from './assets/firebase.js';
 
-    const session = currentSession();
-    if (!session || session.role !== 'orangtua') {
-      // Produksi: onAuthChange; demo: cek localStorage
-      onAuthChange((s) => {
-        if (!s || s.role !== 'orangtua') {
-          window.location.href = 'index.html';
-        } else {
-          document.getElementById('subNama').textContent = s.nama || s.email;
-        }
-      });
-    } else {
-      document.getElementById('subNama').textContent = session.nama || session.email;
+    const $ = (id) => document.getElementById(id);
+
+    function showToast(msg, isError = false) {
+      const t = $('toast');
+      $('toastMsg').textContent = msg;
+      t.classList.toggle('error', isError);
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
     }
 
-    document.getElementById('btnLogout').addEventListener('click', async () => {
+    function inisial(nama) {
+      if (!nama) return '?';
+      const parts = nama.trim().split(/\s+/);
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    function predikatDariNilai(n) {
+      if (n == null || n === '') return '—';
+      const v = Number(n);
+      if (v >= 90) return 'Sangat Baik';
+      if (v >= 80) return 'Baik';
+      if (v >= 70) return 'Cukup';
+      return 'Perlu bimbingan';
+    }
+
+    function escapeHtml(s) {
+      return String(s || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    let session = null;
+    let daftarAnak = [];
+    let aktifId = null;
+
+    function renderChildTabs() {
+      const wrap = $('childTabs');
+      if (daftarAnak.length <= 1) {
+        wrap.classList.add('hidden');
+        return;
+      }
+      wrap.classList.remove('hidden');
+      wrap.innerHTML = daftarAnak
+        .map(
+          (a) =>
+            `<button type="button" class="child-tab ${a.id === aktifId ? 'active' : ''}" data-id="${a.id}">${escapeHtml(a.nama.split(' ')[0])}</button>`
+        )
+        .join('');
+      wrap.querySelectorAll('.child-tab').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          aktifId = btn.dataset.id;
+          renderChildTabs();
+          renderProfil();
+          loadNilai();
+        });
+      });
+    }
+
+    function renderProfil() {
+      const anak = daftarAnak.find((a) => a.id === aktifId) || daftarAnak[0];
+      if (!anak) return;
+      $('avatarInisial').textContent = inisial(anak.nama);
+      $('profilNama').textContent = anak.nama;
+      $('profilMeta').textContent = [anak.nis ? `NIS ${anak.nis}` : null, anak.kelas ? `Kelas ${anak.kelas}` : null]
+        .filter(Boolean)
+        .join(' · ') || '—';
+      $('profilKelas').textContent = anak.kelas ? `Kelas ${anak.kelas}` : '—';
+    }
+
+    function renderNilaiEmpty(published, periodeLabel) {
+      $('periodText').textContent = periodeLabel || 'Semester berjalan';
+      const chip = $('statusChip');
+      if (published === false) {
+        chip.textContent = 'Belum dipublish';
+        chip.className = 'status-chip pending';
+        $('nilaiArea').innerHTML = `
+          <div class="state-box">
+            <div class="icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            </div>
+            <h3>Nilai STS belum dipublish</h3>
+            <p>Guru kelas belum mempublikasikan nilai Sumatif Tengah Semester. Silakan cek lagi nanti.</p>
+          </div>`;
+      } else {
+        chip.textContent = 'Tidak ada data';
+        chip.className = 'status-chip pending';
+        $('nilaiArea').innerHTML = `
+          <div class="state-box">
+            <div class="icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <h3>Belum ada nilai STS</h3>
+            <p>Belum ada data nilai untuk anak ini pada periode ini.</p>
+          </div>`;
+      }
+    }
+
+    function renderNilaiList(items, periodeLabel, publishedAt) {
+      $('periodText').textContent = periodeLabel || 'Semester berjalan';
+      const chip = $('statusChip');
+      chip.textContent = publishedAt ? `Dipublish ${publishedAt}` : 'Sudah dipublish';
+      chip.className = 'status-chip published';
+
+      if (!items.length) {
+        renderNilaiEmpty(true, periodeLabel);
+        return;
+      }
+
+      $('nilaiArea').innerHTML =
+        `<div class="nilai-list">` +
+        items
+          .map(
+            (n) => `
+          <div class="nilai-card">
+            <div class="nilai-mapel">
+              <div class="nilai-mapel-nama">${escapeHtml(n.mapel)}</div>
+              <div class="nilai-mapel-sub">${escapeHtml(n.keterangan || 'Sumatif Tengah Semester')}</div>
+            </div>
+            <div class="nilai-skor">
+              <div class="nilai-angka">${n.nilai != null ? n.nilai : '—'}</div>
+              <div class="nilai-predikat">${escapeHtml(n.predikat || predikatDariNilai(n.nilai))}</div>
+            </div>
+          </div>`
+          )
+          .join('') +
+        `</div>`;
+    }
+
+    async function loadNilai() {
+      const area = $('nilaiArea');
+      area.innerHTML = `<div class="loading-row"><span class="spinner" style="border-color:rgba(30,77,59,.2);border-top-color:var(--green-mid)"></span> Memuat nilai…</div>`;
+      try {
+        const result = await loadNilaiStsPublished(aktifId);
+        if (!result.published) {
+          renderNilaiEmpty(false, result.periodeLabel);
+        } else {
+          renderNilaiList(result.items || [], result.periodeLabel, result.publishedAt);
+        }
+      } catch (err) {
+        console.error(err);
+        area.innerHTML = `
+          <div class="state-box">
+            <div class="icon" style="background:var(--red-light);color:var(--red)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+            </div>
+            <h3>Gagal memuat nilai</h3>
+            <p>Periksa koneksi internet, lalu muat ulang halaman.</p>
+          </div>`;
+      }
+    }
+
+    async function boot(s) {
+      if (!s || s.role !== 'orangtua') {
+        window.location.href = 'index.html';
+        return;
+      }
+      session = s;
+      $('headerNama').textContent = s.nama || s.email || 'Orang tua';
+
+      const ids = s.anakIds && s.anakIds.length
+        ? s.anakIds
+        : s.siswaAktifId
+          ? [s.siswaAktifId]
+          : [];
+
+      if (!ids.length) {
+        $('profileCard').innerHTML = `
+          <div class="state-box" style="width:100%;border:none;box-shadow:none;padding:8px">
+            <h3>Belum ada anak terhubung</h3>
+            <p>Hubungi admin sekolah agar akun Anda dihubungkan ke data siswa.</p>
+          </div>`;
+        $('nilaiArea').innerHTML = '';
+        $('statusChip').textContent = '—';
+        return;
+      }
+
+      try {
+        daftarAnak = await loadSiswaByIds(ids);
+      } catch (err) {
+        console.error(err);
+        showToast('Gagal memuat data anak.', true);
+        daftarAnak = ids.map((id) => ({ id, nama: id, nis: '', kelas: '' }));
+      }
+
+      aktifId = s.siswaAktifId && daftarAnak.some((a) => a.id === s.siswaAktifId)
+        ? s.siswaAktifId
+        : daftarAnak[0].id;
+
+      renderChildTabs();
+      renderProfil();
+      await loadNilai();
+    }
+
+    const existing = currentSession();
+    if (existing) {
+      boot(existing);
+    } else {
+      onAuthChange((s) => boot(s));
+    }
+
+    $('btnLogout').addEventListener('click', async () => {
       await logout();
       window.location.href = 'index.html';
     });
