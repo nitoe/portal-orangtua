@@ -1,65 +1,46 @@
 # Portal Orang Tua — SD Muhammadiyah 01 Kukusan
 
-Portal khusus **orang tua** untuk melihat nilai STS anak setelah dipublish oleh guru kelas.
+Portal terpisah dari aplikasi penilaian (`nitoe/SDM01Penilaian`), project Firebase **`sdm01kukusan-2e735`**.
 
-Berbagi **Firebase project yang sama** dengan aplikasi Penilaian (`sdm01-penilaianv2`), sehingga data siswa & nilai tetap satu sumber kebenaran.
+## Login orang tua (tanpa daftar akun)
 
-## Siapa yang bisa masuk
+1. Pilih **kelas**
+2. Pilih **nama anak**
+3. Masukkan **NISN** anak (field `nisn` di koleksi `siswa`; jika kosong, fallback `nis` / `nipd`)
 
-| Peran | Cara login | Akses |
-|-------|------------|--------|
-| **Orang Tua** | Pilih kelas → pilih nama anak → masukkan password | Hanya data anak yang terhubung & nilai yang sudah dipublish |
-| **Admin** | Email + password (akun admin yang sama dengan aplikasi penilaian) | Kelola akun orang tua, reset password, setujui linking anak |
+Tidak ada akun Firebase Auth untuk orang tua. Sesi disimpan di `localStorage` (`po_ortu_session`).
 
-Tidak ada login siswa atau guru di portal ini.
+## Login admin
 
-## Struktur
+Email + password akun **admin** yang sama dengan aplikasi penilaian.
+
+## Design
+
+Mengikuti `DESIGN.md` SDM01Penilaian: merek `#313083`, permukaan datar, Inter, tanpa gradient.
+
+## Firestore rules (wajib untuk login ortu)
+
+Guest harus bisa **list/get** koleksi `siswa` agar dropdown kelas/nama dan verifikasi NISN berjalan.
+
+**Risiko:** klien bisa membaca field `nisn`. Mitigasi ideal: Cloud Function verifikasi NISN (tidak mengirim NISN ke browser untuk daftar). Untuk tahap ini, pastikan hanya perangkat/orang tua yang dimaksud yang memakai portal.
+
+Contoh longgar (hanya jika Anda menerima risikonya):
 
 ```
-portal-orangtua/
-├── index.html          # Halaman masuk (Orang Tua | Admin)
-├── beranda.html        # Dashboard orang tua (placeholder)
-├── admin.html          # Panel admin portal (placeholder)
-├── assets/
-│   ├── style.css       # Design tokens + komponen (selaras penilaian-v2)
-│   ├── firebase.js     # Auth + Firestore (project yang sama)
-│   └── logo.png        # Logo sekolah (salin dari penilaian-v2)
-├── css/                # (opsional override)
-└── js/
+match /siswa/{id} {
+  allow get, list: if true; // portal ortu — pertimbangkan CF di masa depan
+  allow write: if isAdmin();
+}
 ```
 
-## Login Orang Tua (mekanisme)
+Atau batasi domain hosting + App Check.
 
-1. Orang tua memilih **kelas**.
-2. Dropdown **nama siswa** terisi otomatis dari data kelas tersebut.
-3. Masukkan **password** akun orang tua yang terhubung ke siswa itu.
-4. Setelah login berhasil, orang tua bisa:
-   - Melihat nilai STS yang sudah dipublish
-   - Mengganti password sendiri
-5. Lupa password → hubungi admin (admin bisa reset dari panel).
+Nilai STS: ortu hanya melihat data yang sudah `published` (lihat `loadNilaiStsPublished`).
 
-Akun orang tua dibuat / di-link oleh **admin** (role `admin` dari aplikasi penilaian). Satu akun orang tua bisa terhubung ke satu atau beberapa anak (`anakIds`).
+## Demo offline
 
-## Menjalankan lokal
-
-```bash
-npx serve .
-# atau
-python3 -m http.server 8080
+```js
+localStorage.setItem('po_force_demo', '1')
 ```
 
-Buka `http://localhost:8080`.
-
-## Firebase
-
-Isi `assets/firebase.js` dengan config project yang sama dengan penilaian-v2 (sudah diisi jika kamu menyalin dari sana).
-
-Selama config masih placeholder, aplikasi berjalan dalam **DEMO_MODE** (data simulasi di localStorage).
-
-## Status
-
-- [x] Halaman masuk (UI)
-- [ ] Auth orang tua (filter kelas + nama + password) tersambung Firebase
-- [ ] Dashboard nilai STS
-- [ ] Ganti password orang tua
-- [ ] Panel admin: kelola akun ortu, reset password, approve linking
+Password demo: NIS siswa di seed, atau `ortu123`.

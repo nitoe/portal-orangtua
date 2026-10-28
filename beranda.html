@@ -14,7 +14,7 @@
       padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
     }
     .app-header {
-      background: var(--header-gradient);
+      background: var(--brand);
       padding: calc(env(safe-area-inset-top) + 14px) 18px 18px;
       color: #fff;
     }
@@ -95,8 +95,8 @@
       transition: all 0.15s ease;
     }
     .child-tab.active {
-      background: var(--green-dark);
-      border-color: var(--green-dark);
+      background: var(--brand);
+      border-color: var(--brand);
       color: #fff;
     }
     .profile-card {
@@ -114,8 +114,8 @@
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      background: var(--green-pale);
-      color: var(--green-dark);
+      background: var(--brand-tint);
+      color: var(--brand);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -140,8 +140,8 @@
     }
     .profile-kelas {
       flex-shrink: 0;
-      background: var(--green-ghost);
-      color: var(--green-dark);
+      background: var(--brand-tint);
+      color: var(--brand);
       font-size: 12px;
       font-weight: 800;
       padding: 6px 11px;
@@ -162,7 +162,7 @@
       width: 3px;
       height: 12px;
       border-radius: 2px;
-      background: var(--green-mid);
+      background: var(--brand-hover);
     }
     .period-bar {
       display: flex;
@@ -184,8 +184,8 @@
       border-radius: 8px;
     }
     .status-chip.published {
-      background: var(--green-pale);
-      color: var(--green-dark);
+      background: var(--brand-tint);
+      color: var(--brand);
     }
     .status-chip.pending {
       background: var(--gold-light);
@@ -222,7 +222,7 @@
     .nilai-angka {
       font-size: 22px;
       font-weight: 800;
-      color: var(--green-dark);
+      color: var(--brand);
       line-height: 1;
     }
     .nilai-predikat {
@@ -244,8 +244,8 @@
       height: 48px;
       margin: 0 auto 12px;
       border-radius: 14px;
-      background: var(--green-ghost);
-      color: var(--green-mid);
+      background: var(--brand-tint);
+      color: var(--brand-hover);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -319,7 +319,7 @@
 
     <div id="nilaiArea">
       <div class="loading-row">
-        <span class="spinner" style="border-color:rgba(30,77,59,.2);border-top-color:var(--green-mid)"></span>
+        <span class="spinner" style="border-color:rgba(49,48,131,.2);border-top-color:var(--brand-hover)"></span>
         Memuat nilai…
       </div>
     </div>
@@ -339,7 +339,7 @@
       logout,
       loadSiswaByIds,
       loadNilaiStsPublished,
-    } from './assets/firebase.js';
+    } from './assets/firebase.js?v=20261028f';
 
     const $ = (id) => document.getElementById(id);
 
@@ -474,7 +474,7 @@
 
     async function loadNilai() {
       const area = $('nilaiArea');
-      area.innerHTML = `<div class="loading-row"><span class="spinner" style="border-color:rgba(30,77,59,.2);border-top-color:var(--green-mid)"></span> Memuat nilai…</div>`;
+      area.innerHTML = `<div class="loading-row"><span class="spinner" style="border-color:rgba(49,48,131,.2);border-top-color:var(--brand-hover)"></span> Memuat nilai…</div>`;
       try {
         const result = await loadNilaiStsPublished(aktifId);
         if (!result.published) {

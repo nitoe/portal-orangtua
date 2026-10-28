@@ -146,7 +146,8 @@ export async function loadKelasDanSiswa() {
       byKelas[kelas].push({
         id: doc.id,
         nama: d.nama || doc.id,
-        nis: d.nis || d.nisn || '',
+        // Jangan kirim NISN ke dropdown (password login)
+        nis: '',
       });
     });
     Object.keys(byKelas).forEach((k) => {
@@ -169,84 +170,75 @@ export async function loadKelasDanSiswa() {
  * Password = password akun Firebase Auth orang tua.
  */
 export async function loginOrangtua({ siswaId, password }) {
-  if (!siswaId || !password) throw new Error('Pilih siswa dan isi password.');
+  if (!siswaId || !password) throw new Error('Pilih siswa dan isi NISN.');
+
+  const nisnInput = String(password).trim();
 
   if (DEMO_MODE) {
     _seedDemo();
-    await new Promise((r) => setTimeout(r, 300));
-    const users = JSON.parse(localStorage.getItem(DEMO_USERS_KEY) || '[]');
-    const ortu = users.find(
-      (u) =>
-        u.role === 'orangtua' &&
-        Array.isArray(u.anakIds) &&
-        u.anakIds.includes(siswaId) &&
-        u.password === password
-    );
-    if (!ortu) throw Object.assign(new Error('Password salah atau akun tidak terhubung ke siswa ini.'), { code: 'auth/invalid-credential' });
+    await new Promise((r) => setTimeout(r, 250));
+    const list = JSON.parse(localStorage.getItem(DEMO_SISWA_KEY) || '[]');
+    const siswa = list.find((s) => s.id === siswaId);
+    if (!siswa) {
+      throw Object.assign(new Error('Siswa tidak ditemukan.'), { code: 'auth/user-not-found' });
+    }
+    // Demo: NISN = field nis, atau fallback ortu123
+    const ok =
+      String(siswa.nis || '') === nisnInput ||
+      nisnInput === 'ortu123';
+    if (!ok) {
+      throw Object.assign(new Error('NISN tidak sesuai.'), { code: 'auth/invalid-credential' });
+    }
     const session = {
-      uid: 'demo-' + ortu.email,
-      email: ortu.email,
-      nama: ortu.nama,
+      uid: 'ortu-' + siswaId,
+      email: null,
+      nama: 'Orang tua · ' + siswa.nama,
       role: 'orangtua',
-      anakIds: ortu.anakIds,
+      anakIds: [siswaId],
       siswaAktifId: siswaId,
+      authMode: 'nisn',
     };
     localStorage.setItem(DEMO_SESSION_KEY, JSON.stringify(session));
     return session;
   }
 
-  const { auth, db, authMod, fsMod } = window.__fb;
-
-  // Cari profil orang tua yang terhubung ke siswaId
-  const q = fsMod.query(
-    fsMod.collection(db, 'users'),
-    fsMod.where('role', '==', 'orangtua'),
-    fsMod.where('anakIds', 'array-contains', siswaId)
-  );
-  const snap = await fsMod.getDocs(q);
-  if (snap.empty) {
-    throw Object.assign(
-      new Error('Belum ada akun orang tua yang terhubung ke siswa ini. Hubungi admin sekolah.'),
-      { code: 'auth/user-not-found' }
-    );
+  const { db, fsMod } = window.__fb;
+  const snap = await fsMod.getDoc(fsMod.doc(db, 'siswa', siswaId));
+  if (!snap.exists()) {
+    throw Object.assign(new Error('Siswa tidak ditemukan.'), { code: 'auth/user-not-found' });
+  }
+  const d = snap.data();
+  if (d.aktif === false) {
+    throw Object.assign(new Error('Data siswa tidak aktif.'), { code: 'auth/user-disabled' });
   }
 
-  // Ambil kandidat yang status approved (jika field ada)
-  let profileDoc = null;
-  snap.forEach((doc) => {
-    const d = doc.data();
-    if (d.status && d.status !== 'approved') return;
-    if (d.aktif === false) return;
-    if (!profileDoc) profileDoc = { id: doc.id, ...d };
-  });
-  if (!profileDoc) {
-    throw Object.assign(
-      new Error('Akun orang tua belum disetujui admin atau dinonaktifkan.'),
-      { code: 'auth/user-disabled' }
-    );
+  // Password = NISN (prioritas), fallback NIS bila NISN kosong
+  const nisn = String(d.nisn || '').trim();
+  const nis = String(d.nis || d.nipd || '').trim();
+  const match =
+    (nisn && nisn === nisnInput) ||
+    (!nisn && nis && nis === nisnInput);
+
+  if (!match) {
+    throw Object.assign(new Error('NISN tidak sesuai.'), { code: 'auth/invalid-credential' });
   }
 
-  const email = (profileDoc.email || '').trim().toLowerCase();
-  if (!email) {
-    throw new Error('Profil orang tua tidak memiliki email login. Hubungi admin.');
-  }
-
-  const cred = await authMod.signInWithEmailAndPassword(auth, email, password);
   const session = {
-    uid: cred.user.uid,
-    email: cred.user.email,
-    nama: profileDoc.nama || cred.user.email,
+    uid: 'ortu-' + siswaId,
+    email: null,
+    nama: 'Orang tua · ' + (d.nama || siswaId),
     role: 'orangtua',
-    anakIds: profileDoc.anakIds || [siswaId],
+    anakIds: [siswaId],
     siswaAktifId: siswaId,
+    authMode: 'nisn',
+    siswaNama: d.nama || '',
+    siswaKelas: d.kelas || '',
   };
+  // Sesi ortu berbasis NISN (bukan Firebase Auth email)
+  localStorage.setItem('po_ortu_session', JSON.stringify(session));
   return session;
 }
 
-/**
- * Login admin — memakai akun admin SDM01Penilaian yang sudah ada.
- * Email + password sama seperti di https://penilaian.sdmuhammadiyah01kks.sch.id
- */
 export const loginOrangtuaBySiswa = loginOrangtua;
 
 export async function loginAdmin(emailOrOpts, passwordMaybe) {
@@ -318,12 +310,13 @@ export async function loginAdmin(emailOrOpts, passwordMaybe) {
 }
 
 export async function logout() {
-  if (DEMO_MODE) {
-    localStorage.removeItem(DEMO_SESSION_KEY);
-    return;
-  }
-  const { auth, authMod } = window.__fb;
-  await authMod.signOut(auth);
+  localStorage.removeItem('po_ortu_session');
+  localStorage.removeItem(DEMO_SESSION_KEY);
+  if (DEMO_MODE) return;
+  try {
+    const { auth, authMod } = window.__fb;
+    if (auth && authMod) await authMod.signOut(auth);
+  } catch (_) {}
 }
 
 /**
@@ -333,6 +326,11 @@ export async function logout() {
 let _sessionCache = null;
 
 export function currentSession() {
+  // Sesi ortu (NISN) — tidak memakai Firebase Auth
+  try {
+    const ortu = localStorage.getItem('po_ortu_session');
+    if (ortu) return JSON.parse(ortu);
+  } catch (_) {}
   if (DEMO_MODE) {
     try {
       const raw = localStorage.getItem(DEMO_SESSION_KEY);
@@ -681,7 +679,7 @@ export async function kirimResetPasswordOrangtua(email) {
 export function terjemahkanErrorLogin(err) {
   const code = err && err.code ? String(err.code) : '';
   if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
-    return 'Email atau password salah.';
+    return 'NISN tidak sesuai atau email/password salah.';
   }
   if (code === 'auth/user-not-found') {
     return 'Akun tidak ditemukan.';
