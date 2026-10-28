@@ -16,3 +16,12 @@
 
 ## 2026-10-28e
 - Panel admin kelola akun ortu (digantikan model NISN).
+
+## 2026-10-28g
+
+### Nilai STS produksi
+- Baca koleksi `nilai_sts` (filter `siswaId`, semester & tahun ajaran dari `config/akademik`).
+- Agregasi rata-rata per **mapel** (beberapa TP digabung).
+- Gerbang opsional: `sts_publikasi/{kelas}_{tahunAjaran}_{semester}` dengan `published: true`.
+- Jika dokumen publikasi tidak ada: tampilkan nilai selama ada data (kompatibel).
+- Beranda diselaraskan ke design system biru penilaian.

@@ -427,7 +427,7 @@ export async function loadSiswaByIds(ids) {
 export async function loadNilaiStsPublished(siswaId) {
   if (DEMO_MODE) {
     _seedDemo();
-    await new Promise((r) => setTimeout(r, 350));
+    await new Promise((r) => setTimeout(r, 300));
     const periodeLabel = 'STS · Semester 1 · 2025/2026';
     if (siswaId === 's1') {
       return {
@@ -435,14 +435,10 @@ export async function loadNilaiStsPublished(siswaId) {
         periodeLabel,
         publishedAt: '12 Okt 2025',
         items: [
-          { mapel: 'Pendidikan Agama Islam', nilai: 88, predikat: 'Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Pendidikan Pancasila', nilai: 90, predikat: 'Sangat Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Bahasa Indonesia', nilai: 85, predikat: 'Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Matematika', nilai: 78, predikat: 'Cukup', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'IPAS', nilai: 82, predikat: 'Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Bahasa Inggris', nilai: 91, predikat: 'Sangat Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Seni Rupa', nilai: 87, predikat: 'Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Pendidikan Jasmani', nilai: 93, predikat: 'Sangat Baik', keterangan: 'Sumatif Tengah Semester' },
+          { mapel: 'Pendidikan Agama Islam', nilai: 88, predikat: 'Baik', keterangan: 'Rata-rata STS' },
+          { mapel: 'Bahasa Indonesia', nilai: 85, predikat: 'Baik', keterangan: 'Rata-rata STS' },
+          { mapel: 'Matematika', nilai: 78, predikat: 'Cukup', keterangan: 'Rata-rata STS' },
+          { mapel: 'IPAS', nilai: 82, predikat: 'Baik', keterangan: 'Rata-rata STS' },
         ],
       };
     }
@@ -452,10 +448,8 @@ export async function loadNilaiStsPublished(siswaId) {
         periodeLabel,
         publishedAt: '12 Okt 2025',
         items: [
-          { mapel: 'Pendidikan Agama Islam', nilai: 92, predikat: 'Sangat Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Bahasa Indonesia', nilai: 89, predikat: 'Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'Matematika', nilai: 94, predikat: 'Sangat Baik', keterangan: 'Sumatif Tengah Semester' },
-          { mapel: 'IPAS', nilai: 86, predikat: 'Baik', keterangan: 'Sumatif Tengah Semester' },
+          { mapel: 'Matematika', nilai: 94, predikat: 'Sangat Baik', keterangan: 'Rata-rata STS' },
+          { mapel: 'Bahasa Indonesia', nilai: 89, predikat: 'Baik', keterangan: 'Rata-rata STS' },
         ],
       };
     }
@@ -464,72 +458,109 @@ export async function loadNilaiStsPublished(siswaId) {
 
   const { db, fsMod } = window.__fb;
 
+  // Periode aktif dari config/akademik
+  let semester = '1';
+  let tahunAjaran = '';
   let periodeLabel = 'Semester berjalan';
-  let publishedAt = null;
-  let published = false;
-  const items = [];
-
   try {
     const cfg = await fsMod.getDoc(fsMod.doc(db, 'config', 'akademik'));
     if (cfg.exists()) {
       const c = cfg.data();
-      if (c.semesterLabel) periodeLabel = 'STS · ' + c.semesterLabel;
-      else if (c.tahunAjaran && c.semester) {
-        periodeLabel = `STS · Semester ${c.semester} · ${c.tahunAjaran}`;
+      semester = String(c.semesterAktif || c.semester || '1');
+      tahunAjaran = String(c.tahunAjaran || '');
+      if (tahunAjaran) {
+        periodeLabel = `STS · Semester ${semester} · ${tahunAjaran}`;
+      } else {
+        periodeLabel = `STS · Semester ${semester}`;
       }
     }
-  } catch (_) {
-    /* ignore */
-  }
+  } catch (_) {}
 
-  // Coba beberapa pola koleksi yang mungkin dipakai SDM01Penilaian
-  const tryCollections = ['nilai_sts', 'nilaiSts', 'sts'];
-  for (const colName of tryCollections) {
+  // Data siswa (kelas) untuk cek publikasi
+  let kelas = '';
+  try {
+    const sSnap = await fsMod.getDoc(fsMod.doc(db, 'siswa', siswaId));
+    if (sSnap.exists()) kelas = String(sSnap.data().kelas || '');
+  } catch (_) {}
+
+  // Gerbang publish (opsional): sts_publikasi/{kelas}_{tahunAjaran}_{semester}
+  let publishDoc = null;
+  let publishedForced = null; // null = tidak ada gerbang
+  if (kelas && tahunAjaran) {
+    const pubId = `${kelas}_${tahunAjaran}_${semester}`.replace(/\//g, '-');
     try {
-      const q = fsMod.query(
-        fsMod.collection(db, colName),
-        fsMod.where('siswaId', '==', siswaId)
-      );
-      const snap = await fsMod.getDocs(q);
-      if (snap.empty) continue;
-      snap.forEach((doc) => {
-        const d = doc.data();
-        if (d.published === false) return;
-        if (d.published === true) published = true;
-        // Filter jenis STS jika ada field jenis/fase
-        if (d.jenis && String(d.jenis).toUpperCase() !== 'STS') return;
-        items.push({
-          mapel: d.mapel || d.namaMapel || 'Mapel',
-          nilai: d.nilai != null ? d.nilai : d.skor,
-          predikat: d.predikat || '',
-          keterangan: d.keterangan || 'Sumatif Tengah Semester',
-        });
-        if (d.publishedAt && !publishedAt) {
-          try {
-            const ts = d.publishedAt.toDate
-              ? d.publishedAt.toDate()
-              : new Date(d.publishedAt);
-            publishedAt = ts.toLocaleDateString('id-ID', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric',
-            });
-          } catch (_) {}
-        }
-      });
-      if (items.length) {
-        if (!published) published = true;
-        break;
+      const p = await fsMod.getDoc(fsMod.doc(db, 'sts_publikasi', pubId));
+      if (p.exists()) {
+        publishDoc = p.data();
+        publishedForced = publishDoc.published === true;
       }
-    } catch (err) {
-      console.warn(colName, err);
-    }
+    } catch (_) {}
   }
 
-  items.sort((a, b) => String(a.mapel).localeCompare(String(b.mapel), 'id'));
+  // Ambil nilai_sts untuk siswa (+ filter periode bila field ada)
+  const byMapel = {}; // mapel -> [nilai]
+  try {
+    const q = fsMod.query(
+      fsMod.collection(db, 'nilai_sts'),
+      fsMod.where('siswaId', '==', siswaId)
+    );
+    const snap = await fsMod.getDocs(q);
+    snap.forEach((doc) => {
+      const d = doc.data();
+      if (tahunAjaran && d.tahunAjaran && String(d.tahunAjaran) !== tahunAjaran) return;
+      if (d.semester != null && String(d.semester) !== String(semester)) return;
+      const mapel = String(d.mapel || '').trim() || 'Mapel';
+      const n = Number(d.nilai);
+      if (!Number.isFinite(n)) return;
+      if (!byMapel[mapel]) byMapel[mapel] = [];
+      byMapel[mapel].push(n);
+    });
+  } catch (err) {
+    console.warn('nilai_sts:', err);
+  }
+
+  const items = Object.keys(byMapel)
+    .sort((a, b) => a.localeCompare(b, 'id'))
+    .map((mapel) => {
+      const arr = byMapel[mapel];
+      const avg = arr.reduce((s, x) => s + x, 0) / arr.length;
+      const nilai = Math.round(avg * 10) / 10;
+      let predikat = '—';
+      if (nilai >= 90) predikat = 'Sangat Baik';
+      else if (nilai >= 80) predikat = 'Baik';
+      else if (nilai >= 70) predikat = 'Cukup';
+      else predikat = 'Perlu bimbingan';
+      return {
+        mapel,
+        nilai,
+        predikat,
+        keterangan: arr.length > 1 ? `Rata-rata ${arr.length} TP (STS)` : 'Nilai STS',
+      };
+    });
+
+  let publishedAt = null;
+  if (publishDoc && publishDoc.publishedAt) {
+    try {
+      const ts = publishDoc.publishedAt.toDate
+        ? publishDoc.publishedAt.toDate()
+        : new Date(publishDoc.publishedAt);
+      publishedAt = ts.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+    } catch (_) {}
+  }
+
+  // Jika dokumen publikasi ada: hormati flag-nya.
+  // Jika tidak ada: tampilkan nilai bila ada (kompatibel data lama).
+  let published;
+  if (publishedForced === false) published = false;
+  else if (publishedForced === true) published = items.length > 0;
+  else published = items.length > 0;
 
   return {
-    published: published && items.length > 0 ? true : published,
+    published,
     periodeLabel,
     publishedAt,
     items: published ? items : [],
@@ -537,15 +568,6 @@ export async function loadNilaiStsPublished(siswaId) {
 }
 
 
-
-/* --------------------------------------------------------------------------
-   Admin: kelola akun orang tua
-   -------------------------------------------------------------------------- */
-
-/**
- * Daftar semua akun role=orangtua (admin only).
- * @returns {Promise<Array<{uid,email,nama,status,aktif,anakIds,createdAt}>>}
- */
 export async function listAkunOrangtua() {
   if (DEMO_MODE) {
     _seedDemo();
