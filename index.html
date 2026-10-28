@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Portal Orang Tua — SD Muhammadiyah 01 Kukusan</title>
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    /* ===== Split portal layout (inspirasi Ruang Kuis, disesuaikan konteks ortu) ===== */
+    body {
+      min-height: 100vh;
+      background: #f7f9f7;
+    }
+
+    .portal-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ---- Kiri: hero ---- */
+    .hero {
+      position: relative;
+      background:
+        linear-gradient(160deg, rgba(15, 50, 38, 0.88) 0%, rgba(30, 77, 59, 0.82) 45%, rgba(45, 112, 85, 0.78) 100%),
+        url('assets/hero-bg.jpg') center / cover no-repeat;
+      background-color: var(--green-deep);
+      color: #fff;
+      padding: 40px 48px 48px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(47, 189, 126, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 90% 90%, rgba(224, 172, 76, 0.12) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-width: 520px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--green-dark);
+      letter-spacing: -0.3px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .brand-text strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+    .brand-text span {
+      font-size: 12.5px;
+      opacity: 0.75;
+      font-weight: 600;
+    }
+
+    .hero-kicker {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--gold-accent);
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-size: clamp(28px, 3.2vw, 38px);
+      font-weight: 800;
+      line-height: 1.22;
+      margin: 0 0 18px;
+      letter-spacing: -0.3px;
+    }
+    .hero-lead {
+      font-size: 15.5px;
+      line-height: 1.65;
+      opacity: 0.88;
+      margin: 0 0 28px;
+      font-weight: 500;
+    }
+    .hero-quote {
+      font-size: 14.5px;
+      line-height: 1.6;
+      opacity: 0.8;
+      font-style: italic;
+      margin: 0 0 8px;
+    }
+    .hero-quote-src {
+      font-size: 12.5px;
+      opacity: 0.55;
+      font-weight: 600;
+      margin-bottom: 32px;
+    }
+
+    .feature-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .feature-pill {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 12px 16px;
+      min-width: 140px;
+    }
+    .feature-pill strong {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .feature-pill span {
+      font-size: 12px;
+      opacity: 0.75;
+      font-weight: 500;
+    }
+
+    .hero-footer {
+      margin-top: 28px;
+      padding: 14px 16px;
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      line-height: 1.55;
+      opacity: 0.9;
+    }
+    .hero-footer cite {
+      display: block;
+      margin-top: 6px;
+      font-size: 11.5px;
+      opacity: 0.65;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* ---- Kanan: form ---- */
+    .panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 32px;
+      background: #fafbfa;
+    }
+    .panel-card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(15, 50, 38, 0.08);
+      border: 1px solid var(--border);
+      padding: 28px 28px 24px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: var(--green-ghost);
+      border-radius: 14px;
+      padding: 4px;
+      margin-bottom: 24px;
+      gap: 2px;
+    }
+    .tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      padding: 11px 12px;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .tab:hover { color: var(--green-dark); }
+    .tab.active {
+      background: #fff;
+      color: var(--green-dark);
+      box-shadow: 0 2px 10px rgba(15, 50, 38, 0.1);
+    }
+
+    .panel-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--green-dark);
+      margin: 0 0 6px;
+      letter-spacing: -0.2px;
+    }
+    .panel-sub {
+      font-size: 14px;
+      color: var(--ink-muted);
+      font-weight: 500;
+      line-height: 1.5;
+      margin: 0 0 22px;
+    }
+
+    .link-muted {
+      font-size: 13px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+    }
+    .link-muted:hover { color: var(--green-mid); text-decoration: underline; }
+    .link-accent {
+      color: var(--green-mid);
+      font-weight: 700;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+
+    .panel-bottom {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    /* Mobile: stack */
+    @media (max-width: 900px) {
+      .portal-shell {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        min-height: auto;
+        padding: 28px 24px 32px;
+      }
+      .hero-title { font-size: 26px; }
+      .feature-pills { margin-top: 24px; }
+      .panel {
+        padding: 24px 16px 40px;
+      }
+      .panel-card {
+        box-shadow: 0 4px 24px rgba(15, 50, 38, 0.06);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="portal-shell">
+
+  <!-- ========== HERO KIRI ========== -->
+  <aside class="hero">
+    <div class="hero-inner">
+      <div class="brand-row">
+        <div class="brand-mark">PO</div>
+        <div class="brand-text">
+          <strong>Portal Orang Tua</strong>
+          <span>Nilai &amp; perkembangan anak</span>
+        </div>
+      </div>
+
+      <div class="hero-kicker">SD Muhammadiyah 01 Kukusan</div>
+      <h1 class="hero-title">Pantau nilai STS anak dengan tenang dan jelas.</h1>
+      <p class="hero-lead">
+        Setelah guru kelas mempublikasikan nilai Sumatif Tengah Semester,
+        orang tua dapat melihatnya di sini — kapan saja, dari mana saja.
+      </p>
+      <p class="hero-quote">
+        “Kerja sama sekolah dan orang tua adalah jembatan terbaik bagi tumbuh kembang anak.”
+      </p>
+      <div class="hero-quote-src">— Semangat SD Muhammadiyah 01 Kukusan</div>
+
+      <div class="feature-pills">
+        <div class="feature-pill">
+          <strong>Nilai STS</strong>
+          <span>Setelah dipublish guru</span>
+        </div>
+        <div class="feature-pill">
+          <strong>Aman &amp; pribadi</strong>
+          <span>Hanya data anak Anda</span>
+        </div>
+        <div class="feature-pill">
+          <strong>Mudah dipakai</strong>
+          <span>Pilih kelas &amp; nama anak</span>
+        </div>
+      </div>
+
+      <div class="hero-footer">
+        “Barangsiapa menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga.”
+        <cite>— HR. Muslim</cite>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========== PANEL KANAN ========== -->
+  <main class="panel">
+    <div class="panel-card">
+
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab active" id="tabOrtu" role="tab" aria-selected="true">Orang Tua</button>
+        <button type="button" class="tab" id="tabAdmin" role="tab" aria-selected="false">Admin</button>
+      </div>
+
+      <!-- ---- Form Orang Tua ---- -->
+      <div id="formOrtuWrap">
+        <h2 class="panel-title">Selamat datang, Bapak/Ibu</h2>
+        <p class="panel-sub">
+          Pilih kelas dan nama anak, lalu masukkan password untuk melihat nilai yang sudah dipublish.
+        </p>
+
+        <form id="formOrtu" novalidate>
+          <div class="field" id="fieldKelas">
+            <label for="kelas">Kelas</label>
+            <select id="kelas" required>
+              <option value="">— Pilih kelas —</option>
+              <!-- diisi JS dari data siswa -->
+            </select>
+          </div>
+
+          <div class="field" id="fieldSiswa">
+            <label for="siswa">Nama anak</label>
+            <select id="siswa" required disabled>
+              <option value="">— Pilih kelas dulu —</option>
+            </select>
+          </div>
+
+          <div class="field" id="fieldPasswordOrtu">
+            <label for="passwordOrtu">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="passwordOrtu" placeholder="Password akun orang tua" autocomplete="current-password" required>
+              <button type="button" class="toggle-visibility" id="togglePwOrtu" aria-label="Tampilkan password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="19" height="19"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="field-hint">Password diatur saat akun dibuat. Bisa diganti setelah masuk.</div>
+          </div>
+
+          <div id="errorOrtu" class="field-error-msg hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+            <span id="errorOrtuText">Kelas, nama anak, atau password tidak sesuai.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary-solid" id="btnOrtu" style="margin-top:8px">
+            <span id="btnOrtuLabel">Masuk Portal Orang Tua</span>
+          </button>
+        </form>
+
+        <div class="form-footer">
+          Lupa password?<br>
+          <button type="button" class="link-muted link-accent" id="btnLupaPw">Hubungi admin sekolah untuk reset</button>
+        </div>
+      </div>
+
+      <!-- ---- Form Admin ---- -->
+      <div id="formAdminWrap" class="hidden">
+        <h2 class="panel-title">Masuk sebagai Admin</h2>
+        <p class="panel-sub">
+          Akun admin yang sama dengan aplikasi penilaian. Kelola akun orang tua dan reset password.
+        </p>
+
+        <form id="formAdmin" novalidate>
+          <div class="field" id="fieldEmailAdmin">
+            <label for="emailAdmin">Email admin</label>
+            <input type="email" id="emailAdmin" placeholder="admin@…" autocomplete="username" required>
+          </div>
+
+          <div class="field" id="fieldPasswordAdmin">
+            <label for="passwordAdmin">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="passwordAdmin" placeholder="Kata sandi" autocomplete="current-password" required>
+              <button type="button" class="toggle-visibility" id="togglePwAdmin" aria-label="Tampilkan password">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="19" height="19"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div id="errorAdmin" class="field-error-msg hidden">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/></svg>
+            <span id="errorAdminText">Email atau password salah.</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary-solid" id="btnAdmin" style="margin-top:8px">
+            <span id="btnAdminLabel">Masuk Panel Admin</span>
+          </button>
+        </form>
+
+        <div class="form-footer">
+          Panel ini hanya untuk admin sekolah.<br>
+          Guru memakai <strong>aplikasi penilaian</strong> terpisah.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel-bottom">
+      Portal Orang Tua · SD Muhammadiyah 01 Kukusan
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module">
+  import {
+    DEMO_MODE,
+    loginAdmin,
+    loginOrangtuaBySiswa,
+    loadKelasDanSiswa,
+    terjemahkanErrorLogin,
+  } from './assets/firebase.js';
+
+  const $ = (id) => document.getElementById(id);
+
+  // ---- Toast ----
+  function showToast(msg, isError = false) {
+    const t = $('toast');
+    $('toastMsg').textContent = msg;
+    t.classList.toggle('error', isError);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // ---- Tabs ----
+  const tabOrtu = $('tabOrtu');
+  const tabAdmin = $('tabAdmin');
+  const formOrtuWrap = $('formOrtuWrap');
+  const formAdminWrap = $('formAdminWrap');
+
+  function switchTab(which) {
+    const isOrtu = which === 'ortu';
+    tabOrtu.classList.toggle('active', isOrtu);
+    tabAdmin.classList.toggle('active', !isOrtu);
+    tabOrtu.setAttribute('aria-selected', isOrtu);
+    tabAdmin.setAttribute('aria-selected', !isOrtu);
+    formOrtuWrap.classList.toggle('hidden', !isOrtu);
+    formAdminWrap.classList.toggle('hidden', isOrtu);
+  }
+  tabOrtu.addEventListener('click', () => switchTab('ortu'));
+  tabAdmin.addEventListener('click', () => switchTab('admin'));
+
+  // ---- Toggle password visibility ----
+  function bindToggle(btnId, inputId) {
+    $(btnId).addEventListener('click', () => {
+      const inp = $(inputId);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+  }
+  bindToggle('togglePwOrtu', 'passwordOrtu');
+  bindToggle('togglePwAdmin', 'passwordAdmin');
+
+  // ---- Data kelas & siswa (dari Firebase / demo) ----
+  let siswaByKelas = {}; // { '5A': [ { id, nama, nis }, ... ], ... }
+
+  async function initKelasSiswa() {
+    try {
+      siswaByKelas = await loadKelasDanSiswa();
+      const kelasList = Object.keys(siswaByKelas).sort((a, b) =>
+        a.localeCompare(b, 'id', { numeric: true })
+      );
+      const sel = $('kelas');
+      sel.innerHTML = '<option value="">— Pilih kelas —</option>';
+      kelasList.forEach((k) => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = 'Kelas ' + k;
+        sel.appendChild(opt);
+      });
+    } catch (err) {
+      console.error(err);
+      showToast('Gagal memuat daftar kelas. Coba muat ulang.', true);
+    }
+  }
+
+  $('kelas').addEventListener('change', () => {
+    const kelas = $('kelas').value;
+    const sel = $('siswa');
+    sel.innerHTML = '';
+    if (!kelas || !siswaByKelas[kelas]) {
+      sel.disabled = true;
+      sel.innerHTML = '<option value="">— Pilih kelas dulu —</option>';
+      return;
+    }
+    sel.disabled = false;
+    sel.innerHTML = '<option value="">— Pilih nama anak —</option>';
+    siswaByKelas[kelas]
+      .slice()
+      .sort((a, b) => a.nama.localeCompare(b.nama, 'id'))
+      .forEach((s) => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = s.nama + (s.nis ? ` (${s.nis})` : '');
+        sel.appendChild(opt);
+      });
+  });
+
+  // ---- Submit Orang Tua ----
+  $('formOrtu').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('errorOrtu').classList.add('hidden');
+    ['fieldKelas', 'fieldSiswa', 'fieldPasswordOrtu'].forEach((id) => $(id).classList.remove('error'));
+
+    const kelas = $('kelas').value;
+    const siswaId = $('siswa').value;
+    const password = $('passwordOrtu').value;
+
+    if (!kelas || !siswaId || !password) {
+      $('errorOrtuText').textContent = 'Kelas, nama anak, dan password wajib diisi.';
+      $('errorOrtu').classList.remove('hidden');
+      if (!kelas) $('fieldKelas').classList.add('error');
+      if (!siswaId) $('fieldSiswa').classList.add('error');
+      if (!password) $('fieldPasswordOrtu').classList.add('error');
+      return;
+    }
+
+    const btn = $('btnOrtu');
+    const label = $('btnOrtuLabel');
+    btn.disabled = true;
+    label.innerHTML = '<span class="spinner"></span>';
+
+    try {
+      const session = await loginOrangtuaBySiswa({ siswaId, password });
+      showToast(`Selamat datang, ${session.nama.split(' ')[0]}!`);
+      setTimeout(() => {
+        window.location.href = 'beranda.html';
+      }, 700);
+    } catch (err) {
+      console.error(err);
+      $('errorOrtuText').textContent = terjemahkanErrorLogin(err) || 'Login gagal. Periksa nama anak dan password.';
+      $('errorOrtu').classList.remove('hidden');
+      $('fieldSiswa').classList.add('error');
+      $('fieldPasswordOrtu').classList.add('error');
+      btn.disabled = false;
+      label.textContent = 'Masuk Portal Orang Tua';
+    }
+  });
+
+  // ---- Submit Admin ----
+  $('formAdmin').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    $('errorAdmin').classList.add('hidden');
+    ['fieldEmailAdmin', 'fieldPasswordAdmin'].forEach((id) => $(id).classList.remove('error'));
+
+    const email = $('emailAdmin').value.trim();
+    const password = $('passwordAdmin').value;
+
+    if (!email || !password) {
+      $('errorAdminText').textContent = 'Email dan password wajib diisi.';
+      $('errorAdmin').classList.remove('hidden');
+      if (!email) $('fieldEmailAdmin').classList.add('error');
+      if (!password) $('fieldPasswordAdmin').classList.add('error');
+      return;
+    }
+
+    const btn = $('btnAdmin');
+    const label = $('btnAdminLabel');
+    btn.disabled = true;
+    label.innerHTML = '<span class="spinner"></span>';
+
+    try {
+      const session = await loginAdmin(email, password);
+      if (session.role !== 'admin') {
+        throw Object.assign(new Error('bukan-admin'), { code: 'portal/not-admin' });
+      }
+      showToast(`Selamat datang, Admin!`);
+      setTimeout(() => {
+        window.location.href = 'admin.html';
+      }, 700);
+    } catch (err) {
+      console.error(err);
+      $('errorAdminText').textContent = terjemahkanErrorLogin(err);
+      $('errorAdmin').classList.remove('hidden');
+      $('fieldEmailAdmin').classList.add('error');
+      $('fieldPasswordAdmin').classList.add('error');
+      btn.disabled = false;
+      label.textContent = 'Masuk Panel Admin';
+    }
+  });
+
+  $('btnLupaPw').addEventListener('click', () => {
+    showToast('Silakan hubungi admin sekolah atau wali kelas untuk reset password.');
+  });
+
+  // Init
+  initKelasSiswa();
+  if (DEMO_MODE) {
+    console.info('[Portal Orang Tua] DEMO_MODE aktif — data simulasi lokal.');
+  }
+</script>
+</body>
+</html>
