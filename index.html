@@ -23,10 +23,8 @@
     /* ---- Kiri: hero ---- */
     .hero {
       position: relative;
-      background:
-        linear-gradient(160deg, rgba(15, 50, 38, 0.88) 0%, rgba(30, 77, 59, 0.82) 45%, rgba(45, 112, 85, 0.78) 100%),
-        
-      background-color: var(--green-deep);
+      background: linear-gradient(160deg, #0f2e22 0%, #1e4d3b 42%, #2d6a4f 100%);
+      background-color: #0f2e22;
       color: #fff;
       padding: 40px 48px 48px;
       display: flex;
@@ -446,7 +444,7 @@
     loginOrangtuaBySiswa,
     loadKelasDanSiswa,
     terjemahkanErrorLogin,
-  } from './assets/firebase.js?v=20261028b';
+  } from './assets/firebase.js?v=20261028d';
 
   const $ = (id) => document.getElementById(id);
 
@@ -596,7 +594,7 @@
     label.innerHTML = '<span class="spinner"></span>';
 
     try {
-      const session = await loginAdmin(email, password);
+      const session = await loginAdmin({ email, password });
       if (session.role !== 'admin') {
         throw Object.assign(new Error('bukan-admin'), { code: 'portal/not-admin' });
       }

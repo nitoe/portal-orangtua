@@ -247,7 +247,18 @@ export async function loginOrangtua({ siswaId, password }) {
  * Login admin — memakai akun admin SDM01Penilaian yang sudah ada.
  * Email + password sama seperti di https://penilaian.sdmuhammadiyah01kks.sch.id
  */
-export async function loginAdmin({ email, password }) {
+export const loginOrangtuaBySiswa = loginOrangtua;
+
+export async function loginAdmin(emailOrOpts, passwordMaybe) {
+  // Terima loginAdmin({ email, password }) ATAU loginAdmin(email, password)
+  let email, password;
+  if (emailOrOpts && typeof emailOrOpts === 'object') {
+    email = emailOrOpts.email;
+    password = emailOrOpts.password;
+  } else {
+    email = emailOrOpts;
+    password = passwordMaybe;
+  }
   if (!email || !password) throw new Error('Isi email dan password admin.');
 
   if (DEMO_MODE) {
