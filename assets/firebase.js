@@ -133,23 +133,33 @@ export async function loadKelasDanSiswa() {
   }
 
   const { db, fsMod } = window.__fb;
-  const snap = await fsMod.getDocs(fsMod.collection(db, 'siswa'));
-  const byKelas = {};
-  snap.forEach((doc) => {
-    const d = doc.data();
-    const kelas = d.kelas || '—';
-    if (!byKelas[kelas]) byKelas[kelas] = [];
-    byKelas[kelas].push({
-      id: doc.id,
-      nama: d.nama || doc.id,
-      nis: d.nis || d.nisn || '',
+  // Koleksi siswa dilindungi rules: guest (belum login) tidak boleh list.
+  // Gagal permission → kembalikan {} agar form admin tetap bisa dipakai;
+  // dropdown ortu akan kosong sampai ada endpoint/roster publik atau login.
+  try {
+    const snap = await fsMod.getDocs(fsMod.collection(db, 'siswa'));
+    const byKelas = {};
+    snap.forEach((doc) => {
+      const d = doc.data();
+      const kelas = d.kelas || '—';
+      if (!byKelas[kelas]) byKelas[kelas] = [];
+      byKelas[kelas].push({
+        id: doc.id,
+        nama: d.nama || doc.id,
+        nis: d.nis || d.nisn || '',
+      });
     });
-  });
-  // Urut nama di tiap kelas
-  Object.keys(byKelas).forEach((k) => {
-    byKelas[k].sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
-  });
-  return byKelas;
+    Object.keys(byKelas).forEach((k) => {
+      byKelas[k].sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+    });
+    return byKelas;
+  } catch (err) {
+    console.warn(
+      '[Portal] loadKelasDanSiswa ditolak rules (perlu login / roster publik):',
+      err && err.code ? err.code : err
+    );
+    return {};
+  }
 }
 
 /**
