@@ -4,205 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#313083">
-  <title>Rapor STS — Portal Orang Tua</title>
+  <title>Beranda — Portal Orang Tua</title>
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    /* Lembar rapor STS — mirip format cetak penilaian, layar portal */
-    .rapor-sheet {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      overflow: hidden;
+    .child-line {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 16px;
     }
-    .rapor-kop {
-      border-bottom: 2px solid #0f172a;
-      padding: 16px 16px 14px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
+    .child-av {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: var(--muh-50); color: var(--muh-700);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; flex-shrink: 0;
     }
-    .rapor-kop img {
-      width: 48px; height: 48px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-    .rapor-kop-text { flex: 1; min-width: 0; text-align: center; }
-    .rapor-kop-text .school {
-      font-size: 14px; font-weight: 700; color: #0f172a;
-      letter-spacing: 0.02em; text-transform: uppercase;
-    }
-    .rapor-kop-text .addr {
-      font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.35;
-    }
-    .rapor-judul {
-      text-align: center;
-      padding: 12px 16px 4px;
-    }
-    .rapor-judul h2 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #0f172a;
-    }
-    .rapor-judul p {
-      margin: 4px 0 0;
-      font-size: 12.5px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .rapor-id {
-      margin: 8px 16px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px 16px;
-      font-size: 12.5px;
-    }
-    @media (max-width: 520px) {
-      .rapor-id { grid-template-columns: 1fr; }
-    }
-    .rapor-id dt {
-      margin: 0; font-size: 11px; color: var(--muted); font-weight: 500;
-    }
-    .rapor-id dd {
-      margin: 0; font-weight: 600; color: #0f172a;
-    }
-    .rapor-id .pair { display: flex; flex-direction: column; gap: 1px; }
-
-    .rapor-section {
-      padding: 0 16px 12px;
-    }
-    .rapor-section-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #0f172a;
-      margin: 0 0 8px;
-      padding-bottom: 4px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .rapor-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-    }
-    .rapor-table th {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      padding: 7px 8px;
-      font-size: 11px;
-      font-weight: 600;
-      text-align: center;
-      color: #334155;
-    }
-    .rapor-table td {
-      border: 1px solid #cbd5e1;
-      padding: 7px 8px;
-      vertical-align: top;
-      color: #0f172a;
-    }
-    .rapor-table td.num {
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-      font-weight: 600;
-      width: 3.2rem;
-    }
-    .rapor-table td.pred {
-      text-align: center;
-      font-size: 11.5px;
-      width: 5.5rem;
-    }
-    .rapor-table td.mapel { text-align: left; font-weight: 500; }
-    .rapor-table .group-row td {
-      background: #f1f5f9;
-      font-weight: 600;
-      font-size: 11.5px;
-      text-align: left;
-    }
-
-    .rapor-foot {
-      padding: 12px 16px 16px;
-      border-top: 1px solid var(--border);
-      font-size: 11.5px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-    .rapor-ttd {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      padding: 8px 16px 20px;
-      text-align: center;
-      font-size: 11.5px;
-      color: #334155;
-    }
-    @media (max-width: 520px) {
-      .rapor-ttd { grid-template-columns: 1fr; gap: 16px; }
-    }
-    .rapor-ttd .slot strong {
-      display: block;
-      margin-top: 48px;
-      font-size: 12.5px;
-      color: #0f172a;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-    .rapor-ttd .slot span { color: var(--muted); }
-
-    .wait-box {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      padding: 32px 20px;
-      text-align: center;
-    }
-    .wait-box h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #0f172a;
-    }
-    .wait-box p {
-      margin: 0 auto;
-      max-width: 360px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .toolbar-rapor {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .toolbar-rapor .btn-print {
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #0f172a;
-      cursor: pointer;
-    }
-    .toolbar-rapor .btn-print:hover { background: #f8fafc; }
-
-    @media print {
-      .sidebar, .top-header, .bottom-nav, .toolbar-rapor, .app-frame { padding: 0 !important; }
-      .sidebar, .top-header, .bottom-nav, .toast { display: none !important; }
-      .app-shell, .main-col, .main-body { background: #fff !important; border: none !important; }
-      .rapor-sheet { border: none; border-radius: 0; }
-    }
+    .child-name { font-size: 14px; font-weight: 600; color: #0f172a; }
+    .child-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
   </style>
 </head>
 <body>
@@ -219,11 +36,11 @@
         <p class="sidebar-section">Menu</p>
         <nav style="flex:1">
           <a class="side-link active" href="beranda.html">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            Rapor STS
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+            Beranda
           </a>
         </nav>
-        <div class="hero-banner" id="sideProfile">
+        <div class="hero-banner">
           <div class="hb-label">Masuk sebagai</div>
           <div class="hb-name" id="sideNama">—</div>
           <div class="hb-role">Orang tua</div>
@@ -237,7 +54,7 @@
       <div class="main-col">
         <header class="top-header">
           <div>
-            <h1>Rapor STS</h1>
+            <h1>Beranda</h1>
             <p class="date" id="tanggalHari">—</p>
           </div>
           <div class="top-actions">
@@ -249,8 +66,69 @@
         </header>
 
         <main class="main-body">
-          <div class="main-inner" id="mainContent">
-            <div class="wait-box"><p>Memuat rapor…</p></div>
+          <div class="main-inner">
+            <div class="page-header">
+              <h2>Nilai anak</h2>
+              <p>Pilih jenis laporan yang sudah dibagikan sekolah. Nantinya tidak hanya STS.</p>
+            </div>
+
+            <div class="child-line">
+              <div class="child-av" id="childAv">—</div>
+              <div>
+                <div class="child-name" id="profilNama">—</div>
+                <div class="child-meta" id="profilMeta">—</div>
+              </div>
+            </div>
+
+            <div class="stat-strip" id="statStrip">
+              <div>
+                <div class="label">Status rapor STS</div>
+                <div class="value" id="statStatus" style="font-size:16px;padding-top:4px">…</div>
+              </div>
+              <div>
+                <div class="label">Periode</div>
+                <div class="value" id="statPeriode" style="font-size:14px;padding-top:6px;font-weight:600">—</div>
+              </div>
+            </div>
+
+            <p class="section-label" style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:0 0 8px">
+              Yang dibagikan sekolah
+            </p>
+            <section class="card-soft hub-panel">
+              <h3 class="hub-panel-title">Laporan hasil belajar</h3>
+              <div>
+                <a class="hub-row" href="rapor-sts.html" id="rowSts">
+                  <div class="icon-tile">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  </div>
+                  <div class="hub-row-body">
+                    <div class="hub-row-title">Rapor STS</div>
+                    <div class="hub-row-desc" id="stsDesc">Memuat status…</div>
+                  </div>
+                  <span class="badge badge-neutral" id="stsBadge">…</span>
+                </a>
+                <div class="hub-row disabled">
+                  <div class="icon-tile muted">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
+                  </div>
+                  <div class="hub-row-body">
+                    <div class="hub-row-title">Rapor SAS</div>
+                    <div class="hub-row-desc">Belum dibagikan</div>
+                  </div>
+                  <span class="badge badge-neutral">Segera</span>
+                </div>
+                <div class="hub-row disabled">
+                  <div class="icon-tile muted">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                  </div>
+                  <div class="hub-row-body">
+                    <div class="hub-row-title">Informasi lain</div>
+                    <div class="hub-row-desc">Pengumuman, kehadiran, dll. — menyusul</div>
+                  </div>
+                  <span class="badge badge-neutral">Segera</span>
+                </div>
+              </div>
+            </section>
           </div>
         </main>
       </div>
@@ -259,8 +137,8 @@
 
   <nav class="bottom-nav">
     <a class="active" href="beranda.html">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      Rapor STS
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+      Beranda
     </a>
     <button type="button" id="btnLogoutNav">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
@@ -268,21 +146,18 @@
     </button>
   </nav>
 
-  <div class="toast" id="toast"><span id="toastMsg"></span></div>
-
   <script type="module">
     import {
       currentSession,
       logout,
       loadSiswaByIds,
       loadNilaiStsPublished,
-    } from './assets/firebase.js?v=20261028n';
+    } from './assets/firebase.js?v=20261028o';
 
     const $ = (id) => document.getElementById(id);
-    const TANGGAL = new Intl.DateTimeFormat('id-ID', {
+    $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-    });
-    $('tanggalHari').textContent = TANGGAL.format(new Date());
+    }).format(new Date());
 
     function inisial(nama) {
       if (!nama) return '?';
@@ -291,145 +166,14 @@
         ? p[0].slice(0, 2).toUpperCase()
         : (p[0][0] + p[p.length - 1][0]).toUpperCase();
     }
-    function escapeHtml(s) {
-      return String(s || '')
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-    function predikat(n) {
-      if (n == null || !Number.isFinite(Number(n))) return '—';
-      const v = Number(n);
-      if (v >= 90) return 'Sangat Baik';
-      if (v >= 80) return 'Baik';
-      if (v >= 70) return 'Cukup';
-      return 'Perlu bimbingan';
-    }
 
     async function doLogout() {
       await logout();
       location.href = 'index.html';
     }
-    $('btnLogoutSide').addEventListener('click', doLogout);
-    $('btnLogoutTop').addEventListener('click', doLogout);
-    $('btnLogoutNav').addEventListener('click', doLogout);
-
-    function renderWaiting(anak, periodLabel) {
-      $('mainContent').innerHTML = `
-        <div class="page-header">
-          <h2>Rapor Sumatif Tengah Semester</h2>
-          <p>${escapeHtml(periodLabel || 'Periode berjalan')} · menunggu publikasi sekolah</p>
-        </div>
-        <div class="wait-box">
-          <h2>Rapor belum dipublikasikan</h2>
-          <p>
-            Rapor STS
-            ${anak?.nama ? ' untuk <strong>' + escapeHtml(anak.nama) + '</strong>' : ''}
-            belum dibagikan ke portal orang tua.
-            Silakan cek lagi setelah wali kelas mempublikasikan rapor.
-          </p>
-        </div>`;
-    }
-
-    function renderRapor(anak, result) {
-      const items = result.items || [];
-      const rows = items
-        .map(
-          (x, i) => `
-          <tr>
-            <td class="num">${i + 1}</td>
-            <td class="mapel">${escapeHtml(x.mapel)}</td>
-            <td class="num">${x.nilai != null ? x.nilai : '—'}</td>
-            <td class="pred">${escapeHtml(x.predikat || predikat(x.nilai))}</td>
-          </tr>`
-        )
-        .join('');
-
-      const publishLine = result.publishedAt
-        ? `Diterbitkan ${escapeHtml(result.publishedAt)}`
-        : 'Telah dipublikasikan sekolah';
-
-      $('mainContent').innerHTML = `
-        <div class="toolbar-rapor">
-          <button type="button" class="btn-print" id="btnPrint">Cetak / simpan PDF</button>
-          <span class="badge badge-ok">Dipublikasikan</span>
-        </div>
-
-        <article class="rapor-sheet" id="raporSheet">
-          <div class="rapor-kop">
-            <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
-            <div class="rapor-kop-text">
-              <div class="school">SD Muhammadiyah 01 Kukusan</div>
-              <div class="addr">Portal Orang Tua · Laporan hasil belajar tengah semester</div>
-            </div>
-          </div>
-
-          <div class="rapor-judul">
-            <h2>Laporan Hasil Belajar</h2>
-            <p>Sumatif Tengah Semester (STS)</p>
-            <p>${escapeHtml(result.periodeLabel || '')}</p>
-          </div>
-
-          <dl class="rapor-id">
-            <div class="pair">
-              <dt>Nama peserta didik</dt>
-              <dd>${escapeHtml(anak.nama || '—')}</dd>
-            </div>
-            <div class="pair">
-              <dt>Kelas</dt>
-              <dd>${escapeHtml(anak.kelas ? 'Kelas ' + anak.kelas : '—')}</dd>
-            </div>
-            <div class="pair">
-              <dt>NIS / NISN</dt>
-              <dd>${escapeHtml([anak.nis, anak.nisn].filter(Boolean).join(' · ') || '—')}</dd>
-            </div>
-            <div class="pair">
-              <dt>Status</dt>
-              <dd>${publishLine}</dd>
-            </div>
-          </dl>
-
-          <div class="rapor-section">
-            <h3 class="rapor-section-title">A. Nilai akhir mata pelajaran</h3>
-            ${
-              items.length
-                ? `<table class="rapor-table">
-              <thead>
-                <tr>
-                  <th style="width:2.2rem">No</th>
-                  <th>Mata pelajaran</th>
-                  <th style="width:3.5rem">Nilai</th>
-                  <th style="width:6rem">Predikat</th>
-                </tr>
-              </thead>
-              <tbody>${rows}</tbody>
-            </table>`
-                : `<p style="font-size:13px;color:var(--muted)">Belum ada nilai mapel pada rapor ini.</p>`
-            }
-          </div>
-
-          <div class="rapor-ttd">
-            <div class="slot">
-              <span>Orang tua / wali</span>
-              <strong>&nbsp;</strong>
-            </div>
-            <div class="slot">
-              <span>Wali kelas</span>
-              <strong>&nbsp;</strong>
-            </div>
-            <div class="slot">
-              <span>Kepala sekolah</span>
-              <strong>&nbsp;</strong>
-            </div>
-          </div>
-
-          <div class="rapor-foot">
-            Dokumen ini merupakan rapor STS yang dipublikasikan sekolah untuk orang tua.
-            Bukan leger kelas. Untuk pertanyaan, hubungi wali kelas.
-          </div>
-        </article>`;
-
-      $('btnPrint')?.addEventListener('click', () => window.print());
-    }
+    $('btnLogoutSide').onclick = doLogout;
+    $('btnLogoutTop').onclick = doLogout;
+    $('btnLogoutNav').onclick = doLogout;
 
     async function boot() {
       const s = currentSession();
@@ -439,51 +183,50 @@
       }
       $('sideNama').textContent = s.nama || 'Orang tua';
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
-      if (!aktifId) {
-        $('mainContent').innerHTML = `<div class="wait-box"><h2>Data anak tidak ditemukan</h2></div>`;
-        return;
-      }
+      if (!aktifId) return;
 
-      let anak = {
-        id: aktifId,
-        nama: s.siswaNama || aktifId,
-        kelas: s.siswaKelas || '',
-        nis: '',
-        nisn: '',
-      };
       try {
         const list = await loadSiswaByIds([aktifId]);
-        if (list[0]) {
-          anak = {
-            id: list[0].id,
-            nama: list[0].nama,
-            kelas: list[0].kelas || '',
-            nis: list[0].nis || '',
-            nisn: list[0].nisn || '',
-          };
-        }
+        const anak = list[0] || {
+          nama: s.siswaNama || aktifId,
+          kelas: s.siswaKelas || '',
+          nis: '',
+        };
+        const ini = inisial(anak.nama);
+        $('childAv').textContent = ini;
+        $('avatarInisial').textContent = ini;
+        $('profilNama').textContent = anak.nama || '—';
+        $('profilMeta').textContent = [
+          anak.kelas ? `Kelas ${anak.kelas}` : null,
+          anak.nis ? `NIS ${anak.nis}` : null,
+        ].filter(Boolean).join(' · ') || 'Data siswa';
       } catch (_) {}
-
-      const ini = inisial(anak.nama);
-      $('avatarInisial').textContent = ini;
 
       try {
         const result = await loadNilaiStsPublished(aktifId);
-        if (!result.published) {
-          renderWaiting(anak, result.periodeLabel);
+        $('statPeriode').textContent = result.periodeLabel
+          ? result.periodeLabel.replace(/^STS ·\s*/i, '')
+          : '—';
+        if (result.published) {
+          $('statStatus').textContent = 'Tersedia';
+          $('stsDesc').textContent = result.publishedAt
+            ? `Dipublikasikan ${result.publishedAt} · buka rapor`
+            : 'Rapor STS siap dibuka';
+          $('stsBadge').textContent = 'Tersedia';
+          $('stsBadge').className = 'badge badge-ok';
         } else {
-          renderRapor(anak, result);
+          $('statStatus').textContent = 'Menunggu';
+          $('stsDesc').textContent = 'Menunggu publikasi wali kelas';
+          $('stsBadge').textContent = 'Menunggu';
+          $('stsBadge').className = 'badge badge-pending';
         }
       } catch (err) {
         console.error(err);
-        $('mainContent').innerHTML = `
-          <div class="wait-box">
-            <h2>Gagal memuat rapor</h2>
-            <p>Periksa koneksi internet atau hubungi sekolah.</p>
-          </div>`;
+        $('statStatus').textContent = '—';
+        $('stsDesc').textContent = 'Status tidak dapat dimuat';
+        $('stsBadge').textContent = '—';
       }
     }
-
     boot();
   </script>
 </body>

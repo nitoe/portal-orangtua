@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#313083">
+  <title>Rapor STS — Portal Orang Tua</title>
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .rapor-sheet {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .rapor-kop {
+      border-bottom: 2px solid #0f172a;
+      padding: 16px 16px 14px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .rapor-kop img { width: 48px; height: 48px; object-fit: contain; flex-shrink: 0; }
+    .rapor-kop-text { flex: 1; min-width: 0; text-align: center; }
+    .rapor-kop-text .school {
+      font-size: 14px; font-weight: 700; color: #0f172a;
+      letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .rapor-kop-text .addr { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+    .rapor-judul { text-align: center; padding: 12px 16px 4px; }
+    .rapor-judul h2 {
+      margin: 0; font-size: 15px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase; color: #0f172a;
+    }
+    .rapor-judul p { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); font-weight: 500; }
+    .rapor-id {
+      margin: 8px 16px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 16px;
+      font-size: 12.5px;
+    }
+    @media (max-width: 520px) { .rapor-id { grid-template-columns: 1fr; } }
+    .rapor-id dt { margin: 0; font-size: 11px; color: var(--muted); font-weight: 500; }
+    .rapor-id dd { margin: 0; font-weight: 600; color: #0f172a; }
+    .rapor-id .pair { display: flex; flex-direction: column; gap: 1px; }
+    .rapor-section { padding: 0 16px 12px; }
+    .rapor-section-title {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; color: #0f172a; margin: 0 0 8px;
+      padding-bottom: 4px; border-bottom: 1px solid var(--border);
+    }
+    .rapor-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .rapor-table th {
+      background: #f8fafc; border: 1px solid #cbd5e1; padding: 7px 8px;
+      font-size: 11px; font-weight: 600; text-align: center; color: #334155;
+    }
+    .rapor-table td {
+      border: 1px solid #cbd5e1; padding: 7px 8px; vertical-align: top; color: #0f172a;
+    }
+    .rapor-table td.num {
+      text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; width: 3.2rem;
+    }
+    .rapor-table td.pred { text-align: center; font-size: 11.5px; width: 5.5rem; }
+    .rapor-table td.mapel { text-align: left; font-weight: 500; }
+    .rapor-foot {
+      padding: 12px 16px 16px; border-top: 1px solid var(--border);
+      font-size: 11.5px; color: var(--muted); line-height: 1.45;
+    }
+    .rapor-ttd {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+      padding: 8px 16px 20px; text-align: center; font-size: 11.5px; color: #334155;
+    }
+    @media (max-width: 520px) { .rapor-ttd { grid-template-columns: 1fr; gap: 16px; } }
+    .rapor-ttd .slot strong {
+      display: block; margin-top: 48px; font-size: 12.5px; color: #0f172a;
+      text-decoration: underline; text-underline-offset: 3px;
+    }
+    .wait-box {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius-card);
+      padding: 32px 20px; text-align: center;
+    }
+    .wait-box h2 { margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #0f172a; }
+    .wait-box p {
+      margin: 0 auto; max-width: 360px; font-size: 13px; color: var(--muted); line-height: 1.55;
+    }
+    .toolbar-rapor {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px;
+    }
+    .btn-print {
+      border: 1px solid var(--border); background: #fff; border-radius: 8px;
+      padding: 8px 12px; font-size: 13px; font-weight: 600; color: #0f172a; cursor: pointer;
+    }
+    .btn-print:hover { background: #f8fafc; }
+    @media print {
+      .sidebar, .top-header, .bottom-nav, .toolbar-rapor, .toast { display: none !important; }
+      .app-shell, .main-col, .main-body { background: #fff !important; border: none !important; }
+      .rapor-sheet { border: none; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-frame">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="sidebar-brand" href="beranda.html">
+          <img src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
+          <div>
+            <div class="sidebar-brand-title">SDM 01 Kukusan</div>
+            <div class="sidebar-brand-sub">Portal Orang Tua</div>
+          </div>
+        </a>
+        <p class="sidebar-section">Menu</p>
+        <nav style="flex:1">
+          <a class="side-link" href="beranda.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+            Beranda
+          </a>
+          <a class="side-link active" href="rapor-sts.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Rapor STS
+          </a>
+        </nav>
+        <div class="hero-banner">
+          <div class="hb-label">Masuk sebagai</div>
+          <div class="hb-name" id="sideNama">—</div>
+          <div class="hb-role">Orang tua</div>
+        </div>
+        <button type="button" class="side-logout" id="btnLogoutSide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          Keluar
+        </button>
+      </aside>
+
+      <div class="main-col">
+        <header class="top-header">
+          <div>
+            <h1>Rapor STS</h1>
+            <p class="date" id="tanggalHari">—</p>
+          </div>
+          <div class="top-actions">
+            <div class="avatar-btn" id="avatarInisial">—</div>
+            <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <main class="main-body">
+          <div class="main-inner" id="mainContent">
+            <div class="wait-box"><p>Memuat rapor…</p></div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="beranda.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+      Beranda
+    </a>
+    <a class="active" href="rapor-sts.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Rapor STS
+    </a>
+  </nav>
+
+  <script type="module">
+    import {
+      currentSession,
+      logout,
+      loadSiswaByIds,
+      loadNilaiStsPublished,
+    } from './assets/firebase.js?v=20261028o';
+
+    const $ = (id) => document.getElementById(id);
+    $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    }).format(new Date());
+
+    function inisial(nama) {
+      if (!nama) return '?';
+      const p = nama.trim().split(/\s+/);
+      return p.length === 1
+        ? p[0].slice(0, 2).toUpperCase()
+        : (p[0][0] + p[p.length - 1][0]).toUpperCase();
+    }
+    function escapeHtml(s) {
+      return String(s || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function predikat(n) {
+      if (n == null || !Number.isFinite(Number(n))) return '—';
+      const v = Number(n);
+      if (v >= 90) return 'Sangat Baik';
+      if (v >= 80) return 'Baik';
+      if (v >= 70) return 'Cukup';
+      return 'Perlu bimbingan';
+    }
+
+    async function doLogout() {
+      await logout();
+      location.href = 'index.html';
+    }
+    $('btnLogoutSide').onclick = doLogout;
+    $('btnLogoutTop').onclick = doLogout;
+
+    function renderWaiting(anak, periodLabel) {
+      $('mainContent').innerHTML = `
+        <p style="margin:0 0 12px">
+          <a href="beranda.html" style="font-size:12px;font-weight:600;color:var(--muh-700)">← Beranda</a>
+        </p>
+        <div class="page-header">
+          <h2>Rapor Sumatif Tengah Semester</h2>
+          <p>${escapeHtml(periodLabel || 'Periode berjalan')}</p>
+        </div>
+        <div class="wait-box">
+          <h2>Rapor belum dipublikasikan</h2>
+          <p>
+            Rapor STS${anak?.nama ? ' untuk <strong>' + escapeHtml(anak.nama) + '</strong>' : ''}
+            belum dibagikan ke portal. Silakan kembali lagi setelah wali kelas mempublikasikan.
+          </p>
+        </div>`;
+    }
+
+    function renderRapor(anak, result) {
+      const items = result.items || [];
+      const rows = items
+        .map(
+          (x, i) => `
+          <tr>
+            <td class="num">${i + 1}</td>
+            <td class="mapel">${escapeHtml(x.mapel)}</td>
+            <td class="num">${x.nilai != null ? x.nilai : '—'}</td>
+            <td class="pred">${escapeHtml(x.predikat || predikat(x.nilai))}</td>
+          </tr>`
+        )
+        .join('');
+      const publishLine = result.publishedAt
+        ? `Diterbitkan ${escapeHtml(result.publishedAt)}`
+        : 'Telah dipublikasikan sekolah';
+
+      $('mainContent').innerHTML = `
+        <div class="toolbar-rapor">
+          <a href="beranda.html" style="font-size:12px;font-weight:600;color:var(--muh-700);margin-right:8px">← Beranda</a>
+          <button type="button" class="btn-print" id="btnPrint">Cetak / simpan PDF</button>
+          <span class="badge badge-ok">Dipublikasikan</span>
+        </div>
+        <article class="rapor-sheet">
+          <div class="rapor-kop">
+            <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
+            <div class="rapor-kop-text">
+              <div class="school">SD Muhammadiyah 01 Kukusan</div>
+              <div class="addr">Portal Orang Tua · Laporan hasil belajar tengah semester</div>
+            </div>
+          </div>
+          <div class="rapor-judul">
+            <h2>Laporan Hasil Belajar</h2>
+            <p>Sumatif Tengah Semester (STS)</p>
+            <p>${escapeHtml(result.periodeLabel || '')}</p>
+          </div>
+          <dl class="rapor-id">
+            <div class="pair"><dt>Nama peserta didik</dt><dd>${escapeHtml(anak.nama || '—')}</dd></div>
+            <div class="pair"><dt>Kelas</dt><dd>${escapeHtml(anak.kelas ? 'Kelas ' + anak.kelas : '—')}</dd></div>
+            <div class="pair"><dt>NIS / NISN</dt><dd>${escapeHtml([anak.nis, anak.nisn].filter(Boolean).join(' · ') || '—')}</dd></div>
+            <div class="pair"><dt>Status</dt><dd>${publishLine}</dd></div>
+          </dl>
+          <div class="rapor-section">
+            <h3 class="rapor-section-title">A. Nilai akhir mata pelajaran</h3>
+            ${
+              items.length
+                ? `<table class="rapor-table">
+              <thead><tr>
+                <th style="width:2.2rem">No</th>
+                <th>Mata pelajaran</th>
+                <th style="width:3.5rem">Nilai</th>
+                <th style="width:6rem">Predikat</th>
+              </tr></thead>
+              <tbody>${rows}</tbody>
+            </table>`
+                : `<p style="font-size:13px;color:var(--muted)">Belum ada nilai mapel pada rapor ini.</p>`
+            }
+          </div>
+          <div class="rapor-ttd">
+            <div class="slot"><span>Orang tua / wali</span><strong>&nbsp;</strong></div>
+            <div class="slot"><span>Wali kelas</span><strong>&nbsp;</strong></div>
+            <div class="slot"><span>Kepala sekolah</span><strong>&nbsp;</strong></div>
+          </div>
+          <div class="rapor-foot">
+            Rapor STS yang dipublikasikan sekolah untuk orang tua — bukan leger kelas.
+            Hubungi wali kelas bila ada pertanyaan.
+          </div>
+        </article>`;
+      $('btnPrint')?.addEventListener('click', () => window.print());
+    }
+
+    async function boot() {
+      const s = currentSession();
+      if (!s || s.role !== 'orangtua') {
+        location.href = 'index.html';
+        return;
+      }
+      $('sideNama').textContent = s.nama || 'Orang tua';
+      const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
+      if (!aktifId) {
+        $('mainContent').innerHTML = `<div class="wait-box"><h2>Data anak tidak ditemukan</h2></div>`;
+        return;
+      }
+      let anak = {
+        id: aktifId,
+        nama: s.siswaNama || aktifId,
+        kelas: s.siswaKelas || '',
+        nis: '',
+        nisn: '',
+      };
+      try {
+        const list = await loadSiswaByIds([aktifId]);
+        if (list[0]) {
+          anak = {
+            id: list[0].id,
+            nama: list[0].nama,
+            kelas: list[0].kelas || '',
+            nis: list[0].nis || '',
+            nisn: list[0].nisn || '',
+          };
+        }
+      } catch (_) {}
+      $('avatarInisial').textContent = inisial(anak.nama);
+
+      try {
+        const result = await loadNilaiStsPublished(aktifId);
+        if (!result.published) renderWaiting(anak, result.periodeLabel);
+        else renderRapor(anak, result);
+      } catch (err) {
+        console.error(err);
+        $('mainContent').innerHTML = `<div class="wait-box"><h2>Gagal memuat rapor</h2><p>Periksa koneksi atau hubungi sekolah.</p></div>`;
+      }
+    }
+    boot();
+  </script>
+</body>
+</html>
