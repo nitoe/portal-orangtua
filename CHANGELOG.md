@@ -47,3 +47,12 @@
 - Bottom nav mobile
 - Konten: `page-header`, `stat-strip`, `hub-panel` / `hub-row` seperti modul penilaian
 - Beranda ortu & admin memakai pola yang sama
+
+## 2026-10-28n
+
+### Rapor STS di portal (bukan leger)
+- Beranda ortu menampilkan **lembar rapor STS**: kop sekolah, identitas anak, tabel nilai akhir mapel + predikat, area tanda tangan.
+- Hanya setelah publikasi.
+- State menunggu publikasi.
+- Cetak / simpan PDF via browser.
+- Chart & ranking tidak di halaman utama rapor.

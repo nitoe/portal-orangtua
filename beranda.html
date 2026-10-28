@@ -4,158 +4,210 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#313083">
-  <title>Beranda — Portal Orang Tua</title>
+  <title>Rapor STS — Portal Orang Tua</title>
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    .child-line {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 16px;
-    }
-    .child-av {
-      width: 40px; height: 40px; border-radius: 8px;
-      background: var(--muh-50); color: var(--muh-700);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600; font-size: 13px; flex-shrink: 0;
-    }
-    .child-name { font-size: 14px; font-weight: 600; color: #0f172a; }
-    .child-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
-
-    .nilai-table { overflow: hidden; }
-    .nilai-tr {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px 16px;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      align-items: center;
-    }
-    .nilai-tr:last-child { border-bottom: none; }
-    .nilai-mapel { font-size: 13.5px; font-weight: 500; color: #0f172a; }
-    .nilai-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .nilai-angka {
-      font-size: 18px; font-weight: 600; color: #0f172a;
-      font-variant-numeric: tabular-nums; text-align: right; line-height: 1.1;
-    }
-    .nilai-pred {
-      font-size: 11px; font-weight: 500; color: var(--muted);
-      text-align: right; margin-top: 3px;
-    }
-    .state-box {
-      padding: 28px 16px; text-align: center;
-    }
-    .state-box h3 {
-      margin: 0 0 6px; font-size: 14px; font-weight: 600; color: #0f172a;
-    }
-    .state-box p {
-      margin: 0 auto; max-width: 320px;
-      font-size: 13px; color: var(--muted); line-height: 1.5;
-    }
-    .detail-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 10px; flex-wrap: wrap;
-      margin: 16px 0 10px;
-    }
-    .detail-bar .period { font-size: 13px; color: var(--muted); font-weight: 500; }
-    .section-label {
-      font-size: 12px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.06em; color: #64748b; margin: 0 0 8px;
-    }
-
-    /* Chart capaian STS */
-    .chart-card { padding: 0; overflow: hidden; margin-top: 16px; }
-    .chart-card-head {
-      border-bottom: 1px solid var(--border);
-      background: rgba(248, 250, 252, 0.9);
-      padding: 10px 14px;
-      display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
-    }
-    .chart-card-head h3 {
-      margin: 0;
-      font-size: 12px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.06em; color: #64748b;
-    }
-    .chart-body { padding: 14px 16px 16px; }
-    .chart-empty {
-      text-align: center; padding: 20px 12px;
-      font-size: 13px; color: var(--muted);
-    }
-    .bar-row {
-      display: grid;
-      grid-template-columns: minmax(88px, 28%) 1fr auto;
-      gap: 8px 12px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .bar-row:last-child { margin-bottom: 0; }
-    .bar-label {
-      font-size: 12.5px; font-weight: 500; color: #0f172a;
-      line-height: 1.3;
-      overflow: hidden; text-overflow: ellipsis;
-    }
-    .bar-track {
-      height: 10px;
-      background: #eef0f6;
-      border-radius: 999px;
+    /* Lembar rapor STS — mirip format cetak penilaian, layar portal */
+    .rapor-sheet {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
       overflow: hidden;
     }
-    .bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: var(--muh-600);
-      min-width: 0;
-      transition: width 0.35s ease;
+    .rapor-kop {
+      border-bottom: 2px solid #0f172a;
+      padding: 16px 16px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
     }
-    .bar-fill.is-low { background: #b45309; }
-    .bar-fill.is-mid { background: #4a4fa3; }
-    .bar-fill.is-high { background: #047857; }
-    .bar-val {
-      font-size: 13px; font-weight: 600;
-      font-variant-numeric: tabular-nums;
+    .rapor-kop img {
+      width: 48px; height: 48px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .rapor-kop-text { flex: 1; min-width: 0; text-align: center; }
+    .rapor-kop-text .school {
+      font-size: 14px; font-weight: 700; color: #0f172a;
+      letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .rapor-kop-text .addr {
+      font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.35;
+    }
+    .rapor-judul {
+      text-align: center;
+      padding: 12px 16px 4px;
+    }
+    .rapor-judul h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       color: #0f172a;
-      min-width: 2.5rem; text-align: right;
     }
-    .chart-note {
-      margin-top: 12px;
-      font-size: 12px; color: var(--muted); line-height: 1.45;
+    .rapor-judul p {
+      margin: 4px 0 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 500;
     }
 
-    .cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .cmp-table th {
-      text-align: left; font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.04em;
-      color: #64748b; padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(248,250,252,0.9);
-    }
-    .cmp-table th.num, .cmp-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
-    .cmp-table td {
+    .rapor-id {
+      margin: 8px 16px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
       padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 16px;
+      font-size: 12.5px;
+    }
+    @media (max-width: 520px) {
+      .rapor-id { grid-template-columns: 1fr; }
+    }
+    .rapor-id dt {
+      margin: 0; font-size: 11px; color: var(--muted); font-weight: 500;
+    }
+    .rapor-id dd {
+      margin: 0; font-weight: 600; color: #0f172a;
+    }
+    .rapor-id .pair { display: flex; flex-direction: column; gap: 1px; }
+
+    .rapor-section {
+      padding: 0 16px 12px;
+    }
+    .rapor-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #0f172a;
+      margin: 0 0 8px;
+      padding-bottom: 4px;
       border-bottom: 1px solid var(--border);
+    }
+
+    .rapor-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .rapor-table th {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 7px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      color: #334155;
+    }
+    .rapor-table td {
+      border: 1px solid #cbd5e1;
+      padding: 7px 8px;
       vertical-align: top;
+      color: #0f172a;
     }
-    .cmp-table tr:last-child td { border-bottom: none; }
-    .cmp-mapel { font-weight: 500; color: #0f172a; }
-    .cmp-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
-    .pita {
-      display: inline-flex; align-items: center;
-      font-size: 11px; font-weight: 500;
-      padding: 2px 6px; border-radius: 4px;
+    .rapor-table td.num {
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      width: 3.2rem;
     }
-    .pita-atas { background: var(--ok-tint); color: var(--ok); }
-    .pita-setara { background: var(--muh-50); color: var(--muh-700); }
-    .pita-bawah { background: var(--attention-tint); color: var(--attention); }
-    .rank-cell { font-weight: 600; color: #0f172a; white-space: nowrap; }
-    .rank-of { font-weight: 500; color: var(--muted); font-size: 12px; }
-    @media (max-width: 640px) {
-      .cmp-hide-sm { display: none; }
+    .rapor-table td.pred {
+      text-align: center;
+      font-size: 11.5px;
+      width: 5.5rem;
+    }
+    .rapor-table td.mapel { text-align: left; font-weight: 500; }
+    .rapor-table .group-row td {
+      background: #f1f5f9;
+      font-weight: 600;
+      font-size: 11.5px;
+      text-align: left;
+    }
+
+    .rapor-foot {
+      padding: 12px 16px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .rapor-ttd {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 8px 16px 20px;
+      text-align: center;
+      font-size: 11.5px;
+      color: #334155;
+    }
+    @media (max-width: 520px) {
+      .rapor-ttd { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .rapor-ttd .slot strong {
+      display: block;
+      margin-top: 48px;
+      font-size: 12.5px;
+      color: #0f172a;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .rapor-ttd .slot span { color: var(--muted); }
+
+    .wait-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 32px 20px;
+      text-align: center;
+    }
+    .wait-box h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .wait-box p {
+      margin: 0 auto;
+      max-width: 360px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .toolbar-rapor {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .toolbar-rapor .btn-print {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+      cursor: pointer;
+    }
+    .toolbar-rapor .btn-print:hover { background: #f8fafc; }
+
+    @media print {
+      .sidebar, .top-header, .bottom-nav, .toolbar-rapor, .app-frame { padding: 0 !important; }
+      .sidebar, .top-header, .bottom-nav, .toast { display: none !important; }
+      .app-shell, .main-col, .main-body { background: #fff !important; border: none !important; }
+      .rapor-sheet { border: none; border-radius: 0; }
     }
   </style>
 </head>
 <body>
   <div class="app-frame">
     <div class="app-shell">
-      <!-- Sidebar desktop -->
       <aside class="sidebar">
         <a class="sidebar-brand" href="beranda.html">
           <img src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
@@ -167,8 +219,8 @@
         <p class="sidebar-section">Menu</p>
         <nav style="flex:1">
           <a class="side-link active" href="beranda.html">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
-            Beranda
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Rapor STS
           </a>
         </nav>
         <div class="hero-banner" id="sideProfile">
@@ -182,15 +234,14 @@
         </button>
       </aside>
 
-      <!-- Main -->
       <div class="main-col">
         <header class="top-header">
           <div>
-            <h1>Beranda</h1>
+            <h1>Rapor STS</h1>
             <p class="date" id="tanggalHari">—</p>
           </div>
           <div class="top-actions">
-            <div class="avatar-btn" id="avatarInisial" title="Orang tua">—</div>
+            <div class="avatar-btn" id="avatarInisial">—</div>
             <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
             </button>
@@ -198,86 +249,8 @@
         </header>
 
         <main class="main-body">
-          <div class="main-inner">
-            <div class="page-header">
-              <h2>Nilai anak</h2>
-              <p>Hanya nilai yang sudah dipublikasikan guru yang ditampilkan.</p>
-            </div>
-
-            <div class="child-line">
-              <div class="child-av" id="childAv">—</div>
-              <div>
-                <div class="child-name" id="profilNama">—</div>
-                <div class="child-meta" id="profilMeta">—</div>
-              </div>
-            </div>
-
-            <div class="stat-strip" id="statStrip">
-              <div>
-                <div class="label">Status STS</div>
-                <div class="value" id="statStatus" style="font-size:16px;padding-top:4px">…</div>
-              </div>
-              <div>
-                <div class="label">Jumlah mapel</div>
-                <div class="value" id="statMapel">—</div>
-              </div>
-            </div>
-
-            <p class="section-label">Nilai yang dibagikan</p>
-            <section class="card-soft hub-panel" style="margin-bottom:16px">
-              <h3 class="hub-panel-title">Akademik</h3>
-              <div>
-                <div class="hub-row" id="rowSts">
-                  <div class="icon-tile">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                  </div>
-                  <div class="hub-row-body">
-                    <div class="hub-row-title">Sumatif Tengah Semester (STS)</div>
-                    <div class="hub-row-desc" id="stsDesc">Memuat…</div>
-                  </div>
-                  <span class="badge badge-neutral" id="stsBadge">…</span>
-                </div>
-                <div class="hub-row disabled">
-                  <div class="icon-tile muted">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
-                  </div>
-                  <div class="hub-row-body">
-                    <div class="hub-row-title">Nilai lainnya</div>
-                    <div class="hub-row-desc">Belum dibagikan</div>
-                  </div>
-                  <span class="badge badge-neutral">Segera</span>
-                </div>
-              </div>
-            </section>
-
-            <div class="detail-bar">
-              <span class="period" id="periodText">—</span>
-              <span class="badge badge-pending" id="statusChip">Memuat</span>
-            </div>
-            <div class="card-soft nilai-table" id="nilaiArea">
-              <div class="state-box"><p>Memuat nilai STS…</p></div>
-            
-            <section class="card-soft chart-card" id="chartSection" aria-label="Chart capaian STS">
-              <div class="chart-card-head">
-                <h3>Capaian STS (chart)</h3>
-                <span class="badge badge-neutral" id="chartBadge">—</span>
-              </div>
-              <div class="chart-body" id="chartBody">
-                <div class="chart-empty">Memuat chart…</div>
-              </div>
-            </section>
-
-            <section class="card-soft chart-card" id="cmpSection" aria-label="Perbandingan dengan kelas">
-              <div class="chart-card-head">
-                <h3>Perbandingan dengan kelas</h3>
-                <span class="badge badge-neutral" id="cmpBadge">—</span>
-              </div>
-              <div class="chart-body" id="cmpBody" style="padding:0">
-                <div class="chart-empty" style="padding:20px 12px">Memuat perbandingan…</div>
-              </div>
-            </section>
-
-
+          <div class="main-inner" id="mainContent">
+            <div class="wait-box"><p>Memuat rapor…</p></div>
           </div>
         </main>
       </div>
@@ -286,8 +259,8 @@
 
   <nav class="bottom-nav">
     <a class="active" href="beranda.html">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
-      Beranda
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Rapor STS
     </a>
     <button type="button" id="btnLogoutNav">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
@@ -303,9 +276,7 @@
       logout,
       loadSiswaByIds,
       loadNilaiStsPublished,
-      loadNilaiStsRaw,
-      loadNilaiStsPerbandingan,
-    } from './assets/firebase.js?v=20261028m';
+    } from './assets/firebase.js?v=20261028n';
 
     const $ = (id) => document.getElementById(id);
     const TANGGAL = new Intl.DateTimeFormat('id-ID', {
@@ -316,10 +287,22 @@
     function inisial(nama) {
       if (!nama) return '?';
       const p = nama.trim().split(/\s+/);
-      return p.length === 1 ? p[0].slice(0, 2).toUpperCase() : (p[0][0] + p[p.length - 1][0]).toUpperCase();
+      return p.length === 1
+        ? p[0].slice(0, 2).toUpperCase()
+        : (p[0][0] + p[p.length - 1][0]).toUpperCase();
     }
     function escapeHtml(s) {
-      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return String(s || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function predikat(n) {
+      if (n == null || !Number.isFinite(Number(n))) return '—';
+      const v = Number(n);
+      if (v >= 90) return 'Sangat Baik';
+      if (v >= 80) return 'Baik';
+      if (v >= 70) return 'Cukup';
+      return 'Perlu bimbingan';
     }
 
     async function doLogout() {
@@ -330,158 +313,122 @@
     $('btnLogoutTop').addEventListener('click', doLogout);
     $('btnLogoutNav').addEventListener('click', doLogout);
 
-
-    function barClass(n) {
-      if (n >= 80) return 'is-high';
-      if (n >= 70) return 'is-mid';
-      return 'is-low';
-    }
-    function renderChart(result) {
-      const body = $('chartBody');
-      const badge = $('chartBadge');
-      const items = (result && result.items) || [];
-      if (!items.length) {
-        badge.textContent = 'Belum ada data';
-        badge.className = 'badge badge-neutral';
-        body.innerHTML = `<div class="chart-empty">Belum ada nilai STS yang diisi guru untuk anak ini pada periode berjalan.<br>Chart akan muncul otomatis setelah nilai diinput.</div>`;
-        return;
-      }
-      badge.textContent = result.published ? 'Dipublikasikan' : 'Data internal';
-      badge.className = result.published ? 'badge badge-ok' : 'badge badge-pending';
-      const max = 100;
-      body.innerHTML =
-        items
-          .map((x) => {
-            const pct = Math.max(0, Math.min(100, (Number(x.nilai) / max) * 100));
-            return `<div class="bar-row">
-              <div class="bar-label" title="${escapeHtml(x.mapel)}">${escapeHtml(x.mapel)}</div>
-              <div class="bar-track"><div class="bar-fill ${barClass(Number(x.nilai))}" style="width:${pct}%"></div></div>
-              <div class="bar-val">${x.nilai != null ? x.nilai : '—'}</div>
-            </div>`;
-          })
-          .join('') +
-        `<p class="chart-note">Skala 0–100. Warna: hijau ≥80, biru 70–79, ambar &lt;70. ${
-          result.published
-            ? 'Nilai sudah dipublikasikan guru.'
-            : 'Menampilkan data yang sudah diisi guru (belum tentu sudah dipublikasikan).'
-        }</p>`;
+    function renderWaiting(anak, periodLabel) {
+      $('mainContent').innerHTML = `
+        <div class="page-header">
+          <h2>Rapor Sumatif Tengah Semester</h2>
+          <p>${escapeHtml(periodLabel || 'Periode berjalan')} · menunggu publikasi sekolah</p>
+        </div>
+        <div class="wait-box">
+          <h2>Rapor belum dipublikasikan</h2>
+          <p>
+            Rapor STS
+            ${anak?.nama ? ' untuk <strong>' + escapeHtml(anak.nama) + '</strong>' : ''}
+            belum dibagikan ke portal orang tua.
+            Silakan cek lagi setelah wali kelas mempublikasikan rapor.
+          </p>
+        </div>`;
     }
 
-
-    function pitaLabel(p) {
-      if (p === 'atas') return '<span class="pita pita-atas">Di atas rata-rata</span>';
-      if (p === 'bawah') return '<span class="pita pita-bawah">Di bawah rata-rata</span>';
-      if (p === 'setara') return '<span class="pita pita-setara">Setara rata-rata</span>';
-      return '—';
-    }
-    function renderCmp(data) {
-      const body = $('cmpBody');
-      const badge = $('cmpBadge');
-      const rows = (data && data.rows) || [];
-      if (!rows.length) {
-        badge.textContent = 'Belum ada data';
-        badge.className = 'badge badge-neutral';
-        body.innerHTML = `<div class="chart-empty" style="padding:20px 12px">Belum ada nilai STS untuk dibandingkan dengan kelas.</div>`;
-        return;
-      }
-      badge.textContent = data.kelas ? `Kelas ${data.kelas}` : 'Kelas';
-      badge.className = 'badge badge-brand';
-      const head = `<table class="cmp-table">
-        <thead><tr>
-          <th>Mapel</th>
-          <th class="num">Nilai</th>
-          <th class="num cmp-hide-sm">Rata kelas</th>
-          <th class="num">Urutan</th>
-          <th class="cmp-hide-sm">Capaian</th>
-        </tr></thead><tbody>`;
-      const bodyRows = rows.map((r) => {
-        const delta =
-          r.delta == null
-            ? ''
-            : r.delta > 0
-              ? `+${r.delta}`
-              : String(r.delta);
-        return `<tr>
-          <td>
-            <div class="cmp-mapel">${escapeHtml(r.mapel)}</div>
-            <div class="cmp-sub">${escapeHtml(r.predikat || '')}${
-              r.delta != null ? ` · Δ ${delta}` : ''
-            }</div>
-          </td>
-          <td class="num"><strong>${r.nilai != null ? r.nilai : '—'}</strong></td>
-          <td class="num cmp-hide-sm">${r.rataKelas != null ? r.rataKelas : '—'}</td>
-          <td class="num rank-cell">${r.ranking != null ? r.ranking : '—'} <span class="rank-of">/ ${r.dari || '—'}</span></td>
-          <td class="cmp-hide-sm">${pitaLabel(r.pita)}</td>
-        </tr>`;
-      }).join('');
-      body.innerHTML =
-        head +
-        bodyRows +
-        `</tbody></table>
-        <p class="chart-note" style="padding:12px 14px 14px;margin:0">
-          Urutan 1 = nilai tertinggi di kelas pada mapel tersebut (siswa yang sudah punya nilai STS).
-          Pita capaian: selisih ≥3 poin vs rata-rata kelas.
-          ${data.published ? '' : 'Data menampilkan isian guru; status publikasi terpisah di bagian atas.'}
-        </p>`;
-    }
-
-    function renderSts(result) {
-      $('periodText').textContent = result.periodeLabel || 'Periode berjalan';
-      const chip = $('statusChip');
-      const badge = $('stsBadge');
-      const desc = $('stsDesc');
-      const n = (result.items || []).length;
-
-      if (!result.published) {
-        chip.textContent = 'Belum dipublikasikan';
-        chip.className = 'badge badge-pending';
-        badge.textContent = 'Menunggu';
-        badge.className = 'badge badge-pending';
-        desc.textContent = 'Menunggu publikasi guru kelas';
-        $('statStatus').textContent = 'Belum';
-        $('statMapel').textContent = '0';
-        $('nilaiArea').innerHTML = `
-          <div class="state-box">
-            <h3>Belum dipublikasikan</h3>
-            <p>Guru belum membagikan nilai STS untuk periode ini. Silakan cek lagi nanti.</p>
-          </div>`;
-        return;
-      }
-
-      chip.textContent = result.publishedAt ? `Dipublikasikan ${result.publishedAt}` : 'Dipublikasikan';
-      chip.className = 'badge badge-ok';
-      badge.textContent = 'Tersedia';
-      badge.className = 'badge badge-ok';
-      desc.textContent = result.publishedAt
-        ? `Dipublikasikan ${result.publishedAt}`
-        : `${n} mapel tersedia`;
-      $('statStatus').textContent = 'Ada';
-      $('statMapel').textContent = String(n);
-
-      if (!n) {
-        $('nilaiArea').innerHTML = `
-          <div class="state-box">
-            <h3>Tidak ada nilai</h3>
-            <p>Publikasi sudah ada, tetapi belum ada data untuk anak ini.</p>
-          </div>`;
-        return;
-      }
-
-      $('nilaiArea').innerHTML = (result.items || [])
+    function renderRapor(anak, result) {
+      const items = result.items || [];
+      const rows = items
         .map(
-          (x) => `
-          <div class="nilai-tr">
-            <div>
-              <div class="nilai-mapel">${escapeHtml(x.mapel)}</div>
-              <div class="nilai-sub">${escapeHtml(x.keterangan || 'Nilai STS')}</div>
-            </div>
-            <div>
-              <div class="nilai-angka">${x.nilai != null ? x.nilai : '—'}</div>
-              <div class="nilai-pred">${escapeHtml(x.predikat || '')}</div>
-            </div>
-          </div>`
+          (x, i) => `
+          <tr>
+            <td class="num">${i + 1}</td>
+            <td class="mapel">${escapeHtml(x.mapel)}</td>
+            <td class="num">${x.nilai != null ? x.nilai : '—'}</td>
+            <td class="pred">${escapeHtml(x.predikat || predikat(x.nilai))}</td>
+          </tr>`
         )
         .join('');
+
+      const publishLine = result.publishedAt
+        ? `Diterbitkan ${escapeHtml(result.publishedAt)}`
+        : 'Telah dipublikasikan sekolah';
+
+      $('mainContent').innerHTML = `
+        <div class="toolbar-rapor">
+          <button type="button" class="btn-print" id="btnPrint">Cetak / simpan PDF</button>
+          <span class="badge badge-ok">Dipublikasikan</span>
+        </div>
+
+        <article class="rapor-sheet" id="raporSheet">
+          <div class="rapor-kop">
+            <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
+            <div class="rapor-kop-text">
+              <div class="school">SD Muhammadiyah 01 Kukusan</div>
+              <div class="addr">Portal Orang Tua · Laporan hasil belajar tengah semester</div>
+            </div>
+          </div>
+
+          <div class="rapor-judul">
+            <h2>Laporan Hasil Belajar</h2>
+            <p>Sumatif Tengah Semester (STS)</p>
+            <p>${escapeHtml(result.periodeLabel || '')}</p>
+          </div>
+
+          <dl class="rapor-id">
+            <div class="pair">
+              <dt>Nama peserta didik</dt>
+              <dd>${escapeHtml(anak.nama || '—')}</dd>
+            </div>
+            <div class="pair">
+              <dt>Kelas</dt>
+              <dd>${escapeHtml(anak.kelas ? 'Kelas ' + anak.kelas : '—')}</dd>
+            </div>
+            <div class="pair">
+              <dt>NIS / NISN</dt>
+              <dd>${escapeHtml([anak.nis, anak.nisn].filter(Boolean).join(' · ') || '—')}</dd>
+            </div>
+            <div class="pair">
+              <dt>Status</dt>
+              <dd>${publishLine}</dd>
+            </div>
+          </dl>
+
+          <div class="rapor-section">
+            <h3 class="rapor-section-title">A. Nilai akhir mata pelajaran</h3>
+            ${
+              items.length
+                ? `<table class="rapor-table">
+              <thead>
+                <tr>
+                  <th style="width:2.2rem">No</th>
+                  <th>Mata pelajaran</th>
+                  <th style="width:3.5rem">Nilai</th>
+                  <th style="width:6rem">Predikat</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>`
+                : `<p style="font-size:13px;color:var(--muted)">Belum ada nilai mapel pada rapor ini.</p>`
+            }
+          </div>
+
+          <div class="rapor-ttd">
+            <div class="slot">
+              <span>Orang tua / wali</span>
+              <strong>&nbsp;</strong>
+            </div>
+            <div class="slot">
+              <span>Wali kelas</span>
+              <strong>&nbsp;</strong>
+            </div>
+            <div class="slot">
+              <span>Kepala sekolah</span>
+              <strong>&nbsp;</strong>
+            </div>
+          </div>
+
+          <div class="rapor-foot">
+            Dokumen ini merupakan rapor STS yang dipublikasikan sekolah untuk orang tua.
+            Bukan leger kelas. Untuk pertanyaan, hubungi wali kelas.
+          </div>
+        </article>`;
+
+      $('btnPrint')?.addEventListener('click', () => window.print());
     }
 
     async function boot() {
@@ -492,45 +439,51 @@
       }
       $('sideNama').textContent = s.nama || 'Orang tua';
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
-      if (!aktifId) return;
+      if (!aktifId) {
+        $('mainContent').innerHTML = `<div class="wait-box"><h2>Data anak tidak ditemukan</h2></div>`;
+        return;
+      }
 
+      let anak = {
+        id: aktifId,
+        nama: s.siswaNama || aktifId,
+        kelas: s.siswaKelas || '',
+        nis: '',
+        nisn: '',
+      };
       try {
         const list = await loadSiswaByIds([aktifId]);
-        const anak = list[0] || { nama: s.siswaNama || aktifId, kelas: s.siswaKelas || '', nis: '' };
-        const ini = inisial(anak.nama);
-        $('childAv').textContent = ini;
-        $('avatarInisial').textContent = ini;
-        $('profilNama').textContent = anak.nama || '—';
-        $('profilMeta').textContent = [
-          anak.kelas ? `Kelas ${anak.kelas}` : null,
-          anak.nis ? `NIS ${anak.nis}` : null,
-        ].filter(Boolean).join(' · ') || 'Data siswa';
+        if (list[0]) {
+          anak = {
+            id: list[0].id,
+            nama: list[0].nama,
+            kelas: list[0].kelas || '',
+            nis: list[0].nis || '',
+            nisn: list[0].nisn || '',
+          };
+        }
       } catch (_) {}
 
+      const ini = inisial(anak.nama);
+      $('avatarInisial').textContent = ini;
+
       try {
-        const publishedView = await loadNilaiStsPublished(aktifId);
-        renderSts(publishedView);
-      } catch (err) {
-        console.error(err);
-        $('nilaiArea').innerHTML = `<div class="state-box"><h3>Gagal memuat nilai</h3><p>Periksa koneksi atau hubungi sekolah.</p></div>`;
-      }
-      try {
-        const raw = await loadNilaiStsRaw(aktifId);
-        renderChart(raw);
-      } catch (err) {
-        console.error(err);
-        $('chartBody').innerHTML = `<div class="chart-empty">Gagal memuat chart.</div>`;
-      }
-      try {
-        const cmp = await loadNilaiStsPerbandingan(aktifId);
-        renderCmp(cmp);
-      } catch (err) {
-        console.error(err);
-        if ($('cmpBody')) {
-          $('cmpBody').innerHTML = `<div class="chart-empty" style="padding:20px">Gagal memuat perbandingan.</div>`;
+        const result = await loadNilaiStsPublished(aktifId);
+        if (!result.published) {
+          renderWaiting(anak, result.periodeLabel);
+        } else {
+          renderRapor(anak, result);
         }
+      } catch (err) {
+        console.error(err);
+        $('mainContent').innerHTML = `
+          <div class="wait-box">
+            <h2>Gagal memuat rapor</h2>
+            <p>Periksa koneksi internet atau hubungi sekolah.</p>
+          </div>`;
       }
     }
+
     boot();
   </script>
 </body>

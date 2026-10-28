@@ -410,7 +410,8 @@ export async function loadSiswaByIds(ids) {
       results.push({
         id: snap.id,
         nama: d.nama || snap.id,
-        nis: d.nis || d.nisn || '',
+        nis: d.nis || '',
+        nisn: d.nisn || '',
         kelas: d.kelas || '',
       });
     } else {
