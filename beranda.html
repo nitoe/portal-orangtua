@@ -119,6 +119,37 @@
       margin-top: 12px;
       font-size: 12px; color: var(--muted); line-height: 1.45;
     }
+
+    .cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .cmp-table th {
+      text-align: left; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: #64748b; padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(248,250,252,0.9);
+    }
+    .cmp-table th.num, .cmp-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .cmp-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .cmp-table tr:last-child td { border-bottom: none; }
+    .cmp-mapel { font-weight: 500; color: #0f172a; }
+    .cmp-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+    .pita {
+      display: inline-flex; align-items: center;
+      font-size: 11px; font-weight: 500;
+      padding: 2px 6px; border-radius: 4px;
+    }
+    .pita-atas { background: var(--ok-tint); color: var(--ok); }
+    .pita-setara { background: var(--muh-50); color: var(--muh-700); }
+    .pita-bawah { background: var(--attention-tint); color: var(--attention); }
+    .rank-cell { font-weight: 600; color: #0f172a; white-space: nowrap; }
+    .rank-of { font-weight: 500; color: var(--muted); font-size: 12px; }
+    @media (max-width: 640px) {
+      .cmp-hide-sm { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -236,6 +267,17 @@
               </div>
             </section>
 
+            <section class="card-soft chart-card" id="cmpSection" aria-label="Perbandingan dengan kelas">
+              <div class="chart-card-head">
+                <h3>Perbandingan dengan kelas</h3>
+                <span class="badge badge-neutral" id="cmpBadge">—</span>
+              </div>
+              <div class="chart-body" id="cmpBody" style="padding:0">
+                <div class="chart-empty" style="padding:20px 12px">Memuat perbandingan…</div>
+              </div>
+            </section>
+
+
           </div>
         </main>
       </div>
@@ -262,7 +304,8 @@
       loadSiswaByIds,
       loadNilaiStsPublished,
       loadNilaiStsRaw,
-    } from './assets/firebase.js?v=20261028k';
+      loadNilaiStsPerbandingan,
+    } from './assets/firebase.js?v=20261028m';
 
     const $ = (id) => document.getElementById(id);
     const TANGGAL = new Intl.DateTimeFormat('id-ID', {
@@ -322,6 +365,64 @@
             ? 'Nilai sudah dipublikasikan guru.'
             : 'Menampilkan data yang sudah diisi guru (belum tentu sudah dipublikasikan).'
         }</p>`;
+    }
+
+
+    function pitaLabel(p) {
+      if (p === 'atas') return '<span class="pita pita-atas">Di atas rata-rata</span>';
+      if (p === 'bawah') return '<span class="pita pita-bawah">Di bawah rata-rata</span>';
+      if (p === 'setara') return '<span class="pita pita-setara">Setara rata-rata</span>';
+      return '—';
+    }
+    function renderCmp(data) {
+      const body = $('cmpBody');
+      const badge = $('cmpBadge');
+      const rows = (data && data.rows) || [];
+      if (!rows.length) {
+        badge.textContent = 'Belum ada data';
+        badge.className = 'badge badge-neutral';
+        body.innerHTML = `<div class="chart-empty" style="padding:20px 12px">Belum ada nilai STS untuk dibandingkan dengan kelas.</div>`;
+        return;
+      }
+      badge.textContent = data.kelas ? `Kelas ${data.kelas}` : 'Kelas';
+      badge.className = 'badge badge-brand';
+      const head = `<table class="cmp-table">
+        <thead><tr>
+          <th>Mapel</th>
+          <th class="num">Nilai</th>
+          <th class="num cmp-hide-sm">Rata kelas</th>
+          <th class="num">Urutan</th>
+          <th class="cmp-hide-sm">Capaian</th>
+        </tr></thead><tbody>`;
+      const bodyRows = rows.map((r) => {
+        const delta =
+          r.delta == null
+            ? ''
+            : r.delta > 0
+              ? `+${r.delta}`
+              : String(r.delta);
+        return `<tr>
+          <td>
+            <div class="cmp-mapel">${escapeHtml(r.mapel)}</div>
+            <div class="cmp-sub">${escapeHtml(r.predikat || '')}${
+              r.delta != null ? ` · Δ ${delta}` : ''
+            }</div>
+          </td>
+          <td class="num"><strong>${r.nilai != null ? r.nilai : '—'}</strong></td>
+          <td class="num cmp-hide-sm">${r.rataKelas != null ? r.rataKelas : '—'}</td>
+          <td class="num rank-cell">${r.ranking != null ? r.ranking : '—'} <span class="rank-of">/ ${r.dari || '—'}</span></td>
+          <td class="cmp-hide-sm">${pitaLabel(r.pita)}</td>
+        </tr>`;
+      }).join('');
+      body.innerHTML =
+        head +
+        bodyRows +
+        `</tbody></table>
+        <p class="chart-note" style="padding:12px 14px 14px;margin:0">
+          Urutan 1 = nilai tertinggi di kelas pada mapel tersebut (siswa yang sudah punya nilai STS).
+          Pita capaian: selisih ≥3 poin vs rata-rata kelas.
+          ${data.published ? '' : 'Data menampilkan isian guru; status publikasi terpisah di bagian atas.'}
+        </p>`;
     }
 
     function renderSts(result) {
@@ -419,6 +520,15 @@
       } catch (err) {
         console.error(err);
         $('chartBody').innerHTML = `<div class="chart-empty">Gagal memuat chart.</div>`;
+      }
+      try {
+        const cmp = await loadNilaiStsPerbandingan(aktifId);
+        renderCmp(cmp);
+      } catch (err) {
+        console.error(err);
+        if ($('cmpBody')) {
+          $('cmpBody').innerHTML = `<div class="chart-empty" style="padding:20px">Gagal memuat perbandingan.</div>`;
+        }
       }
     }
     boot();

@@ -647,6 +647,226 @@ export async function loadNilaiStsRaw(siswaId) {
   };
 }
 
+
+/**
+ * Perbandingan STS vs kelas: rata-rata kelas + ranking per mapel.
+ * @returns {{
+ *   periodeLabel: string,
+ *   published: boolean,
+ *   kelas: string,
+ *   nSiswaKelas: number,
+ *   rows: Array<{
+ *     mapel: string,
+ *     nilai: number,
+ *     predikat: string,
+ *     rataKelas: number|null,
+ *     delta: number|null,
+ *     pita: 'atas'|'setara'|'bawah'|null,
+ *     ranking: number|null,
+ *     dari: number,
+ *   }>
+ * }}
+ */
+export async function loadNilaiStsPerbandingan(siswaId) {
+  const predikatOf = (nilai) => {
+    if (nilai >= 90) return 'Sangat Baik';
+    if (nilai >= 80) return 'Baik';
+    if (nilai >= 70) return 'Cukup';
+    return 'Perlu bimbingan';
+  };
+  const pitaOf = (nilai, rata) => {
+    if (rata == null || !Number.isFinite(rata)) return null;
+    const d = nilai - rata;
+    if (d >= 3) return 'atas';
+    if (d <= -3) return 'bawah';
+    return 'setara';
+  };
+
+  if (DEMO_MODE) {
+    _seedDemo();
+    await new Promise((r) => setTimeout(r, 200));
+    // Demo: 2 siswa di 1A
+    const rows = [
+      {
+        mapel: 'Pendidikan Agama Islam',
+        nilai: 88,
+        predikat: predikatOf(88),
+        rataKelas: 82,
+        delta: 6,
+        pita: 'atas',
+        ranking: 1,
+        dari: 2,
+      },
+      {
+        mapel: 'Bahasa Indonesia',
+        nilai: 85,
+        predikat: predikatOf(85),
+        rataKelas: 84,
+        delta: 1,
+        pita: 'setara',
+        ranking: 1,
+        dari: 2,
+      },
+      {
+        mapel: 'Matematika',
+        nilai: 78,
+        predikat: predikatOf(78),
+        rataKelas: 86,
+        delta: -8,
+        pita: 'bawah',
+        ranking: 2,
+        dari: 2,
+      },
+      {
+        mapel: 'IPAS',
+        nilai: 82,
+        predikat: predikatOf(82),
+        rataKelas: 80,
+        delta: 2,
+        pita: 'setara',
+        ranking: 1,
+        dari: 2,
+      },
+    ];
+    return {
+      periodeLabel: 'STS · Semester 1 · 2025/2026',
+      published: true,
+      kelas: '1A',
+      nSiswaKelas: 2,
+      rows,
+    };
+  }
+
+  const { db, fsMod } = window.__fb;
+
+  // Periode
+  let semester = '1';
+  let tahunAjaran = '';
+  let periodeLabel = 'Semester berjalan';
+  try {
+    const cfg = await fsMod.getDoc(fsMod.doc(db, 'config', 'akademik'));
+    if (cfg.exists()) {
+      const c = cfg.data();
+      semester = String(c.semesterAktif || c.semester || '1');
+      tahunAjaran = String(c.tahunAjaran || '');
+      periodeLabel = tahunAjaran
+        ? `STS · Semester ${semester} · ${tahunAjaran}`
+        : `STS · Semester ${semester}`;
+    }
+  } catch (_) {}
+
+  // Siswa → kelas
+  let kelas = '';
+  try {
+    const sSnap = await fsMod.getDoc(fsMod.doc(db, 'siswa', siswaId));
+    if (sSnap.exists()) kelas = String(sSnap.data().kelas || '');
+  } catch (_) {}
+
+  // Publish flag (opsional)
+  let published = false;
+  if (kelas && tahunAjaran) {
+    const pubId = `${kelas}_${tahunAjaran}_${semester}`.replace(/\//g, '-');
+    try {
+      const p = await fsMod.getDoc(fsMod.doc(db, 'sts_publikasi', pubId));
+      if (p.exists() && p.data().published === true) published = true;
+    } catch (_) {}
+  }
+
+  // Ambil nilai_sts: prioritaskan filter kelas bila ada (satu query untuk ranking)
+  const scoresByMapel = {}; // mapel -> { siswaId: [nilai, ...] }
+  try {
+    let snap;
+    if (kelas) {
+      const q = fsMod.query(
+        fsMod.collection(db, 'nilai_sts'),
+        fsMod.where('kelas', '==', kelas)
+      );
+      snap = await fsMod.getDocs(q);
+    } else {
+      const q = fsMod.query(
+        fsMod.collection(db, 'nilai_sts'),
+        fsMod.where('siswaId', '==', siswaId)
+      );
+      snap = await fsMod.getDocs(q);
+    }
+    snap.forEach((doc) => {
+      const d = doc.data();
+      if (tahunAjaran && d.tahunAjaran && String(d.tahunAjaran) !== tahunAjaran) return;
+      if (d.semester != null && String(d.semester) !== String(semester)) return;
+      const mapel = String(d.mapel || '').trim() || 'Mapel';
+      const sid = String(d.siswaId || '');
+      const n = Number(d.nilai);
+      if (!sid || !Number.isFinite(n)) return;
+      if (!scoresByMapel[mapel]) scoresByMapel[mapel] = {};
+      if (!scoresByMapel[mapel][sid]) scoresByMapel[mapel][sid] = [];
+      scoresByMapel[mapel][sid].push(n);
+    });
+  } catch (err) {
+    console.warn('loadNilaiStsPerbandingan:', err);
+  }
+
+  // Rata-rata per siswa per mapel
+  const avgByMapel = {}; // mapel -> { siswaId: avg }
+  Object.keys(scoresByMapel).forEach((mapel) => {
+    avgByMapel[mapel] = {};
+    Object.keys(scoresByMapel[mapel]).forEach((sid) => {
+      const arr = scoresByMapel[mapel][sid];
+      avgByMapel[mapel][sid] = arr.reduce((s, x) => s + x, 0) / arr.length;
+    });
+  });
+
+  const siswaSet = new Set();
+  Object.values(avgByMapel).forEach((m) => Object.keys(m).forEach((id) => siswaSet.add(id)));
+  const nSiswaKelas = siswaSet.size || 1;
+
+  const rows = Object.keys(avgByMapel)
+    .sort((a, b) => a.localeCompare(b, 'id'))
+    .map((mapel) => {
+      const mapScores = avgByMapel[mapel];
+      const my = mapScores[siswaId];
+      if (my == null || !Number.isFinite(my)) return null;
+
+      const nilai = Math.round(my * 10) / 10;
+      const allAvgs = Object.values(mapScores).filter((x) => Number.isFinite(x));
+      const rataKelas =
+        allAvgs.length > 0
+          ? Math.round((allAvgs.reduce((s, x) => s + x, 0) / allAvgs.length) * 10) / 10
+          : null;
+
+      // Ranking: nilai lebih tinggi = ranking lebih kecil (1 terbaik)
+      // Competition rank: sama nilai = sama ranking
+      const sorted = [...allAvgs].sort((a, b) => b - a);
+      let ranking = 1;
+      for (let i = 0; i < sorted.length; i++) {
+        if (sorted[i] > nilai + 1e-9) ranking = i + 2;
+        // adjust: count how many strictly greater
+      }
+      ranking = sorted.filter((x) => x > nilai + 1e-9).length + 1;
+
+      const delta = rataKelas != null ? Math.round((nilai - rataKelas) * 10) / 10 : null;
+      return {
+        mapel,
+        nilai,
+        predikat: predikatOf(nilai),
+        rataKelas,
+        delta,
+        pita: pitaOf(nilai, rataKelas),
+        ranking,
+        dari: allAvgs.length,
+      };
+    })
+    .filter(Boolean);
+
+  // Jika tidak ada baris untuk siswa ini tapi published false, rows kosong OK
+  return {
+    periodeLabel,
+    published,
+    kelas,
+    nSiswaKelas,
+    rows,
+  };
+}
+
 export async function listAkunOrangtua() {
   if (DEMO_MODE) {
     _seedDemo();
