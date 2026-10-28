@@ -3,57 +3,373 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Admin Portal Orang Tua | SD Muhammadiyah 01 Kukusan</title>
+  <title>Admin · Portal Orang Tua | SD Muhammadiyah 01 Kukusan</title>
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    body { background: var(--bg-light); min-height: 100vh; }
+    body {
+      background: var(--bg-light);
+      min-height: 100vh;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 28px);
+    }
     .app-header {
       background: var(--header-gradient);
-      padding: calc(env(safe-area-inset-top) + 16px) 20px 20px;
+      padding: calc(env(safe-area-inset-top) + 14px) 16px 16px;
       color: #fff;
     }
-    .app-header-row { display: flex; align-items: center; gap: 12px; }
-    .app-header-title { font-size: 17px; font-weight: 800; flex: 1; }
-    .app-header-sub { font-size: 12px; opacity: 0.8; font-weight: 600; margin-top: 2px; }
+    .app-header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .app-header-brand { flex: 1; min-width: 0; }
+    .app-header-title {
+      font-size: 16px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-header-sub {
+      font-size: 12px;
+      opacity: 0.82;
+      font-weight: 600;
+      margin-top: 2px;
+    }
     .btn-out {
-      background: rgba(255,255,255,.15);
+      background: rgba(255, 255, 255, 0.15);
       border: none;
       color: #fff;
       font-family: inherit;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 10px;
+      padding: 9px 14px;
+      border-radius: 11px;
       cursor: pointer;
+      flex-shrink: 0;
     }
-    .body { padding: 20px 16px 40px; max-width: 720px; margin: 0 auto; }
-    .card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      box-shadow: var(--shadow-soft);
+    .btn-out:hover { background: rgba(255, 255, 255, 0.22); }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 16px 14px 40px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
       margin-bottom: 14px;
     }
-    .card h2 { margin: 0 0 8px; font-size: 16px; font-weight: 800; color: var(--green-dark); }
-    .card p { margin: 0; font-size: 14px; color: var(--ink-muted); line-height: 1.55; }
+    .search-wrap {
+      flex: 1;
+      min-width: 180px;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px 11px 38px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      background: #fff;
+      color: var(--ink);
+    }
+    .search-wrap input:focus {
+      outline: none;
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45, 112, 85, 0.12);
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-muted);
+      pointer-events: none;
+    }
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-mid);
+      cursor: pointer;
+    }
+    .chip.active {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #fff;
+    }
+    .stat-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .stat {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      min-width: 88px;
+      box-shadow: var(--shadow-soft);
+    }
+    .stat-n {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--green-dark);
+      line-height: 1;
+    }
+    .stat-l {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .list { display: flex; flex-direction: column; gap: 10px; }
+
+    .akun-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+    }
+    .akun-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .akun-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--green-pale);
+      color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .akun-info { flex: 1; min-width: 0; }
+    .akun-nama {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .akun-email {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      margin-top: 2px;
+      word-break: break-all;
+    }
+    .akun-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
     .badge {
-      display: inline-block;
-      background: var(--gold-light);
-      color: var(--gold);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 9px;
+      border-radius: 8px;
+    }
+    .badge-pending { background: var(--gold-light); color: #9a6b12; }
+    .badge-approved { background: var(--green-pale); color: var(--green-dark); }
+    .badge-off { background: var(--red-light); color: var(--red); }
+    .badge-anak {
+      background: #eef2f7;
+      color: var(--ink-mid);
+    }
+
+    .akun-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-sm {
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-mid);
+      cursor: pointer;
+    }
+    .btn-sm:hover { border-color: var(--green-mid); color: var(--green-dark); }
+    .btn-sm.primary {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #fff;
+    }
+    .btn-sm.primary:hover { filter: brightness(1.05); }
+    .btn-sm.danger { color: var(--red); border-color: rgba(192, 57, 43, 0.25); }
+    .btn-sm:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .empty-box, .loading-box {
+      text-align: center;
+      padding: 36px 16px;
+      color: var(--ink-muted);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 23, 18, 0.55);
+      z-index: 80;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+    }
+    @media (min-width: 640px) {
+      .modal-backdrop { align-items: center; }
+    }
+    .modal {
+      background: #fff;
+      border-radius: 18px 18px 14px 14px;
+      width: 100%;
+      max-width: 520px;
+      max-height: min(88vh, 640px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+    .modal-head {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-head h3 {
+      margin: 0;
+      flex: 1;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .modal-close {
+      border: none;
+      background: var(--bg-light);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      color: var(--ink-mid);
+      line-height: 1;
+    }
+    .modal-body {
+      padding: 14px 18px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-foot {
+      padding: 12px 18px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .field-label {
       font-size: 12px;
       font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
-      margin-bottom: 12px;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
     }
-    ul { margin: 10px 0 0; padding-left: 18px; color: var(--ink-mid); font-size: 14px; line-height: 1.7; }
+    .siswa-pick-list {
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .siswa-pick-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 13.5px;
+    }
+    .siswa-pick-item:last-child { border-bottom: none; }
+    .siswa-pick-item:hover { background: var(--green-ghost); }
+    .siswa-pick-item input { width: 16px; height: 16px; accent-color: var(--green-dark); }
+    .siswa-pick-meta {
+      font-size: 11.5px;
+      color: var(--ink-muted);
+      font-weight: 600;
+    }
+    .note {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .btn-primary-modal {
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      padding: 11px 18px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-ghost-modal {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
+      padding: 11px 16px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink-mid);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
   <header class="app-header">
-    <div class="app-header-row">
-      <div>
+    <div class="app-header-inner">
+      <div class="app-header-brand">
         <div class="app-header-title">Admin · Portal Orang Tua</div>
         <div class="app-header-sub" id="subNama">Memuat…</div>
       </div>
@@ -61,44 +377,382 @@
     </div>
   </header>
 
-  <div class="body">
-    <div class="card">
-      <span class="badge">Placeholder</span>
-      <h2>Kelola akun orang tua</h2>
-      <p>Fitur yang akan tersedia di panel ini:</p>
-      <ul>
-        <li>Buat / hubungkan akun orang tua ke siswa</li>
-        <li>Reset password orang tua (atas permintaan)</li>
-        <li>Lihat status akun (aktif / pending)</li>
-        <li>Cabut akses jika diperlukan</li>
-      </ul>
+  <main class="page">
+    <div class="stat-row" id="statRow">
+      <div class="stat"><div class="stat-n" id="statTotal">—</div><div class="stat-l">Total</div></div>
+      <div class="stat"><div class="stat-n" id="statPending">—</div><div class="stat-l">Pending</div></div>
+      <div class="stat"><div class="stat-n" id="statApproved">—</div><div class="stat-l">Aktif</div></div>
     </div>
-    <div class="card">
-      <h2>Catatan</h2>
-      <p>
-        Admin di sini memakai akun yang sama dengan aplikasi penilaian
-        (role <code>admin</code>). Tidak perlu akun terpisah.
-      </p>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+        <input type="search" id="qSearch" placeholder="Cari nama atau email…" autocomplete="off">
+      </div>
+      <div class="filter-chips">
+        <button type="button" class="chip active" data-filter="all">Semua</button>
+        <button type="button" class="chip" data-filter="pending">Pending</button>
+        <button type="button" class="chip" data-filter="approved">Disetujui</button>
+        <button type="button" class="chip" data-filter="off">Nonaktif</button>
+      </div>
+    </div>
+
+    <div id="listArea">
+      <div class="loading-box">
+        <span class="spinner" style="border-color:rgba(30,77,59,.2);border-top-color:var(--green-mid);display:inline-block;vertical-align:middle;margin-right:8px"></span>
+        Memuat akun orang tua…
+      </div>
+    </div>
+
+    <p class="note" style="margin-top:18px;text-align:center">
+      Akun orang tua mendaftar sendiri (status <strong>pending</strong>).
+      Admin menyetujui, menghubungkan anak, dan dapat mengirim email reset password.
+      Pembuatan user Auth baru membutuhkan Cloud Function (belum di panel ini).
+    </p>
+  </main>
+
+  <!-- Modal hubungkan anak -->
+  <div class="modal-backdrop hidden" id="modalAnak" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modalAnakTitle">Hubungkan anak</h3>
+        <button type="button" class="modal-close" id="modalAnakClose" aria-label="Tutup">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="note" id="modalAnakSub">Pilih satu atau lebih siswa yang terhubung ke akun ini.</p>
+        <div class="field-label">Filter kelas / nama</div>
+        <input type="search" id="modalAnakFilter" placeholder="Ketik kelas atau nama…" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:13.5px;font-weight:600;margin-bottom:10px">
+        <div class="siswa-pick-list" id="modalAnakList"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-ghost-modal" id="modalAnakCancel">Batal</button>
+        <button type="button" class="btn-primary-modal" id="modalAnakSave">Simpan</button>
+      </div>
     </div>
   </div>
 
-  <script type="module">
-    import { currentSession, onAuthChange, logout } from './assets/firebase.js';
+  <div class="toast" id="toast"><span id="toastMsg"></span></div>
 
-    const session = currentSession();
-    if (!session || session.role !== 'admin') {
-      onAuthChange((s) => {
-        if (!s || s.role !== 'admin') {
-          window.location.href = 'index.html';
-        } else {
-          document.getElementById('subNama').textContent = s.nama || s.email;
-        }
-      });
-    } else {
-      document.getElementById('subNama').textContent = session.nama || session.email;
+  <script type="module">
+    import {
+      currentSession,
+      onAuthChange,
+      logout,
+      listAkunOrangtua,
+      updateAkunOrangtua,
+      listSemuaSiswa,
+      loadSiswaByIds,
+      kirimResetPasswordOrangtua,
+      terjemahkanErrorLogin,
+    } from './assets/firebase.js?v=20261028e';
+
+    const $ = (id) => document.getElementById(id);
+
+    function showToast(msg, isError = false) {
+      const t = $('toast');
+      $('toastMsg').textContent = msg;
+      t.classList.toggle('error', isError);
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3200);
     }
 
-    document.getElementById('btnLogout').addEventListener('click', async () => {
+    function inisial(nama) {
+      if (!nama) return '?';
+      const p = nama.trim().split(/\s+/);
+      if (p.length === 1) return p[0].slice(0, 2).toUpperCase();
+      return (p[0][0] + p[p.length - 1][0]).toUpperCase();
+    }
+
+    function escapeHtml(s) {
+      return String(s || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    let session = null;
+    let akunList = [];
+    let siswaAll = [];
+    let siswaMap = {}; // id -> {nama, kelas, nis}
+    let filter = 'all';
+    let search = '';
+    let editUid = null;
+    let editAnakSelected = new Set();
+
+    function applyFilter(list) {
+      let out = list;
+      if (filter === 'pending') out = out.filter((a) => a.status === 'pending' && a.aktif !== false);
+      else if (filter === 'approved') out = out.filter((a) => a.status === 'approved' && a.aktif !== false);
+      else if (filter === 'off') out = out.filter((a) => a.aktif === false);
+      if (search) {
+        const q = search.toLowerCase();
+        out = out.filter(
+          (a) =>
+            (a.nama || '').toLowerCase().includes(q) ||
+            (a.email || '').toLowerCase().includes(q)
+        );
+      }
+      return out;
+    }
+
+    function renderStats() {
+      const total = akunList.length;
+      const pending = akunList.filter((a) => a.status === 'pending' && a.aktif !== false).length;
+      const approved = akunList.filter((a) => a.status === 'approved' && a.aktif !== false).length;
+      $('statTotal').textContent = total;
+      $('statPending').textContent = pending;
+      $('statApproved').textContent = approved;
+    }
+
+    function labelAnak(ids) {
+      if (!ids || !ids.length) return 'Belum dihubungkan';
+      return ids
+        .map((id) => {
+          const s = siswaMap[id];
+          return s ? `${s.nama} (${s.kelas || '—'})` : id;
+        })
+        .join(', ');
+    }
+
+    function renderList() {
+      const rows = applyFilter(akunList);
+      const area = $('listArea');
+      if (!rows.length) {
+        area.innerHTML = `<div class="empty-box">Tidak ada akun yang cocok.</div>`;
+        return;
+      }
+      area.innerHTML =
+        `<div class="list">` +
+        rows
+          .map((a) => {
+            const badges = [];
+            if (a.aktif === false) badges.push(`<span class="badge badge-off">Nonaktif</span>`);
+            else if (a.status === 'pending') badges.push(`<span class="badge badge-pending">Pending</span>`);
+            else badges.push(`<span class="badge badge-approved">Disetujui</span>`);
+            badges.push(
+              `<span class="badge badge-anak">${a.anakIds && a.anakIds.length ? a.anakIds.length + ' anak' : '0 anak'}</span>`
+            );
+
+            const actions = [];
+            if (a.aktif !== false && a.status === 'pending') {
+              actions.push(
+                `<button type="button" class="btn-sm primary" data-act="approve" data-uid="${escapeHtml(a.uid)}">Setujui</button>`
+              );
+            }
+            if (a.aktif !== false && a.status === 'approved') {
+              actions.push(
+                `<button type="button" class="btn-sm" data-act="pending" data-uid="${escapeHtml(a.uid)}">Tarik persetujuan</button>`
+              );
+            }
+            actions.push(
+              `<button type="button" class="btn-sm" data-act="anak" data-uid="${escapeHtml(a.uid)}">Hubungkan anak</button>`
+            );
+            if (a.email) {
+              actions.push(
+                `<button type="button" class="btn-sm" data-act="reset" data-uid="${escapeHtml(a.uid)}" data-email="${escapeHtml(a.email)}">Email reset PW</button>`
+              );
+            }
+            if (a.aktif !== false) {
+              actions.push(
+                `<button type="button" class="btn-sm danger" data-act="off" data-uid="${escapeHtml(a.uid)}">Nonaktifkan</button>`
+              );
+            } else {
+              actions.push(
+                `<button type="button" class="btn-sm primary" data-act="on" data-uid="${escapeHtml(a.uid)}">Aktifkan</button>`
+              );
+            }
+
+            return `
+            <article class="akun-card" data-uid="${escapeHtml(a.uid)}">
+              <div class="akun-top">
+                <div class="akun-avatar">${escapeHtml(inisial(a.nama || a.email))}</div>
+                <div class="akun-info">
+                  <div class="akun-nama">${escapeHtml(a.nama || '—')}</div>
+                  <div class="akun-email">${escapeHtml(a.email || 'tanpa email')}</div>
+                  <div class="akun-badges">${badges.join('')}</div>
+                  <div class="siswa-pick-meta" style="margin-top:8px">${escapeHtml(labelAnak(a.anakIds))}</div>
+                </div>
+              </div>
+              <div class="akun-actions">${actions.join('')}</div>
+            </article>`;
+          })
+          .join('') +
+        `</div>`;
+
+      area.querySelectorAll('[data-act]').forEach((btn) => {
+        btn.addEventListener('click', () => onAction(btn.dataset.act, btn.dataset.uid, btn.dataset.email));
+      });
+    }
+
+    async function refresh() {
+      try {
+        akunList = await listAkunOrangtua();
+        // resolve anak names
+        const allIds = [...new Set(akunList.flatMap((a) => a.anakIds || []))];
+        if (allIds.length) {
+          const detail = await loadSiswaByIds(allIds);
+          detail.forEach((s) => {
+            siswaMap[s.id] = s;
+          });
+        }
+        renderStats();
+        renderList();
+      } catch (err) {
+        console.error(err);
+        $('listArea').innerHTML = `<div class="empty-box">Gagal memuat data. ${escapeHtml(err.message || '')}</div>`;
+        showToast('Gagal memuat daftar akun.', true);
+      }
+    }
+
+    async function onAction(act, uid, email) {
+      const akun = akunList.find((a) => a.uid === uid);
+      if (!akun && act !== 'reset') return;
+
+      try {
+        if (act === 'approve') {
+          await updateAkunOrangtua(uid, { status: 'approved', aktif: true });
+          showToast('Akun disetujui.');
+          await refresh();
+        } else if (act === 'pending') {
+          if (!confirm('Tarik persetujuan akun ini? Ortu tidak bisa akses data sampai disetujui lagi.')) return;
+          await updateAkunOrangtua(uid, { status: 'pending' });
+          showToast('Persetujuan ditarik.');
+          await refresh();
+        } else if (act === 'off') {
+          if (!confirm('Nonaktifkan akun ini?')) return;
+          await updateAkunOrangtua(uid, { aktif: false });
+          showToast('Akun dinonaktifkan.');
+          await refresh();
+        } else if (act === 'on') {
+          await updateAkunOrangtua(uid, { aktif: true });
+          showToast('Akun diaktifkan kembali.');
+          await refresh();
+        } else if (act === 'reset') {
+          if (!email) return;
+          if (!confirm(`Kirim email reset password ke ${email}?`)) return;
+          await kirimResetPasswordOrangtua(email);
+          showToast('Email reset password dikirim (cek inbox/spam).');
+        } else if (act === 'anak') {
+          openModalAnak(akun);
+        }
+      } catch (err) {
+        console.error(err);
+        showToast(terjemahkanErrorLogin(err) || err.message || 'Gagal.', true);
+      }
+    }
+
+    async function openModalAnak(akun) {
+      editUid = akun.uid;
+      editAnakSelected = new Set(akun.anakIds || []);
+      $('modalAnakTitle').textContent = 'Hubungkan anak';
+      $('modalAnakSub').textContent = `${akun.nama || akun.email} — centang siswa yang terhubung.`;
+      $('modalAnakFilter').value = '';
+      if (!siswaAll.length) {
+        try {
+          siswaAll = await listSemuaSiswa();
+          siswaAll.forEach((s) => {
+            siswaMap[s.id] = s;
+          });
+        } catch (err) {
+          showToast('Gagal memuat daftar siswa.', true);
+          return;
+        }
+      }
+      renderModalAnakList();
+      $('modalAnak').classList.remove('hidden');
+    }
+
+    function renderModalAnakList() {
+      const q = ($('modalAnakFilter').value || '').trim().toLowerCase();
+      let list = siswaAll;
+      if (q) {
+        list = list.filter(
+          (s) =>
+            s.nama.toLowerCase().includes(q) ||
+            String(s.kelas).toLowerCase().includes(q) ||
+            String(s.nis).toLowerCase().includes(q)
+        );
+      }
+      const box = $('modalAnakList');
+      if (!list.length) {
+        box.innerHTML = `<div class="empty-box" style="padding:20px">Tidak ada siswa.</div>`;
+        return;
+      }
+      box.innerHTML = list
+        .map(
+          (s) => `
+        <label class="siswa-pick-item">
+          <input type="checkbox" value="${escapeHtml(s.id)}" ${editAnakSelected.has(s.id) ? 'checked' : ''}>
+          <span>
+            <strong>${escapeHtml(s.nama)}</strong>
+            <div class="siswa-pick-meta">Kelas ${escapeHtml(s.kelas || '—')}${s.nis ? ' · ' + escapeHtml(s.nis) : ''}</div>
+          </span>
+        </label>`
+        )
+        .join('');
+      box.querySelectorAll('input[type=checkbox]').forEach((cb) => {
+        cb.addEventListener('change', () => {
+          if (cb.checked) editAnakSelected.add(cb.value);
+          else editAnakSelected.delete(cb.value);
+        });
+      });
+    }
+
+    function closeModalAnak() {
+      $('modalAnak').classList.add('hidden');
+      editUid = null;
+    }
+
+    $('modalAnakClose').addEventListener('click', closeModalAnak);
+    $('modalAnakCancel').addEventListener('click', closeModalAnak);
+    $('modalAnakFilter').addEventListener('input', renderModalAnakList);
+    $('modalAnakSave').addEventListener('click', async () => {
+      if (!editUid) return;
+      const btn = $('modalAnakSave');
+      btn.disabled = true;
+      try {
+        await updateAkunOrangtua(editUid, { anakIds: [...editAnakSelected] });
+        showToast('Anak berhasil dihubungkan.');
+        closeModalAnak();
+        await refresh();
+      } catch (err) {
+        console.error(err);
+        showToast(err.message || 'Gagal menyimpan.', true);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    $('qSearch').addEventListener('input', () => {
+      search = $('qSearch').value.trim();
+      renderList();
+    });
+
+    document.querySelectorAll('.chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
+        chip.classList.add('active');
+        filter = chip.dataset.filter;
+        renderList();
+      });
+    });
+
+    async function boot(s) {
+      if (!s || s.role !== 'admin') {
+        window.location.href = 'index.html';
+        return;
+      }
+      session = s;
+      $('subNama').textContent = s.nama || s.email || 'Admin';
+      await refresh();
+    }
+
+    const existing = currentSession();
+    if (existing) boot(existing);
+    else onAuthChange((s) => boot(s));
+
+    $('btnLogout').addEventListener('click', async () => {
       await logout();
       window.location.href = 'index.html';
     });

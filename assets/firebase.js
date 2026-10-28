@@ -538,6 +538,146 @@ export async function loadNilaiStsPublished(siswaId) {
   };
 }
 
+
+
+/* --------------------------------------------------------------------------
+   Admin: kelola akun orang tua
+   -------------------------------------------------------------------------- */
+
+/**
+ * Daftar semua akun role=orangtua (admin only).
+ * @returns {Promise<Array<{uid,email,nama,status,aktif,anakIds,createdAt}>>}
+ */
+export async function listAkunOrangtua() {
+  if (DEMO_MODE) {
+    _seedDemo();
+    await new Promise((r) => setTimeout(r, 200));
+    const users = JSON.parse(localStorage.getItem(DEMO_USERS_KEY) || '[]');
+    return users
+      .filter((u) => u.role === 'orangtua')
+      .map((u, i) => ({
+        uid: 'demo-ortu-' + i,
+        email: u.email,
+        nama: u.nama,
+        status: u.status || 'approved',
+        aktif: u.aktif !== false,
+        anakIds: u.anakIds || [],
+        createdAt: null,
+      }));
+  }
+  const { db, fsMod } = window.__fb;
+  const q = fsMod.query(
+    fsMod.collection(db, 'users'),
+    fsMod.where('role', '==', 'orangtua')
+  );
+  const snap = await fsMod.getDocs(q);
+  const list = [];
+  snap.forEach((doc) => {
+    const d = doc.data();
+    list.push({
+      uid: doc.id,
+      email: d.email || '',
+      nama: d.nama || '',
+      status: d.status || 'pending',
+      aktif: d.aktif !== false,
+      anakIds: Array.isArray(d.anakIds) ? d.anakIds : [],
+      createdAt: d.createdAt || null,
+    });
+  });
+  list.sort((a, b) => {
+    // pending dulu, lalu nama
+    if (a.status === 'pending' && b.status !== 'pending') return -1;
+    if (b.status === 'pending' && a.status !== 'pending') return 1;
+    return String(a.nama || a.email).localeCompare(String(b.nama || b.email), 'id');
+  });
+  return list;
+}
+
+/**
+ * Update profil orang tua (status, aktif, anakIds, nama).
+ * Hanya field yang diizinkan rules untuk admin.
+ */
+export async function updateAkunOrangtua(uid, patch) {
+  if (!uid) throw new Error('UID wajib.');
+  if (DEMO_MODE) {
+    _seedDemo();
+    const users = JSON.parse(localStorage.getItem(DEMO_USERS_KEY) || '[]');
+    // demo: match by synthetic
+    const idx = users.findIndex(
+      (u, i) => u.role === 'orangtua' && 'demo-ortu-' + i === uid
+    );
+    if (idx < 0) throw new Error('Akun tidak ditemukan (demo).');
+    if (patch.nama != null) users[idx].nama = patch.nama;
+    if (patch.status != null) users[idx].status = patch.status;
+    if (patch.aktif != null) users[idx].aktif = patch.aktif;
+    if (patch.anakIds != null) users[idx].anakIds = patch.anakIds;
+    localStorage.setItem(DEMO_USERS_KEY, JSON.stringify(users));
+    return;
+  }
+  const { db, fsMod } = window.__fb;
+  const ref = fsMod.doc(db, 'users', uid);
+  const data = {};
+  if (patch.nama != null) data.nama = String(patch.nama).trim();
+  if (patch.status != null) data.status = patch.status;
+  if (patch.aktif != null) data.aktif = !!patch.aktif;
+  if (patch.anakIds != null) {
+    data.anakIds = Array.isArray(patch.anakIds) ? patch.anakIds : [];
+  }
+  data.updatedAt = fsMod.serverTimestamp();
+  await fsMod.updateDoc(ref, data);
+}
+
+/**
+ * Semua siswa ringkas untuk picker anak (admin sudah login → rules izinkan).
+ * @returns {Promise<Array<{id,nama,nis,kelas}>>}
+ */
+export async function listSemuaSiswa() {
+  if (DEMO_MODE) {
+    _seedDemo();
+    const list = JSON.parse(localStorage.getItem(DEMO_SISWA_KEY) || '[]');
+    return list.map((s) => ({
+      id: s.id,
+      nama: s.nama,
+      nis: s.nis || '',
+      kelas: s.kelas || '',
+    }));
+  }
+  const { db, fsMod } = window.__fb;
+  const snap = await fsMod.getDocs(fsMod.collection(db, 'siswa'));
+  const list = [];
+  snap.forEach((doc) => {
+    const d = doc.data();
+    if (d.aktif === false) return;
+    list.push({
+      id: doc.id,
+      nama: d.nama || doc.id,
+      nis: d.nis || d.nisn || d.nipd || '',
+      kelas: d.kelas || '',
+    });
+  });
+  list.sort((a, b) => {
+    const kc = String(a.kelas).localeCompare(String(b.kelas), 'id', { numeric: true });
+    if (kc !== 0) return kc;
+    return a.nama.localeCompare(b.nama, 'id');
+  });
+  return list;
+}
+
+/**
+ * Kirim email reset password Firebase ke alamat ortu.
+ * Tidak mengubah password langsung (butuh Admin SDK / Cloud Function).
+ */
+export async function kirimResetPasswordOrangtua(email) {
+  if (!email) throw new Error('Email wajib.');
+  if (DEMO_MODE) {
+    await new Promise((r) => setTimeout(r, 400));
+    return { ok: true, demo: true };
+  }
+  const { auth, authMod } = window.__fb;
+  await authMod.sendPasswordResetEmail(auth, email.trim().toLowerCase());
+  return { ok: true };
+}
+
 export function terjemahkanErrorLogin(err) {
   const code = err && err.code ? String(err.code) : '';
   if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
