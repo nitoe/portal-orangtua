@@ -573,6 +573,80 @@ export async function loadNilaiStsPublished(siswaId) {
 }
 
 
+
+/**
+ * Agregasi nilai STS per mapel TANPA gerbang publikasi.
+ * Untuk chart capaian — menampilkan data yang sudah diisi guru meski belum dipublish.
+ */
+export async function loadNilaiStsRaw(siswaId) {
+  const result = await loadNilaiStsPublished(siswaId);
+  // Paksa baca ulang items jika published=false tetapi data mungkin ada
+  if (result.items && result.items.length) return result;
+
+  if (DEMO_MODE) {
+    return result; // demo sudah di-handle di loadNilaiStsPublished
+  }
+
+  const { db, fsMod } = window.__fb;
+  let semester = '1';
+  let tahunAjaran = '';
+  let periodeLabel = 'Semester berjalan';
+  try {
+    const cfg = await fsMod.getDoc(fsMod.doc(db, 'config', 'akademik'));
+    if (cfg.exists()) {
+      const c = cfg.data();
+      semester = String(c.semesterAktif || c.semester || '1');
+      tahunAjaran = String(c.tahunAjaran || '');
+      periodeLabel = tahunAjaran
+        ? `STS · Semester ${semester} · ${tahunAjaran}`
+        : `STS · Semester ${semester}`;
+    }
+  } catch (_) {}
+
+  const byMapel = {};
+  try {
+    const q = fsMod.query(
+      fsMod.collection(db, 'nilai_sts'),
+      fsMod.where('siswaId', '==', siswaId)
+    );
+    const snap = await fsMod.getDocs(q);
+    snap.forEach((doc) => {
+      const d = doc.data();
+      if (tahunAjaran && d.tahunAjaran && String(d.tahunAjaran) !== tahunAjaran) return;
+      if (d.semester != null && String(d.semester) !== String(semester)) return;
+      const mapel = String(d.mapel || '').trim() || 'Mapel';
+      const n = Number(d.nilai);
+      if (!Number.isFinite(n)) return;
+      if (!byMapel[mapel]) byMapel[mapel] = [];
+      byMapel[mapel].push(n);
+    });
+  } catch (err) {
+    console.warn('loadNilaiStsRaw:', err);
+  }
+
+  const items = Object.keys(byMapel)
+    .sort((a, b) => a.localeCompare(b, 'id'))
+    .map((mapel) => {
+      const arr = byMapel[mapel];
+      const avg = arr.reduce((s, x) => s + x, 0) / arr.length;
+      const nilai = Math.round(avg * 10) / 10;
+      let predikat = '—';
+      if (nilai >= 90) predikat = 'Sangat Baik';
+      else if (nilai >= 80) predikat = 'Baik';
+      else if (nilai >= 70) predikat = 'Cukup';
+      else predikat = 'Perlu bimbingan';
+      return { mapel, nilai, predikat, keterangan: arr.length > 1 ? `Rata-rata ${arr.length} TP` : 'Nilai STS' };
+    });
+
+  return {
+    published: result.published,
+    periodeLabel,
+    publishedAt: result.publishedAt,
+    items,
+    hasData: items.length > 0,
+  };
+}
+
 export async function listAkunOrangtua() {
   if (DEMO_MODE) {
     _seedDemo();

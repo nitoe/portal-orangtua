@@ -61,6 +61,64 @@
       font-size: 12px; font-weight: 600; text-transform: uppercase;
       letter-spacing: 0.06em; color: #64748b; margin: 0 0 8px;
     }
+
+    /* Chart capaian STS */
+    .chart-card { padding: 0; overflow: hidden; margin-top: 16px; }
+    .chart-card-head {
+      border-bottom: 1px solid var(--border);
+      background: rgba(248, 250, 252, 0.9);
+      padding: 10px 14px;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    }
+    .chart-card-head h3 {
+      margin: 0;
+      font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em; color: #64748b;
+    }
+    .chart-body { padding: 14px 16px 16px; }
+    .chart-empty {
+      text-align: center; padding: 20px 12px;
+      font-size: 13px; color: var(--muted);
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(88px, 28%) 1fr auto;
+      gap: 8px 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .bar-row:last-child { margin-bottom: 0; }
+    .bar-label {
+      font-size: 12.5px; font-weight: 500; color: #0f172a;
+      line-height: 1.3;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .bar-track {
+      height: 10px;
+      background: #eef0f6;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--muh-600);
+      min-width: 0;
+      transition: width 0.35s ease;
+    }
+    .bar-fill.is-low { background: #b45309; }
+    .bar-fill.is-mid { background: #4a4fa3; }
+    .bar-fill.is-high { background: #047857; }
+    .bar-val {
+      font-size: 13px; font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: #0f172a;
+      min-width: 2.5rem; text-align: right;
+    }
+    .chart-note {
+      margin-top: 12px;
+      font-size: 12px; color: var(--muted); line-height: 1.45;
+    }
   </style>
 </head>
 <body>
@@ -167,7 +225,17 @@
             </div>
             <div class="card-soft nilai-table" id="nilaiArea">
               <div class="state-box"><p>Memuat nilai STS…</p></div>
-            </div>
+            
+            <section class="card-soft chart-card" id="chartSection" aria-label="Chart capaian STS">
+              <div class="chart-card-head">
+                <h3>Capaian STS (chart)</h3>
+                <span class="badge badge-neutral" id="chartBadge">—</span>
+              </div>
+              <div class="chart-body" id="chartBody">
+                <div class="chart-empty">Memuat chart…</div>
+              </div>
+            </section>
+
           </div>
         </main>
       </div>
@@ -193,7 +261,8 @@
       logout,
       loadSiswaByIds,
       loadNilaiStsPublished,
-    } from './assets/firebase.js?v=20261028j';
+      loadNilaiStsRaw,
+    } from './assets/firebase.js?v=20261028k';
 
     const $ = (id) => document.getElementById(id);
     const TANGGAL = new Intl.DateTimeFormat('id-ID', {
@@ -217,6 +286,43 @@
     $('btnLogoutSide').addEventListener('click', doLogout);
     $('btnLogoutTop').addEventListener('click', doLogout);
     $('btnLogoutNav').addEventListener('click', doLogout);
+
+
+    function barClass(n) {
+      if (n >= 80) return 'is-high';
+      if (n >= 70) return 'is-mid';
+      return 'is-low';
+    }
+    function renderChart(result) {
+      const body = $('chartBody');
+      const badge = $('chartBadge');
+      const items = (result && result.items) || [];
+      if (!items.length) {
+        badge.textContent = 'Belum ada data';
+        badge.className = 'badge badge-neutral';
+        body.innerHTML = `<div class="chart-empty">Belum ada nilai STS yang diisi guru untuk anak ini pada periode berjalan.<br>Chart akan muncul otomatis setelah nilai diinput.</div>`;
+        return;
+      }
+      badge.textContent = result.published ? 'Dipublikasikan' : 'Data internal';
+      badge.className = result.published ? 'badge badge-ok' : 'badge badge-pending';
+      const max = 100;
+      body.innerHTML =
+        items
+          .map((x) => {
+            const pct = Math.max(0, Math.min(100, (Number(x.nilai) / max) * 100));
+            return `<div class="bar-row">
+              <div class="bar-label" title="${escapeHtml(x.mapel)}">${escapeHtml(x.mapel)}</div>
+              <div class="bar-track"><div class="bar-fill ${barClass(Number(x.nilai))}" style="width:${pct}%"></div></div>
+              <div class="bar-val">${x.nilai != null ? x.nilai : '—'}</div>
+            </div>`;
+          })
+          .join('') +
+        `<p class="chart-note">Skala 0–100. Warna: hijau ≥80, biru 70–79, ambar &lt;70. ${
+          result.published
+            ? 'Nilai sudah dipublikasikan guru.'
+            : 'Menampilkan data yang sudah diisi guru (belum tentu sudah dipublikasikan).'
+        }</p>`;
+    }
 
     function renderSts(result) {
       $('periodText').textContent = result.periodeLabel || 'Periode berjalan';
@@ -301,10 +407,18 @@
       } catch (_) {}
 
       try {
-        renderSts(await loadNilaiStsPublished(aktifId));
+        const publishedView = await loadNilaiStsPublished(aktifId);
+        renderSts(publishedView);
       } catch (err) {
         console.error(err);
         $('nilaiArea').innerHTML = `<div class="state-box"><h3>Gagal memuat nilai</h3><p>Periksa koneksi atau hubungi sekolah.</p></div>`;
+      }
+      try {
+        const raw = await loadNilaiStsRaw(aktifId);
+        renderChart(raw);
+      } catch (err) {
+        console.error(err);
+        $('chartBody').innerHTML = `<div class="chart-empty">Gagal memuat chart.</div>`;
       }
     }
     boot();
