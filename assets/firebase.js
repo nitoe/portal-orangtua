@@ -2,30 +2,49 @@
  * firebase.js — Portal Orang Tua
  * SD Muhammadiyah 01 Kukusan
  *
- * Memakai Firebase project yang SAMA dengan penilaian-v2
- * (sdm01-penilaianv2) agar data siswa & nilai satu sumber.
+ * Memakai Firebase project yang SAMA dengan SDM01Penilaian
+ * (nitoe/SDM01Penilaian → project sdm01kukusan-2e735).
  *
- * Ganti firebaseConfig jika project berbeda, atau biarkan
- * placeholder untuk DEMO_MODE.
+ * Admin login = akun admin yang sudah ada di aplikasi penilaian
+ * (https://penilaian.sdmuhammadiyah01kks.sch.id). Jangan buat akun admin baru.
+ *
+ * Config di bawah diambil dari app web yang sudah deploy (public by design).
+ * DEMO_MODE hanya aktif jika config kosong / placeholder, ATAU
+ * localStorage.setItem('po_force_demo','1') untuk uji UI offline.
  */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA52_m-tU18t2ULV268v7j3X8HDkWVBGi0",
-  authDomain: "sdm01-penilaianv2.firebaseapp.com",
-  projectId: "sdm01-penilaianv2",
-  storageBucket: "sdm01-penilaianv2.firebasestorage.app",
-  messagingSenderId: "437694245628",
-  appId: "1:437694245628:web:14d0fc8350f59be0364579",
+  apiKey: 'AIzaSyBvVulB3Kwjs9CYBeKo2lyXA14nCSpJfwk',
+  authDomain: 'sdm01kukusan-2e735.firebaseapp.com',
+  projectId: 'sdm01kukusan-2e735',
+  storageBucket: 'sdm01kukusan-2e735.firebasestorage.app',
+  messagingSenderId: '970181491299',
+  appId: '1:970181491299:web:8d6798fbbb43c231879656',
 };
 
-export const DEMO_MODE = !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith('TODO');
+const forceDemo =
+  typeof localStorage !== 'undefined' && localStorage.getItem('po_force_demo') === '1';
 
-let app = null, auth = null, db = null;
+export const DEMO_MODE =
+  forceDemo ||
+  !firebaseConfig.apiKey ||
+  firebaseConfig.apiKey.startsWith('TODO') ||
+  firebaseConfig.apiKey.startsWith('ganti_');
+
+let app = null,
+  auth = null,
+  db = null;
 
 if (!DEMO_MODE) {
-  const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-  const authMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-  const fsMod = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+  const { initializeApp } = await import(
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'
+  );
+  const authMod = await import(
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'
+  );
+  const fsMod = await import(
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'
+  );
 
   app = initializeApp(firebaseConfig);
   auth = authMod.getAuth(app);
@@ -41,7 +60,7 @@ if (!DEMO_MODE) {
 export { app, auth, db };
 
 /* --------------------------------------------------------------------------
-   DEMO data
+   DEMO data (hanya jika DEMO_MODE)
    -------------------------------------------------------------------------- */
 const DEMO_SESSION_KEY = 'po_demo_session';
 const DEMO_USERS_KEY = 'po_demo_users';
@@ -62,15 +81,12 @@ function _seedDemo() {
     localStorage.setItem(DEMO_SISWA_KEY, JSON.stringify(siswa));
   }
   if (!localStorage.getItem(DEMO_USERS_KEY)) {
-    // Mapping: password per "akun ortu" yang terhubung ke siswa
-    // Di produksi: users/{uid} role=orangtua, anakIds=[...], login via email
-    // Untuk UX pilih-siswa: kita simpan parentPassword di dokumen siswa
-    // atau lookup users yang anakIds contains siswaId.
+    // Hanya untuk uji UI offline. Admin produksi = akun di Firebase SDM01Penilaian.
     const users = [
       {
-        email: 'admin@sdm01kukusan.sch.id',
-        password: 'admin123',
-        nama: 'Admin Sekolah',
+        email: 'demo-admin-offline@local',
+        password: 'demo-only',
+        nama: 'Admin (demo offline)',
         role: 'admin',
       },
       {
@@ -129,53 +145,49 @@ export async function loadKelasDanSiswa() {
       nis: d.nis || d.nisn || '',
     });
   });
+  // Urut nama di tiap kelas
+  Object.keys(byKelas).forEach((k) => {
+    byKelas[k].sort((a, b) => a.nama.localeCompare(b.nama, 'id'));
+  });
   return byKelas;
 }
 
 /**
- * Login orang tua dengan memilih siswa + password.
- * Mencari user role=orangtua yang anakIds mengandung siswaId,
- * lalu verifikasi password (demo) / signIn (produksi lewat email tersimpan).
- *
- * Catatan desain produksi:
- * - Setiap orang tua punya email + password di Firebase Auth.
- * - Dokumen users/{uid} berisi role, anakIds.
- * - Untuk UX "pilih anak dulu": kita lookup user yang punya anakIds berisi siswaId,
- *   lalu signInWithEmailAndPassword(email, password).
- * - Password diganti orang tua sendiri; admin bisa reset lewat Firebase Auth / panel.
+ * Login orang tua: pilih siswa + password.
+ * Produksi: cari user role=orangtua yang anakIds mengandung siswaId,
+ * lalu signInWithEmailAndPassword (email dari profil ortu).
+ * Password = password akun Firebase Auth orang tua.
  */
-export async function loginOrangtuaBySiswa({ siswaId, password }) {
+export async function loginOrangtua({ siswaId, password }) {
+  if (!siswaId || !password) throw new Error('Pilih siswa dan isi password.');
+
   if (DEMO_MODE) {
     _seedDemo();
-    await new Promise((r) => setTimeout(r, 450));
+    await new Promise((r) => setTimeout(r, 300));
     const users = JSON.parse(localStorage.getItem(DEMO_USERS_KEY) || '[]');
-    const found = users.find(
+    const ortu = users.find(
       (u) =>
         u.role === 'orangtua' &&
         Array.isArray(u.anakIds) &&
         u.anakIds.includes(siswaId) &&
         u.password === password
     );
-    if (!found) {
-      const err = new Error('demo/invalid-credential');
-      err.code = 'demo/invalid-credential';
-      throw err;
-    }
+    if (!ortu) throw Object.assign(new Error('Password salah atau akun tidak terhubung ke siswa ini.'), { code: 'auth/invalid-credential' });
     const session = {
-      uid: 'demo-' + btoa(found.email),
-      email: found.email,
-      nama: found.nama,
+      uid: 'demo-' + ortu.email,
+      email: ortu.email,
+      nama: ortu.nama,
       role: 'orangtua',
-      anakIds: found.anakIds || [],
+      anakIds: ortu.anakIds,
       siswaAktifId: siswaId,
     };
     localStorage.setItem(DEMO_SESSION_KEY, JSON.stringify(session));
     return session;
   }
 
-  const { db, fsMod, auth, authMod } = window.__fb;
+  const { auth, db, authMod, fsMod } = window.__fb;
 
-  // Cari user orangtua yang terhubung ke siswa ini
+  // Cari profil orang tua yang terhubung ke siswaId
   const q = fsMod.query(
     fsMod.collection(db, 'users'),
     fsMod.where('role', '==', 'orangtua'),
@@ -183,80 +195,174 @@ export async function loginOrangtuaBySiswa({ siswaId, password }) {
   );
   const snap = await fsMod.getDocs(q);
   if (snap.empty) {
-    const err = new Error('portal/no-parent-for-siswa');
-    err.code = 'portal/no-parent-for-siswa';
-    throw err;
+    throw Object.assign(
+      new Error('Belum ada akun orang tua yang terhubung ke siswa ini. Hubungi admin sekolah.'),
+      { code: 'auth/user-not-found' }
+    );
   }
-  // Ambil email dari dokumen pertama (biasanya 1 ortu per anak di fase awal)
-  const parentDoc = snap.docs[0];
-  const parent = parentDoc.data();
-  const email = parent.email || parentDoc.id; // fallback jika email disimpan di doc
 
-  // Login Firebase Auth
-  await authMod.setPersistence(auth, authMod.browserLocalPersistence);
+  // Ambil kandidat yang status approved (jika field ada)
+  let profileDoc = null;
+  snap.forEach((doc) => {
+    const d = doc.data();
+    if (d.status && d.status !== 'approved') return;
+    if (d.aktif === false) return;
+    if (!profileDoc) profileDoc = { id: doc.id, ...d };
+  });
+  if (!profileDoc) {
+    throw Object.assign(
+      new Error('Akun orang tua belum disetujui admin atau dinonaktifkan.'),
+      { code: 'auth/user-disabled' }
+    );
+  }
+
+  const email = (profileDoc.email || '').trim().toLowerCase();
+  if (!email) {
+    throw new Error('Profil orang tua tidak memiliki email login. Hubungi admin.');
+  }
+
   const cred = await authMod.signInWithEmailAndPassword(auth, email, password);
-
-  return {
+  const session = {
     uid: cred.user.uid,
     email: cred.user.email,
-    nama: parent.nama || cred.user.email,
+    nama: profileDoc.nama || cred.user.email,
     role: 'orangtua',
-    anakIds: parent.anakIds || [],
+    anakIds: profileDoc.anakIds || [siswaId],
     siswaAktifId: siswaId,
   };
+  return session;
 }
 
 /**
- * Login admin (email + password), role harus admin.
+ * Login admin — memakai akun admin SDM01Penilaian yang sudah ada.
+ * Email + password sama seperti di https://penilaian.sdmuhammadiyah01kks.sch.id
  */
-export async function loginAdmin(email, password, rememberMe = true) {
+export async function loginAdmin({ email, password }) {
+  if (!email || !password) throw new Error('Isi email dan password admin.');
+
   if (DEMO_MODE) {
     _seedDemo();
-    await new Promise((r) => setTimeout(r, 450));
+    await new Promise((r) => setTimeout(r, 300));
     const users = JSON.parse(localStorage.getItem(DEMO_USERS_KEY) || '[]');
-    const found = users.find(
+    const admin = users.find(
       (u) =>
         u.role === 'admin' &&
-        u.email.toLowerCase() === email.toLowerCase() &&
+        u.email.toLowerCase() === email.trim().toLowerCase() &&
         u.password === password
     );
-    if (!found) {
-      const err = new Error('demo/invalid-credential');
-      err.code = 'demo/invalid-credential';
-      throw err;
+    if (!admin) {
+      throw Object.assign(new Error('Email atau password admin salah (mode demo).'), {
+        code: 'auth/invalid-credential',
+      });
     }
     const session = {
       uid: 'demo-admin',
-      email: found.email,
-      nama: found.nama,
+      email: admin.email,
+      nama: admin.nama,
       role: 'admin',
     };
     localStorage.setItem(DEMO_SESSION_KEY, JSON.stringify(session));
     return session;
   }
 
-  const { auth, authMod, db, fsMod } = window.__fb;
-  await authMod.setPersistence(
+  const { auth, db, authMod, fsMod } = window.__fb;
+  const cred = await authMod.signInWithEmailAndPassword(
     auth,
-    rememberMe ? authMod.browserLocalPersistence : authMod.browserSessionPersistence
+    email.trim().toLowerCase(),
+    password
   );
-  const cred = await authMod.signInWithEmailAndPassword(auth, email, password);
-  const snap = await fsMod.getDoc(fsMod.doc(db, 'users', cred.user.uid));
-  const profile = snap.exists() ? snap.data() : {};
+  const uid = cred.user.uid;
+  const snap = await fsMod.getDoc(fsMod.doc(db, 'users', uid));
+  if (!snap.exists()) {
+    await authMod.signOut(auth);
+    throw new Error(
+      'Akun login ada di Firebase, tetapi profil staf tidak ditemukan. Hubungi administrator.'
+    );
+  }
+  const profile = snap.data();
   if (profile.role !== 'admin') {
     await authMod.signOut(auth);
-    const err = new Error('portal/not-admin');
-    err.code = 'portal/not-admin';
-    throw err;
+    throw new Error('Akun ini bukan admin. Gunakan tab Orang Tua untuk akun orang tua.');
+  }
+  if (profile.aktif === false) {
+    await authMod.signOut(auth);
+    throw new Error('Akun ini dinonaktifkan. Hubungi administrator.');
   }
   return {
-    uid: cred.user.uid,
+    uid,
     email: cred.user.email,
     nama: profile.nama || cred.user.email,
     role: 'admin',
   };
 }
 
+export async function logout() {
+  if (DEMO_MODE) {
+    localStorage.removeItem(DEMO_SESSION_KEY);
+    return;
+  }
+  const { auth, authMod } = window.__fb;
+  await authMod.signOut(auth);
+}
+
+/**
+ * Sesi saat ini (sync untuk gate halaman).
+ * Di produksi Firebase, null sampai onAuthChange mengisi cache.
+ */
+let _sessionCache = null;
+
+export function currentSession() {
+  if (DEMO_MODE) {
+    try {
+      const raw = localStorage.getItem(DEMO_SESSION_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+  return _sessionCache;
+}
+
+/**
+ * Dengarkan perubahan auth. Callback(session | null).
+ */
+export function onAuthChange(callback) {
+  if (DEMO_MODE) {
+    const s = currentSession();
+    callback(s);
+    return () => {};
+  }
+  const { auth, db, authMod, fsMod } = window.__fb;
+  return authMod.onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      _sessionCache = null;
+      callback(null);
+      return;
+    }
+    try {
+      const snap = await fsMod.getDoc(fsMod.doc(db, 'users', user.uid));
+      if (!snap.exists()) {
+        _sessionCache = null;
+        callback(null);
+        return;
+      }
+      const p = snap.data();
+      _sessionCache = {
+        uid: user.uid,
+        email: user.email,
+        nama: p.nama || user.email,
+        role: p.role,
+        anakIds: p.anakIds || [],
+        siswaAktifId: null,
+      };
+      callback(_sessionCache);
+    } catch (err) {
+      console.error(err);
+      _sessionCache = null;
+      callback(null);
+    }
+  });
+}
 
 /**
  * Ambil detail siswa by list of IDs (NIS / doc id).
@@ -297,24 +403,13 @@ export async function loadSiswaByIds(ids) {
 
 /**
  * Nilai STS yang sudah dipublish untuk satu siswa.
- * Skema fleksibel — menyesuaikan koleksi yang dipakai penilaian-v2.
- *
- * DEMO: s1 & s2 punya nilai published; s3 belum publish.
- *
- * Produksi (usulan):
- *   - sts_publish/{kelas}_{semesterId}  → { published: true, publishedAt, periodeLabel }
- *   - nilai_sts/{siswaId}_{mapel}_{semesterId} atau subcollection
- * Untuk sementara: baca koleksi `nilai_sts` filter siswaId + published==true
- * atau dokumen publish per kelas.
- *
- * @returns {Promise<{published:boolean, periodeLabel:string, publishedAt:string|null, items:Array<{mapel,nilai,predikat,keterangan}>}>}
+ * @returns {Promise<{published:boolean, periodeLabel:string, publishedAt:string|null, items:Array}>}
  */
 export async function loadNilaiStsPublished(siswaId) {
   if (DEMO_MODE) {
     _seedDemo();
     await new Promise((r) => setTimeout(r, 350));
     const periodeLabel = 'STS · Semester 1 · 2025/2026';
-    // Demo: s1 & s2 published, lainnya belum
     if (siswaId === 's1') {
       return {
         published: true,
@@ -345,23 +440,15 @@ export async function loadNilaiStsPublished(siswaId) {
         ],
       };
     }
-    // s3 dan lainnya: belum publish
-    return {
-      published: false,
-      periodeLabel,
-      publishedAt: null,
-      items: [],
-    };
+    return { published: false, periodeLabel, publishedAt: null, items: [] };
   }
 
   const { db, fsMod } = window.__fb;
 
-  // 1) Cek status publish — usulan koleksi sts_publish
-  //    Doc id bisa kelas_semester atau global semester.
-  //    Fallback: jika ada nilai dengan flag published, anggap published.
   let periodeLabel = 'Semester berjalan';
   let publishedAt = null;
   let published = false;
+  const items = [];
 
   try {
     const cfg = await fsMod.getDoc(fsMod.doc(db, 'config', 'akademik'));
@@ -372,42 +459,54 @@ export async function loadNilaiStsPublished(siswaId) {
         periodeLabel = `STS · Semester ${c.semester} · ${c.tahunAjaran}`;
       }
     }
-  } catch (_) { /* ignore */ }
-
-  // 2) Ambil nilai STS siswa
-  // Prefer: collection nilai_sts where siswaId == X and jenis == 'STS' and published == true
-  const items = [];
-  try {
-    const q = fsMod.query(
-      fsMod.collection(db, 'nilai_sts'),
-      fsMod.where('siswaId', '==', siswaId)
-    );
-    const snap = await fsMod.getDocs(q);
-    snap.forEach((doc) => {
-      const d = doc.data();
-      // Hanya tampilkan yang published (field di dokumen nilai atau di publish kelas)
-      if (d.published === false) return;
-      if (d.published === true) published = true;
-      items.push({
-        mapel: d.mapel || d.namaMapel || 'Mapel',
-        nilai: d.nilai != null ? d.nilai : d.skor,
-        predikat: d.predikat || '',
-        keterangan: d.keterangan || 'Sumatif Tengah Semester',
-      });
-      if (d.publishedAt && !publishedAt) {
-        try {
-          const ts = d.publishedAt.toDate ? d.publishedAt.toDate() : new Date(d.publishedAt);
-          publishedAt = ts.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-        } catch (_) {}
-      }
-    });
-    // Jika ada item tanpa flag published eksplisit, anggap published
-    if (items.length && !published) published = true;
-  } catch (err) {
-    console.warn('nilai_sts query:', err);
+  } catch (_) {
+    /* ignore */
   }
 
-  // Urutkan alphabet mapel
+  // Coba beberapa pola koleksi yang mungkin dipakai SDM01Penilaian
+  const tryCollections = ['nilai_sts', 'nilaiSts', 'sts'];
+  for (const colName of tryCollections) {
+    try {
+      const q = fsMod.query(
+        fsMod.collection(db, colName),
+        fsMod.where('siswaId', '==', siswaId)
+      );
+      const snap = await fsMod.getDocs(q);
+      if (snap.empty) continue;
+      snap.forEach((doc) => {
+        const d = doc.data();
+        if (d.published === false) return;
+        if (d.published === true) published = true;
+        // Filter jenis STS jika ada field jenis/fase
+        if (d.jenis && String(d.jenis).toUpperCase() !== 'STS') return;
+        items.push({
+          mapel: d.mapel || d.namaMapel || 'Mapel',
+          nilai: d.nilai != null ? d.nilai : d.skor,
+          predikat: d.predikat || '',
+          keterangan: d.keterangan || 'Sumatif Tengah Semester',
+        });
+        if (d.publishedAt && !publishedAt) {
+          try {
+            const ts = d.publishedAt.toDate
+              ? d.publishedAt.toDate()
+              : new Date(d.publishedAt);
+            publishedAt = ts.toLocaleDateString('id-ID', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            });
+          } catch (_) {}
+        }
+      });
+      if (items.length) {
+        if (!published) published = true;
+        break;
+      }
+    } catch (err) {
+      console.warn(colName, err);
+    }
+  }
+
   items.sort((a, b) => String(a.mapel).localeCompare(String(b.mapel), 'id'));
 
   return {
@@ -419,61 +518,22 @@ export async function loadNilaiStsPublished(siswaId) {
 }
 
 export function terjemahkanErrorLogin(err) {
-  const code = err?.code || '';
-  const map = {
-    'auth/invalid-email': 'Format email tidak valid.',
-    'auth/user-not-found': 'Akun tidak ditemukan.',
-    'auth/wrong-password': 'Password salah.',
-    'auth/invalid-credential': 'Email atau password salah.',
-    'auth/too-many-requests': 'Terlalu banyak percobaan. Coba lagi nanti.',
-    'auth/network-request-failed': 'Koneksi bermasalah. Periksa internet Anda.',
-    'demo/invalid-credential': 'Nama anak atau password tidak sesuai.',
-    'portal/no-parent-for-siswa': 'Belum ada akun orang tua terhubung ke anak ini. Hubungi admin.',
-    'portal/not-admin': 'Akun ini bukan admin portal.',
-  };
-  return map[code] || 'Login gagal. Silakan coba lagi.';
-}
-
-export function currentSession() {
-  if (DEMO_MODE) {
-    const raw = localStorage.getItem(DEMO_SESSION_KEY);
-    return raw ? JSON.parse(raw) : null;
+  const code = err && err.code ? String(err.code) : '';
+  if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
+    return 'Email atau password salah.';
   }
-  return null;
-}
-
-export async function logout() {
-  if (DEMO_MODE) {
-    localStorage.removeItem(DEMO_SESSION_KEY);
-    return;
+  if (code === 'auth/user-not-found') {
+    return 'Akun tidak ditemukan.';
   }
-  const { authMod, auth } = window.__fb;
-  await authMod.signOut(auth);
-}
-
-export function onAuthChange(callback) {
-  if (DEMO_MODE) {
-    callback(currentSession());
-    return () => {};
+  if (code === 'auth/user-disabled') {
+    return 'Akun dinonaktifkan atau belum disetujui.';
   }
-  const { authMod, auth, db, fsMod } = window.__fb;
-  return authMod.onAuthStateChanged(auth, async (fbUser) => {
-    if (!fbUser) {
-      callback(null);
-      return;
-    }
-    try {
-      const snap = await fsMod.getDoc(fsMod.doc(db, 'users', fbUser.uid));
-      const profile = snap.exists() ? snap.data() : {};
-      callback({
-        uid: fbUser.uid,
-        email: fbUser.email,
-        nama: profile.nama || fbUser.email,
-        role: profile.role || '',
-        anakIds: profile.anakIds || [],
-      });
-    } catch {
-      callback({ uid: fbUser.uid, email: fbUser.email, nama: fbUser.email, role: '', anakIds: [] });
-    }
-  });
+  if (code === 'auth/too-many-requests') {
+    return 'Terlalu banyak percobaan. Coba lagi nanti.';
+  }
+  if (code === 'auth/invalid-email') {
+    return 'Format email tidak valid.';
+  }
+  if (err && err.message) return err.message;
+  return 'Gagal masuk. Coba lagi.';
 }
