@@ -124,3 +124,13 @@
 ### Keluar dari halaman Rapor STS dan Ringkasan Capaian
 - **Bug**: tombol Keluar di halaman selain Beranda tidak berfungsi. Di `rapor-sts.html` handler tidak dipasang sama sekali. Di `capaian.html` sesi dihapus tetapi tidak dialihkan ke halaman login, sehingga baru terasa keluar setelah membuka Beranda.
 - **Perbaikan**: kedua halaman memakai pola yang sama dengan Beranda — `doLogout()` memanggil `logout()` lalu `location.href = 'index.html'`. Tombol sidebar, header, dan bottom-nav semuanya terhubung.
+
+## 2026-10-29i
+
+### Halaman login lebih ramah sebagai kesan pertama
+- Hero kiri memakai latar kelas (assets/hero-kelas.png) dengan overlay biru sekolah.
+- Narasi disesuaikan untuk orang tua: mendampingi perkembangan, bukan sekadar “masuk lihat nilai”.
+- Pills: Rapor STS, Ringkasan capaian, Tanpa akun baru.
+- Kutipan HR. Muslim di bagian bawah hero.
+- Panel kanan: sapaan “Hai, Bapak dan Ibu.”, petunjuk NISN lebih jelas, tombol “Masuk & lihat perkembangan”.
+- Form, id elemen, tab Orang Tua/Admin, dan logika login tidak diubah. Skala fluid (ANTIREGRESI §9) tetap.

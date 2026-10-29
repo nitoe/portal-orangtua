@@ -37,9 +37,11 @@
     }
 
     .hero {
-      background: var(--brand-sidebar);
+      background:
+        linear-gradient(160deg, rgba(31, 31, 80, 0.72) 0%, rgba(49, 48, 131, 0.55) 45%, rgba(16, 40, 70, 0.62) 100%),
+        url('assets/hero-kelas.png') center / cover no-repeat;
       color: #fff;
-      padding: 3rem 2.5rem;
+      padding: 2.5rem 2.25rem;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -48,10 +50,8 @@
     .hero::after {
       content: '';
       position: absolute;
-      width: 20rem; height: 20rem;
-      right: -5rem; bottom: -3.75rem;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.04);
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.12) 0%, rgba(15, 23, 42, 0.38) 100%);
       pointer-events: none;
     }
     .hero-inner {
@@ -120,6 +120,48 @@
       padding-top: 2.5rem;
       font-size: 0.75rem;
       opacity: 0.55;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0 1.75rem;
+    }
+    .hero-pill {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      min-width: 7.5rem;
+      backdrop-filter: blur(4px);
+    }
+    .hero-pill strong {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .hero-pill span {
+      display: block;
+      font-size: 0.6875rem;
+      opacity: 0.85;
+      margin-top: 0.125rem;
+    }
+    .hero-quote {
+      margin-top: auto;
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 0.75rem;
+      padding: 0.875rem 1rem;
+      font-size: 0.8125rem;
+      line-height: 1.45;
+    }
+    .hero-quote cite {
+      display: block;
+      margin-top: 0.375rem;
+      font-size: 0.75rem;
+      font-style: normal;
+      opacity: 0.8;
     }
 
     .panel {
@@ -250,30 +292,34 @@
         <div class="brand-row">
           <img class="brand-logo" src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
           <div>
-            <div class="brand-name">SD Muhammadiyah 01 Kukusan</div>
-            <div class="brand-tag">Portal Orang Tua</div>
+            <div class="brand-name">Portal Orang Tua</div>
+            <div class="brand-tag">Mendampingi, memahami, tumbuh bersama</div>
           </div>
         </div>
-        <h1>Nilai anak, langsung dari sekolah.</h1>
+        <p style="margin:0 0 0.5rem;font-size:0.8125rem;opacity:0.9">Untuk orang tua · SD Muhammadiyah 01 Kukusan</p>
+        <h1>Setiap perkembangan anak adalah langkah kecil yang layak didampingi.</h1>
         <p>
-          Masuk dengan memilih kelas dan nama anak, lalu masukkan NISN.
-          Tidak perlu membuat akun baru.
+          “Bukan tentang membandingkan, melainkan tentang memahami —
+          agar pendampingan di rumah selaras dengan yang terjadi di sekolah.”
         </p>
-        <div class="hero-steps">
-          <div class="hero-step">
-            <span class="hero-step-num">1</span>
-            <span>Pilih kelas dan nama anak</span>
+        <div class="hero-pills">
+          <div class="hero-pill">
+            <strong>Rapor STS</strong>
+            <span>Lembar resmi dari sekolah</span>
           </div>
-          <div class="hero-step">
-            <span class="hero-step-num">2</span>
-            <span>Masukkan NISN anak sebagai kata sandi</span>
+          <div class="hero-pill">
+            <strong>Ringkasan capaian</strong>
+            <span>Yang sudah dikuasai & perlu didampingi</span>
           </div>
-          <div class="hero-step">
-            <span class="hero-step-num">3</span>
-            <span>Lihat nilai yang sudah dibagikan guru</span>
+          <div class="hero-pill">
+            <strong>Tanpa akun baru</strong>
+            <span>Cukup kelas, nama, dan NISN</span>
           </div>
         </div>
-        <div class="hero-foot">Sistem Penilaian internal sekolah</div>
+        <div class="hero-quote">
+          “Barangsiapa menempuh jalan untuk mencari ilmu, maka Allah akan mudahkan baginya jalan menuju surga.”
+          <cite>— HR. Muslim</cite>
+        </div>
       </div>
     </aside>
 
@@ -293,8 +339,8 @@
         </div>
 
         <div id="formOrtuWrap">
-          <h2 class="panel-title">Masuk</h2>
-          <p class="panel-sub">Gunakan NISN anak. Nilai hanya tampil setelah guru mempublikasikan.</p>
+          <h2 class="panel-title">Hai, Bapak dan Ibu.</h2>
+          <p class="panel-sub">Pilih kelas dan nama anak, masukkan NISN, lalu lihat perkembangan yang sudah dibagikan sekolah.</p>
 
           <form id="formOrtu" novalidate>
             <div class="field" id="fieldKelas">
@@ -317,11 +363,11 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
               </div>
-              <div class="field-hint">NISN ada di rapor atau kartu siswa.</div>
+              <div class="field-hint">Password = NISN anak. Ada di rapor atau kartu siswa. Lupa? Tanya wali kelas.</div>
             </div>
             <div id="errorOrtu" class="field-error-msg hidden"><span id="errorOrtuText"></span></div>
             <button type="submit" class="btn btn-primary" id="btnOrtu">
-              <span id="btnOrtuLabel">Masuk</span>
+              <span id="btnOrtuLabel">Masuk & lihat perkembangan</span>
             </button>
           </form>
         </div>
