@@ -87,3 +87,13 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Jangan menghidupkan kembali kode ranking atau perbandingan dengan siswa lain.
 - Ambang predikat pada bagian “Cara membaca nilai” harus disalin dari `LEVEL_RANGE_DEFAULT` di `akademikRumus.ts` aplikasi penilaian. Jangan dikarang.
 - Perubahan pada `rapor-sts.html` atau `rapor-resmi.js` tetap harus mengikuti aturan yang sudah ada (ANTIREGRESI §5, §8, §10). Halaman capaian tidak boleh menyentuh lembar resmi.
+
+## §12 Klasifikasi “perlu didampingi” di Ringkasan Capaian
+
+- Jangan mengelompokkan hanya berdasarkan indeks array `capaian` (0 = terbaik, sisanya = perlu).
+- Kalimat kedua (dari TP terendah) bisa tetap positif bila level KKTP-nya 2–3.
+- Klasifikasi wajib membaca awalan kalimat:
+  - “Masih memerlukan bimbingan …” atau “Perlu peningkatan …” → perlu didampingi
+  - “Mencapai kompetensi dengan baik/sangat baik/cukup baik …” → sudah dikuasai
+- Awalan ini dihasilkan oleh `awalanCapaianTerbaik` / `awalanCapaianTerendah` di aplikasi penilaian. Jika fungsi itu berubah, sesuaikan juga `jenisKalimat()` di `capaian.html`.
+- Jangan memasukkan kalimat positif ke daftar “Perlu didampingi”.

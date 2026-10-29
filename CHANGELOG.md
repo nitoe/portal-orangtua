@@ -101,3 +101,14 @@
 - Penjelasan “Cara membaca nilai” memakai ambang default dari aplikasi penilaian (`LEVEL_RANGE_DEFAULT` di `akademikRumus.ts`): 90–100 Sangat Baik, 84–89 Baik, 75–83 Cukup, 0–74 Perlu Bimbingan.
 - Menu ditambahkan di sidebar dan bottom-nav pada `beranda.html` dan `rapor-sts.html`, serta kartu di hub beranda.
 - Lembar rapor resmi (`rapor-sts.html`, `rapor-resmi.js`) tidak diubah.
+
+## 2026-10-29f
+
+### Ringkasan Capaian: klasifikasi lebih selektif + tampilan ringkas
+- Klasifikasi “perlu didampingi” sekarang berdasarkan awalan kalimat, bukan posisi array.
+  Hanya kalimat yang berawalan “Masih memerlukan bimbingan” atau “Perlu peningkatan” yang masuk daftar perlu.
+  Kalimat “Mencapai kompetensi dengan baik/sangat baik” tetap di “sudah dikuasai” meskipun berada di indeks kedua.
+- Tampilan dirombak: chip ringkasan jumlah, filter (Semua / Perlu didampingi / Sudah baik), kartu lebih ringkas dengan badge status, rincian kalimat disembunyikan di dalam `<details>` agar halaman tidak panjang.
+- Daftar “Perlu didampingi” di atas hanya menampilkan poin yang benar-benar perlu tindakan.
+- Batang nilai hanya muncul pada filter “Semua”.
+- Sumber data tetap `rapor_sts_ortu` (tidak ada angka baru). Lembar rapor resmi tidak diubah.
