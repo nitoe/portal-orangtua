@@ -84,7 +84,7 @@
     }
     .wait-box h2 { margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #0f172a; }
     .wait-box p {
-      margin: 0 auto; max-width: 360px; font-size: 13px; color: var(--muted); line-height: 1.55;
+      margin: 0 auto; max-width: 380px; font-size: 13px; color: var(--muted); line-height: 1.55;
     }
     .toolbar-rapor {
       display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px;
@@ -186,7 +186,7 @@
       logout,
       loadSiswaByIds,
       loadRaporStsResmi,
-    } from './assets/firebase.js?v=20261029p';
+    } from './assets/firebase.js?v=20261029s';
     import { dokumenRaporSts, cetakRaporSts } from './assets/rapor-resmi.js?v=20261029q';
 
     const $ = (id) => document.getElementById(id);
@@ -203,13 +203,13 @@
     }
     function escapeHtml(s) {
       return String(s || '')
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        .replace(/&/g, '&').replace(/</g, '<')
+        .replace(/>/g, '>').replace(/"/g, '"');
     }
     function renderWaiting(pesan) {
       $('mainContent').innerHTML = `
         <div class="wait-box">
-          <h2>Rapor belum siap ditampilkan</h2>
+          <h2>Rapor STS belum tersedia</h2>
           <p>${pesan}</p>
         </div>`;
     }
@@ -272,9 +272,13 @@
       try {
         const result = await loadRaporStsResmi(aktifId);
         if (!result.published || !result.rapor) {
-          renderWaiting(
-            'Lembar rapor resmi belum ada di portal. Wali kelas perlu menekan <strong>Publikasikan</strong> lagi di aplikasi penilaian (menu Publikasikan rapor STS) setelah pembaruan ini. Rapor lama yang hanya berisi rata-rata tidak ditampilkan agar tidak berbeda dari rapor cetak.'
-          );
+          let pesan;
+          if (result.jadwalLabel) {
+            pesan = `Rapor STS${result.periodeLabel ? ' ' + result.periodeLabel : ''} dijadwalkan akan dibuka pada <strong>${escapeHtml(result.jadwalLabel)}</strong>. Silakan kembali setelah waktu tersebut untuk melihatnya.`;
+          } else {
+            pesan = 'Rapor STS belum dipublikasikan oleh wali kelas. Biasanya dibuka setelah penilaian selesai. Silakan cek kembali nanti atau tanyakan langsung ke wali kelas.';
+          }
+          renderWaiting(pesan);
           return;
         }
         renderResmi(result.rapor);
@@ -284,7 +288,7 @@
       }
     }
 
-        boot();
+    boot();
   </script>
 </body>
 </html>

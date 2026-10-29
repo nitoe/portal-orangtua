@@ -1029,27 +1029,61 @@ export async function loadRaporStsResmi(siswaId) {
     fsMod.where('siswaId', '==', siswaId),
   );
   const snap = await fsMod.getDocs(q);
-  const kandidat = [];
+  const semua = [];
   snap.forEach((docSnap) => {
     const d = docSnap.data() || {};
-    if (d.published === true) kandidat.push(d);
+    semua.push(d);
   });
-  kandidat.sort((a, b) => {
+  semua.sort((a, b) => {
     const ta = String(b.tahunAjaran || '').localeCompare(String(a.tahunAjaran || ''), 'id');
     if (ta) return ta;
     return String(b.semester || '').localeCompare(String(a.semester || ''));
   });
 
-  for (const d of kandidat) {
+  let jadwalAt = null;
+  let jadwalLabel = null;
+  let periodeLabel = null;
+  let reason = semua.length ? 'gerbang' : 'kosong';
+
+  for (const d of semua) {
     const pubId = `${d.kelas}_${d.tahunAjaran}_${d.semester}`.replace(/\//g, '-');
+    if (!periodeLabel && d.tahunAjaran && d.semester) {
+      periodeLabel = `Semester ${d.semester} · ${d.tahunAjaran}`;
+    }
     try {
       const p = await fsMod.getDoc(fsMod.doc(db, 'sts_publikasi', pubId));
-      if (p.exists() && p.data() && p.data().published === true) {
-        return { published: true, rapor: d };
+      if (p.exists()) {
+        const pd = p.data() || {};
+        if (pd.published === true && d.published === true) {
+          return { published: true, rapor: d };
+        }
+        // Cek jadwal jika belum published
+        if (!jadwalAt && pd.jadwalAt && pd.published !== true) {
+          const raw = pd.jadwalAt;
+          const dt = raw?.toDate ? raw.toDate() : raw ? new Date(raw) : null;
+          if (dt && !Number.isNaN(dt.getTime())) {
+            jadwalAt = dt.toISOString();
+            jadwalLabel = dt.toLocaleString('id-ID', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            });
+          }
+        }
       }
     } catch (err) {
       console.warn('[Portal] sts_publikasi:', err);
     }
   }
-  return { published: false, reason: kandidat.length ? 'gerbang' : 'kosong' };
+  return {
+    published: false,
+    reason,
+    jadwalAt,
+    jadwalLabel,
+    periodeLabel,
+  };
 }
+
