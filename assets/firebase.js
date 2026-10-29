@@ -8,19 +8,13 @@
  * Admin login = akun admin yang sudah ada di aplikasi penilaian
  * (https://penilaian.sdmuhammadiyah01kks.sch.id). Jangan buat akun admin baru.
  *
- * Config di bawah diambil dari app web yang sudah deploy (public by design).
+ * Config dibaca dari assets/firebase-config.js (tidak di-commit).
+ * Salin dari firebase-config.example.js bila belum ada.
  * DEMO_MODE hanya aktif jika config kosong / placeholder, ATAU
  * localStorage.setItem('po_force_demo','1') untuk uji UI offline.
  */
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyBvVulB3Kwjs9CYBeKo2lyXA14nCSpJfwk',
-  authDomain: 'sdm01kukusan-2e735.firebaseapp.com',
-  projectId: 'sdm01kukusan-2e735',
-  storageBucket: 'sdm01kukusan-2e735.firebasestorage.app',
-  messagingSenderId: '970181491299',
-  appId: '1:970181491299:web:8d6798fbbb43c231879656',
-};
+import { firebaseConfig } from './firebase-config.js';
 
 const forceDemo =
   typeof localStorage !== 'undefined' && localStorage.getItem('po_force_demo') === '1';

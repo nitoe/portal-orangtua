@@ -106,3 +106,11 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Jangan hanya memanggil `logout()` tanpa redirect — pengguna tetap di halaman dan seolah tombol tidak bekerja.
 - Jangan mengimpor `logout` tanpa memasangnya ke elemen. Cek `btnLogoutSide`, `btnLogoutTop`, dan `btnLogoutNav` bila ada.
 - Setelah menambah halaman baru dengan shell yang sama, salin pola `doLogout` dari `beranda.html`.
+
+## §14 Jangan menulis API key Firebase di file yang di-commit
+
+- Jangan mengembalikan objek `firebaseConfig` dengan `apiKey: 'AIza…'` ke `assets/firebase.js`.
+- Nilai asli hanya di `assets/firebase-config.js` (di-.gitignore). Template: `assets/firebase-config.example.js`.
+- Saat clone baru: salin example → `firebase-config.js`, isi key, lalu deploy. Jangan `git add assets/firebase-config.js`.
+- Kunci ini adalah kunci klien. Setelah deploy tetap terlihat di browser. Wajib batasi HTTP referrer di Google Cloud Console ke domain portal dan penilaian.
+- `.env` portal tidak dipakai oleh situs statis ini. Jangan di-commit.

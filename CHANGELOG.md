@@ -134,3 +134,11 @@
 - Kutipan HR. Muslim di bagian bawah hero.
 - Panel kanan: sapaan “Hai, Bapak dan Ibu.”, petunjuk NISN lebih jelas, tombol “Masuk & lihat perkembangan”.
 - Form, id elemen, tab Orang Tua/Admin, dan logika login tidak diubah. Skala fluid (ANTIREGRESI §9) tetap.
+
+## 2026-10-29j
+
+### API key Firebase tidak lagi tertulis di file yang di-commit
+- Config dipindah dari `assets/firebase.js` ke `assets/firebase-config.js`.
+- `firebase-config.js` masuk `.gitignore`. Contoh ada di `assets/firebase-config.example.js`.
+- `assets/firebase.js` hanya mengimpor config. Jika file config tidak ada atau masih placeholder, portal masuk DEMO_MODE.
+- Kunci klien Firebase tetap perlu ada di mesin yang men-deploy (dan akan terlihat di browser setelah deploy). Perlindungan utama: batasi HTTP referrer kunci di Google Cloud Console + Firestore rules.

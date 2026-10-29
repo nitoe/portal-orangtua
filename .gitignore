@@ -3,3 +3,6 @@
 .firebase/
 *.log
 .DS_Store
+
+# Config Firebase berisi API key — jangan di-commit
+assets/firebase-config.js
