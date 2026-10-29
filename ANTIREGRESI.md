@@ -78,3 +78,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Saat menyalin ulang `raporHtml.ts` dari SDM01Penilaian ke portal, cek ulang signature `kolom()` dan pemanggilnya; versi TypeScript tidak memperlihatkan masalah ini karena parameter tidak bernilai `undefined` di sana.
 - Setelah ubah `rapor-resmi.js`, naikkan `?v=` di `rapor-sts.html` (lihat §5 dan §8).
 - **Tes:** buka `rapor-sts.html` untuk anak yang sudah dipublikasikan → bagian bawah kolom Orang Tua/Wali hanya `(………………………………)` tanpa teks apa pun. Wali Kelas dan Kepala Sekolah tetap menampilkan `NBM. …`. Tes juga lewat Cetak / simpan PDF. Cari kata `undefined` di sumber iframe: tidak boleh ada.
+
+## §11 Ringkasan Capaian adalah pendamping, bukan rapor resmi
+
+- `capaian.html` hanya membaca dokumen `rapor_sts_ortu` yang sama dengan halaman Rapor STS (lewat `loadRaporStsResmi`).
+- Jangan menambahkan perhitungan nilai baru di halaman ini. Nilai akhir dan kalimat capaian harus berasal dari dokumen yang sudah ditulis aplikasi penilaian saat Publikasikan.
+- Pemisahan “Sudah dikuasai” / “Perlu didampingi” mengikuti struktur array `capaian` yang dihasilkan `kalimatCapaian()`: indeks 0 = terbaik, sisanya = perlu.
+- Jangan menghidupkan kembali kode ranking atau perbandingan dengan siswa lain.
+- Ambang predikat pada bagian “Cara membaca nilai” harus disalin dari `LEVEL_RANGE_DEFAULT` di `akademikRumus.ts` aplikasi penilaian. Jangan dikarang.
+- Perubahan pada `rapor-sts.html` atau `rapor-resmi.js` tetap harus mengikuti aturan yang sudah ada (ANTIREGRESI §5, §8, §10). Halaman capaian tidak boleh menyentuh lembar resmi.

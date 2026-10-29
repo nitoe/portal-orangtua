@@ -89,3 +89,15 @@
 - Header keamanan dasar + cache control (HTML/JS/CSS no-cache, aset gambar immutable).
 - Catatan: perlu penyesuaian kecil di `firestore.rules` (repo SDM01Penilaian) agar `config/akademik` bisa dibaca tanpa Auth (periode aktif). Rules tidak di-deploy dari repo ini.
 - `.gitignore` ditambahkan (abaikan `.env`, `.firebase/`).
+
+## 2026-10-29e
+
+### Ringkasan Capaian (halaman pendamping rapor STS)
+- Halaman baru `capaian.html`: penjelasan pendamping, bukan rapor resmi.
+- Sumber data sama persis dengan rapor STS (`loadRaporStsResmi` / dokumen `rapor_sts_ortu`). Tidak ada angka baru, tidak menghitung ulang.
+- Kartu per mapel memisahkan kalimat capaian: “Sudah dikuasai” (kalimat pertama / capaian terbaik) dan “Perlu didampingi” (kalimat sisanya).
+- Daftar tindak lanjut di bagian atas: semua poin “perlu didampingi” dikumpulkan di satu tempat.
+- Batang nilai akhir antar mapel milik anak itu sendiri (tanpa ranking / perbandingan dengan siswa lain).
+- Penjelasan “Cara membaca nilai” memakai ambang default dari aplikasi penilaian (`LEVEL_RANGE_DEFAULT` di `akademikRumus.ts`): 90–100 Sangat Baik, 84–89 Baik, 75–83 Cukup, 0–74 Perlu Bimbingan.
+- Menu ditambahkan di sidebar dan bottom-nav pada `beranda.html` dan `rapor-sts.html`, serta kartu di hub beranda.
+- Lembar rapor resmi (`rapor-sts.html`, `rapor-resmi.js`) tidak diubah.
