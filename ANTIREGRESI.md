@@ -64,7 +64,8 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 ## §9 Login harus fluid (rem + skala viewport), bukan px tetap
 
 - Ukuran di `index.html` memakai `rem`. Jangan kembalikan `px` / `max-width` tetap untuk `.hero-inner`, `.panel-card`, font, padding, atau ikon di halaman login: saat browser di-zoom-out viewport melebar dan kartu tampak kecil dengan ruang kosong di kiri-kanan.
-- Skala berasal dari `html { font-size: clamp(16px, min(1vw, 1.75vh), 64px) }` di dalam `@media (min-width: 1600px)` pada `index.html`. Jangan memindahkannya ke `assets/style.css` karena `beranda.html`, `admin.html`, dan `rapor-sts.html` ikut terdampak.
+- Skala berasal dari `html { font-size: clamp(16px, min(1.25vw, 2.6vh), 80px) }` di dalam `@media (min-width: 1280px)` pada `index.html`. Jangan memindahkannya ke `assets/style.css` karena `beranda.html`, `admin.html`, dan `rapor-sts.html` ikut terdampak.
 - Override komponen bersama (`.field`, `select`, `.btn-primary`, `.spinner`, `.toggle-visibility`) harus tetap di-scope `.panel-card` agar `style.css` tidak perlu diubah. Komponen baru di login harus ikut memakai `rem`.
-- Media query (`max-width: 900px`, `min-width: 768px`, `min-width: 1600px`) tetap dalam `px`. Jangan diubah ke `rem`/`em`.
-- **Tes:** buka login, zoom browser 100%, 67%, 50%, 33%, 25%. Kartu login harus selalu sekitar 21–22% lebar layar (≥ 1600px viewport), tanpa scroll horizontal. Cek juga lebar 375px (mobile brand muncul, hero tersembunyi), tab Admin bisa dibuka, dan toast tampil. Console tidak boleh ada error JavaScript.
+- Media query (`max-width: 900px`, `min-width: 768px`, `min-width: 1280px`) tetap dalam `px`. Jangan diubah ke `rem`/`em`.
+- Batas tinggi (`vh`) pada rumus jangan diperketat: viewport umum berbentuk lebar-pendek (mis. 1909×871) dan batas `vh` yang terlalu kecil membuat skala jatuh ke 16px sehingga perbaikan tidak terlihat. Kartu + padding setinggi ±36rem harus tetap muat di tinggi viewport.
+- **Tes:** buka login, uji juga di viewport 1909×871, zoom browser 100%, 67%, 50%, 33%, 25%. Kartu login harus selalu sekitar 28–31% lebar layar (viewport ≥ 1280px), tanpa scroll horizontal. Cek juga lebar 375px (mobile brand muncul, hero tersembunyi), tab Admin bisa dibuka, dan toast tampil. Console tidak boleh ada error JavaScript.

@@ -68,6 +68,6 @@
 
 ### Login responsif saat zoom-out / layar lebar
 - Perbaikan: saat browser di-zoom-out (atau layar sangat lebar), kartu login dan panel hero tetap berukuran tetap sehingga muncul banyak ruang kosong di kiri dan kanan.
-- `index.html`: seluruh ukuran halaman login diubah dari `px` ke `rem`. Pada viewport ≥ 1600px, ukuran dasar (`html font-size`) ikut membesar mengikuti lebar dan tinggi viewport, dibatasi 16px–64px. Kartu login kini selalu sekitar 21–22% lebar layar pada zoom berapa pun.
+- `index.html`: seluruh ukuran halaman login diubah dari `px` ke `rem`. Pada viewport ≥ 1280px, ukuran dasar (`html font-size`) ikut membesar mengikuti lebar dan tinggi viewport (`clamp(16px, min(1.25vw, 2.6vh), 80px)`). Kartu login kini selalu sekitar 28–31% lebar layar pada zoom berapa pun.
 - Komponen bersama dari `style.css` (field, select, tombol, spinner) disesuaikan ke `rem` hanya di dalam `.panel-card` pada `index.html`; `style.css` tidak diubah, sehingga `beranda.html`, `admin.html`, dan `rapor-sts.html` tidak terpengaruh.
-- Tampilan di bawah 1600px (termasuk mobile ≤ 900px) tidak berubah. Logika JavaScript, id elemen, dan import `firebase.js` tidak diubah.
+- Tampilan di bawah 1280px (termasuk mobile ≤ 900px) tidak berubah. Logika JavaScript, id elemen, dan import `firebase.js` tidak diubah.
