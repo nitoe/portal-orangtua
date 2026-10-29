@@ -388,7 +388,7 @@
         ? `<section class="bars-card">
             <h3>Gambaran nilai akhir</h3>
             ${bars}
-            <p style="margin:8px 0 0;font-size:11.5px;color:var(--muted)">Hanya nilai anak ini. Tidak ada perbandingan dengan siswa lain.</p>
+            <p style="margin:8px 0 0;font-size:11.5px;color:var(--muted)">Hanya nilai ananda. Tidak ada perbandingan dengan siswa lain.</p>
           </section>`
         : '';
 
@@ -462,7 +462,7 @@
       $('sideNama').textContent = s.nama || 'Orang tua';
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
-        $('mainContent').innerHTML = `<div class="wait-box"><h2>Data anak tidak ditemukan</h2></div>`;
+        $('mainContent').innerHTML = `<div class="wait-box"><h2>Data ananda tidak ditemukan</h2></div>`;
         return;
       }
       let anak = {
@@ -482,7 +482,7 @@
       if (!hasil.published) {
         const alasan = hasil.reason === 'gerbang'
           ? 'Rapor STS belum dipublikasikan oleh wali kelas.'
-          : 'Belum ada data rapor STS untuk anak ini.';
+          : 'Belum ada data rapor STS untuk ananda.';
         renderWaiting(alasan);
         return;
       }
@@ -523,3 +523,4 @@
   </script>
 </body>
 </html>
+
