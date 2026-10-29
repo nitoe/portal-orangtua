@@ -52,3 +52,11 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Reset password: hanya **kirim email reset** (`sendPasswordResetEmail`). Set password langsung butuh Admin SDK / Cloud Function — jangan pura-pura mengubah password lewat client SDK.
 - Query `users where role == orangtua` dan `list` koleksi `siswa` mengandalkan sesi **admin** yang valid.
 - **Tes:** login admin → lihat daftar → setujui pending → hubungkan ≥1 anak → ortu dengan status approved + anakIds bisa login (setelah akun Auth ada).
+
+## §8 Rapor STS resmi bukan rata-rata nilai_sts
+
+- Jangan mengembalikan tabel predikat dari `loadNilaiStsPublished` ke halaman rapor orang tua. Angka itu rata-rata kasar per mapel, bukan nilai akhir rapor (bobot cakupan STS) dan tidak punya capaian kompetensi.
+- Satu-satunya sumber tampilan rapor: `loadRaporStsResmi` → koleksi `rapor_sts_ortu` yang `published == true` **dan** gerbang `sts_publikasi` untuk kelas/tahun/semester yang sama juga `published == true`.
+- HTML/CSS lembar ada di `assets/rapor-resmi.js` (salinan `raporHtml.ts`). Jangan mengubah rumus capaian di portal. Ubah rumus hanya di aplikasi penilaian, lalu publikasikan ulang.
+- Setelah ubah `firebase.js` atau `rapor-resmi.js`, naikkan `?v=` di `rapor-sts.html`.
+- **Tes:** setelah wali menekan Publikasikan ulang, rapor anak di portal memuat NISN, fase, tahun pelajaran, kolom Capaian Kompetensi, nama wali + NBM, nama kepsek + stempel. Sebelum dipublikasikan ulang, halaman tidak boleh menampilkan tabel rata-rata lama seolah-olah itu rapor resmi.

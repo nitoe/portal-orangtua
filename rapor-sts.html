@@ -173,8 +173,9 @@
       currentSession,
       logout,
       loadSiswaByIds,
-      loadNilaiStsPublished,
-    } from './assets/firebase.js?v=20261028o';
+      loadRaporStsResmi,
+    } from './assets/firebase.js?v=20261029p';
+    import { dokumenRaporSts, cetakRaporSts } from './assets/rapor-resmi.js?v=20261029p';
 
     const $ = (id) => document.getElementById(id);
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
@@ -193,109 +194,34 @@
         .replace(/&/g, '&amp;').replace(/</g, '&lt;')
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
-    function predikat(n) {
-      if (n == null || !Number.isFinite(Number(n))) return '—';
-      const v = Number(n);
-      if (v >= 90) return 'Sangat Baik';
-      if (v >= 80) return 'Baik';
-      if (v >= 70) return 'Cukup';
-      return 'Perlu bimbingan';
-    }
-
-    async function doLogout() {
-      await logout();
-      location.href = 'index.html';
-    }
-    $('btnLogoutSide').onclick = doLogout;
-    $('btnLogoutTop').onclick = doLogout;
-
-    function renderWaiting(anak, periodLabel) {
+    function renderWaiting(pesan) {
       $('mainContent').innerHTML = `
-        <p style="margin:0 0 12px">
-          <a href="beranda.html" style="font-size:12px;font-weight:600;color:var(--muh-700)">← Beranda</a>
-        </p>
-        <div class="page-header">
-          <h2>Rapor Sumatif Tengah Semester</h2>
-          <p>${escapeHtml(periodLabel || 'Periode berjalan')}</p>
-        </div>
         <div class="wait-box">
-          <h2>Rapor belum dipublikasikan</h2>
-          <p>
-            Rapor STS${anak?.nama ? ' untuk <strong>' + escapeHtml(anak.nama) + '</strong>' : ''}
-            belum dibagikan ke portal. Silakan kembali lagi setelah wali kelas mempublikasikan.
-          </p>
+          <h2>Rapor belum siap ditampilkan</h2>
+          <p>${pesan}</p>
         </div>`;
     }
 
-    function renderRapor(anak, result) {
-      const items = result.items || [];
-      const rows = items
-        .map(
-          (x, i) => `
-          <tr>
-            <td class="num">${i + 1}</td>
-            <td class="mapel">${escapeHtml(x.mapel)}</td>
-            <td class="num">${x.nilai != null ? x.nilai : '—'}</td>
-            <td class="pred">${escapeHtml(x.predikat || predikat(x.nilai))}</td>
-          </tr>`
-        )
-        .join('');
-      const publishLine = result.publishedAt
-        ? `Diterbitkan ${escapeHtml(result.publishedAt)}`
-        : 'Telah dipublikasikan sekolah';
+    function pasangTinggi(frame) {
+      const doc = frame.contentDocument;
+      if (!doc || !doc.body) return;
+      const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
+      frame.style.height = Math.max(640, h + 24) + 'px';
+    }
 
+    function renderResmi(rapor) {
+      const html = dokumenRaporSts(rapor, 'layar');
       $('mainContent').innerHTML = `
         <div class="toolbar-rapor">
-          <a href="beranda.html" style="font-size:12px;font-weight:600;color:var(--muh-700);margin-right:8px">← Beranda</a>
           <button type="button" class="btn-print" id="btnPrint">Cetak / simpan PDF</button>
-          <span class="badge badge-ok">Dipublikasikan</span>
+          <span class="badge badge-ok">Sama dengan rapor STS di aplikasi penilaian</span>
         </div>
-        <article class="rapor-sheet">
-          <div class="rapor-kop">
-            <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
-            <div class="rapor-kop-text">
-              <div class="school">SD Muhammadiyah 01 Kukusan</div>
-              <div class="addr">Portal Orang Tua · Laporan hasil belajar tengah semester</div>
-            </div>
-          </div>
-          <div class="rapor-judul">
-            <h2>Laporan Hasil Belajar</h2>
-            <p>Sumatif Tengah Semester (STS)</p>
-            <p>${escapeHtml(result.periodeLabel || '')}</p>
-          </div>
-          <dl class="rapor-id">
-            <div class="pair"><dt>Nama peserta didik</dt><dd>${escapeHtml(anak.nama || '—')}</dd></div>
-            <div class="pair"><dt>Kelas</dt><dd>${escapeHtml(anak.kelas ? 'Kelas ' + anak.kelas : '—')}</dd></div>
-            <div class="pair"><dt>NIS / NISN</dt><dd>${escapeHtml([anak.nis, anak.nisn].filter(Boolean).join(' · ') || '—')}</dd></div>
-            <div class="pair"><dt>Status</dt><dd>${publishLine}</dd></div>
-          </dl>
-          <div class="rapor-section">
-            <h3 class="rapor-section-title">A. Nilai akhir mata pelajaran</h3>
-            ${
-              items.length
-                ? `<table class="rapor-table">
-              <thead><tr>
-                <th style="width:2.2rem">No</th>
-                <th>Mata pelajaran</th>
-                <th style="width:3.5rem">Nilai</th>
-                <th style="width:6rem">Predikat</th>
-              </tr></thead>
-              <tbody>${rows}</tbody>
-            </table>`
-                : `<p style="font-size:13px;color:var(--muted)">Belum ada nilai mapel pada rapor ini.</p>`
-            }
-          </div>
-          <div class="rapor-ttd">
-            <div class="slot"><span>Orang tua / wali</span><strong>&nbsp;</strong></div>
-            <div class="slot"><span>Wali kelas</span><strong>&nbsp;</strong></div>
-            <div class="slot"><span>Kepala sekolah</span><strong>&nbsp;</strong></div>
-          </div>
-          <div class="rapor-foot">
-            Rapor STS yang dipublikasikan sekolah untuk orang tua — bukan leger kelas.
-            Hubungi wali kelas bila ada pertanyaan.
-          </div>
-        </article>`;
-      $('btnPrint')?.addEventListener('click', () => window.print());
+        <iframe id="lembarRapor" title="Rapor STS" sandbox="allow-same-origin allow-scripts"
+          style="width:100%;border:1px solid var(--line,#e6e8ef);border-radius:12px;background:#fff;min-height:640px"></iframe>`;
+      const frame = $('lembarRapor');
+      frame.srcdoc = html;
+      frame.addEventListener('load', () => pasangTinggi(frame));
+      $('btnPrint').addEventListener('click', () => cetakRaporSts(rapor));
     }
 
     async function boot() {
@@ -314,33 +240,31 @@
         id: aktifId,
         nama: s.siswaNama || aktifId,
         kelas: s.siswaKelas || '',
-        nis: '',
-        nisn: '',
       };
       try {
         const list = await loadSiswaByIds([aktifId]);
         if (list[0]) {
-          anak = {
-            id: list[0].id,
-            nama: list[0].nama,
-            kelas: list[0].kelas || '',
-            nis: list[0].nis || '',
-            nisn: list[0].nisn || '',
-          };
+          anak = { id: list[0].id, nama: list[0].nama, kelas: list[0].kelas || '' };
         }
       } catch (_) {}
       $('avatarInisial').textContent = inisial(anak.nama);
 
       try {
-        const result = await loadNilaiStsPublished(aktifId);
-        if (!result.published) renderWaiting(anak, result.periodeLabel);
-        else renderRapor(anak, result);
+        const result = await loadRaporStsResmi(aktifId);
+        if (!result.published || !result.rapor) {
+          renderWaiting(
+            'Lembar rapor resmi belum ada di portal. Wali kelas perlu menekan <strong>Publikasikan</strong> lagi di aplikasi penilaian (menu Publikasikan rapor STS) setelah pembaruan ini. Rapor lama yang hanya berisi rata-rata tidak ditampilkan agar tidak berbeda dari rapor cetak.'
+          );
+          return;
+        }
+        renderResmi(result.rapor);
       } catch (err) {
         console.error(err);
-        $('mainContent').innerHTML = `<div class="wait-box"><h2>Gagal memuat rapor</h2><p>Periksa koneksi atau hubungi sekolah.</p></div>`;
+        $('mainContent').innerHTML = `<div class="wait-box"><h2>Gagal memuat rapor</h2><p>Periksa koneksi. Jika baru saja diperbarui, pastikan rules Firestore koleksi rapor_sts_ortu sudah di-deploy.</p></div>`;
       }
     }
-    boot();
+
+        boot();
   </script>
 </body>
 </html>

@@ -1018,3 +1018,44 @@ export function terjemahkanErrorLogin(err) {
   if (err && err.message) return err.message;
   return 'Gagal masuk. Coba lagi.';
 }
+
+/**
+ * Rapor STS resmi (salinan cetak aplikasi penilaian).
+ * Koleksi `rapor_sts_ortu`, ditulis saat wali/admin mempublikasikan.
+ * Portal tidak menghitung ulang nilai.
+ * Mengembalikan { published, rapor } atau { published:false, reason }.
+ */
+export async function loadRaporStsResmi(siswaId) {
+  if (!siswaId) return { published: false, reason: 'kosong' };
+  if (DEMO_MODE) return { published: false, reason: 'demo' };
+
+  const { db, fsMod } = window.__fb;
+  const q = fsMod.query(
+    fsMod.collection(db, 'rapor_sts_ortu'),
+    fsMod.where('siswaId', '==', siswaId),
+  );
+  const snap = await fsMod.getDocs(q);
+  const kandidat = [];
+  snap.forEach((docSnap) => {
+    const d = docSnap.data() || {};
+    if (d.published === true) kandidat.push(d);
+  });
+  kandidat.sort((a, b) => {
+    const ta = String(b.tahunAjaran || '').localeCompare(String(a.tahunAjaran || ''), 'id');
+    if (ta) return ta;
+    return String(b.semester || '').localeCompare(String(a.semester || ''));
+  });
+
+  for (const d of kandidat) {
+    const pubId = `${d.kelas}_${d.tahunAjaran}_${d.semester}`.replace(/\//g, '-');
+    try {
+      const p = await fsMod.getDoc(fsMod.doc(db, 'sts_publikasi', pubId));
+      if (p.exists() && p.data() && p.data().published === true) {
+        return { published: true, rapor: d };
+      }
+    } catch (err) {
+      console.warn('[Portal] sts_publikasi:', err);
+    }
+  }
+  return { published: false, reason: kandidat.length ? 'gerbang' : 'kosong' };
+}

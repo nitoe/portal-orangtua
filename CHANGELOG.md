@@ -56,3 +56,10 @@
 - State menunggu publikasi.
 - Cetak / simpan PDF via browser.
 - Chart & ranking tidak di halaman utama rapor.
+
+## 2026-10-29a
+
+### Rapor STS disamakan dengan cetak aplikasi penilaian
+- Portal tidak lagi merata-ratakan `nilai_sts` (angka dan predikat itu bukan rapor resmi).
+- Halaman `rapor-sts.html` menampilkan salinan `rapor_sts_ortu`: identitas, muatan wajib/yayasan, nilai akhir, deskripsi capaian, tanda tangan wali + kepala sekolah, stempel.
+- Sumber data ditulis oleh SDM01Penilaian saat **Publikasikan** ulang. Publikasi lama tidak otomatis berubah.
