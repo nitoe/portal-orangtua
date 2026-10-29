@@ -1,5 +1,12 @@
 # Changelog — Portal Orang Tua
 
+## 2026-10-29k
+
+### Sapaan login lebih islami
+- Di halaman login (`index.html`), judul panel orang tua diubah dari “Hai, Bapak dan Ibu.” menjadi “Assalamu'alaikum wr. wb. Ayah/Bunda.”
+- Hanya teks sapaan yang berubah. Form, id elemen, tab, logika login, skala fluid, dan seluruh halaman lain tidak diubah.
+- Tidak ada risiko regresi fungsional.
+
 ## 2026-10-28f
 
 ### Login orang tua: NISN, tanpa registrasi
