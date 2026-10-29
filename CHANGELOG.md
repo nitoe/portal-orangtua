@@ -80,3 +80,12 @@
 - `assets/rapor-resmi.js`: parameter `nbm` diberi nilai bawaan string kosong (`nbm = ''`). Kolom Orang Tua/Wali kini kosong di bawah garis, sama dengan rapor cetak aplikasi penilaian. Kolom Wali Kelas dan Kepala Sekolah tidak berubah (tetap `NBM. …` bila ada).
 - `rapor-sts.html`: `?v=` import `rapor-resmi.js` dinaikkan ke `20261029q` agar browser memuat modul baru.
 - Tidak ada perubahan di rumus capaian, `firebase.js`, data Firestore, maupun aplikasi penilaian (SDM01Penilaian). Tidak perlu publikasi ulang rapor.
+
+## 2026-10-29d
+
+### Persiapan deploy ke Firebase Hosting
+- Ditambahkan konfigurasi Hosting: `firebase.json` (target `portal-ortu`, public `.`), `.firebaserc` (project `sdm01kukusan-2e735`, situs `sdm01-portal-ortu`), dan `DEPLOY.md`.
+- Situs terpisah di project Firebase yang sama dengan Penilaian / Perpustakaan / Sarpras.
+- Header keamanan dasar + cache control (HTML/JS/CSS no-cache, aset gambar immutable).
+- Catatan: perlu penyesuaian kecil di `firestore.rules` (repo SDM01Penilaian) agar `config/akademik` bisa dibaca tanpa Auth (periode aktif). Rules tidak di-deploy dari repo ini.
+- `.gitignore` ditambahkan (abaikan `.env`, `.firebase/`).

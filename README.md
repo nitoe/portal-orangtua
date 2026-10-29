@@ -44,3 +44,7 @@ localStorage.setItem('po_force_demo', '1')
 ```
 
 Password demo: NIS siswa di seed, atau `ortu123`.
+
+## Deploy
+
+Lihat **[DEPLOY.md](DEPLOY.md)** untuk langkah lengkap (Firebase Hosting, situs `sdm01-portal-ortu`, domain khusus, dan penyesuaian rules di repo Penilaian).

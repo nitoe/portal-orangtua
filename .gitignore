@@ -1,0 +1,5 @@
+# .gitignore
+.env
+.firebase/
+*.log
+.DS_Store
