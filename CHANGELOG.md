@@ -118,3 +118,9 @@
 ### Ringkasan Capaian: hilangkan kalimat teknis di bawah tabel nilai
 - Paragraf “Ambang dari LEVEL_RANGE_DEFAULT …” di bagian “Cara membaca nilai” dihapus.
 - Tabel ambang predikat tetap ada; keterangan teknis tidak perlu dibaca wali murid.
+
+## 2026-10-29h
+
+### Keluar dari halaman Rapor STS dan Ringkasan Capaian
+- **Bug**: tombol Keluar di halaman selain Beranda tidak berfungsi. Di `rapor-sts.html` handler tidak dipasang sama sekali. Di `capaian.html` sesi dihapus tetapi tidak dialihkan ke halaman login, sehingga baru terasa keluar setelah membuka Beranda.
+- **Perbaikan**: kedua halaman memakai pola yang sama dengan Beranda — `doLogout()` memanggil `logout()` lalu `location.href = 'index.html'`. Tombol sidebar, header, dan bottom-nav semuanya terhubung.

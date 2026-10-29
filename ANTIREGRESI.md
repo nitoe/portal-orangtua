@@ -97,3 +97,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
   - “Mencapai kompetensi dengan baik/sangat baik/cukup baik …” → sudah dikuasai
 - Awalan ini dihasilkan oleh `awalanCapaianTerbaik` / `awalanCapaianTerendah` di aplikasi penilaian. Jika fungsi itu berubah, sesuaikan juga `jenisKalimat()` di `capaian.html`.
 - Jangan memasukkan kalimat positif ke daftar “Perlu didampingi”.
+
+## §13 Tombol Keluar harus mengalihkan ke login di setiap halaman
+
+- Setiap halaman yang punya tombol Keluar (`beranda.html`, `rapor-sts.html`, `capaian.html`, `admin.html`) wajib memasang handler yang:
+  1. memanggil `logout()` (hapus `po_ortu_session` + signOut bila ada),
+  2. lalu `location.href = 'index.html'`.
+- Jangan hanya memanggil `logout()` tanpa redirect — pengguna tetap di halaman dan seolah tombol tidak bekerja.
+- Jangan mengimpor `logout` tanpa memasangnya ke elemen. Cek `btnLogoutSide`, `btnLogoutTop`, dan `btnLogoutNav` bila ada.
+- Setelah menambah halaman baru dengan shell yang sama, salin pola `doLogout` dari `beranda.html`.
