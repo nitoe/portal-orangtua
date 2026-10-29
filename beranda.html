@@ -177,8 +177,8 @@
       currentSession,
       logout,
       loadSiswaByIds,
-      loadNilaiStsPublished,
-    } from './assets/firebase.js?v=20261028o';
+      loadRaporStsResmi,
+    } from './assets/firebase.js?v=20261029r';
 
     const $ = (id) => document.getElementById(id);
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
@@ -229,20 +229,21 @@
       } catch (_) {}
 
       try {
-        const result = await loadNilaiStsPublished(aktifId);
-        $('statPeriode').textContent = result.periodeLabel
-          ? result.periodeLabel.replace(/^STS ·\s*/i, '')
-          : '—';
-        if (result.published) {
+        const result = await loadRaporStsResmi(aktifId);
+        if (result.published && result.rapor) {
+          const rapor = result.rapor;
+          const periode = (rapor.tahunAjaran && rapor.semester)
+            ? `Semester ${rapor.semester} · ${rapor.tahunAjaran}`
+            : '—';
           $('statStatus').textContent = 'Tersedia';
-          $('stsDesc').textContent = result.publishedAt
-            ? `Dipublikasikan ${result.publishedAt} · buka rapor`
-            : 'Rapor STS siap dibuka';
+          $('statPeriode').textContent = periode;
+          $('stsDesc').textContent = 'Rapor STS siap dibuka';
           $('stsBadge').textContent = 'Tersedia';
           $('stsBadge').className = 'badge badge-ok';
         } else {
           $('statStatus').textContent = 'Menunggu';
-          $('stsDesc').textContent = 'Menunggu publikasi wali kelas';
+          $('statPeriode').textContent = '—';
+          $('stsDesc').textContent = 'Belum dipublikasikan oleh wali kelas';
           $('stsBadge').textContent = 'Menunggu';
           $('stsBadge').className = 'badge badge-pending';
         }
