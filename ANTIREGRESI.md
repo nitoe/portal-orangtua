@@ -69,3 +69,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Media query (`max-width: 900px`, `min-width: 768px`, `min-width: 1280px`) tetap dalam `px`. Jangan diubah ke `rem`/`em`.
 - Batas tinggi (`vh`) pada rumus jangan diperketat: viewport umum berbentuk lebar-pendek (mis. 1909×871) dan batas `vh` yang terlalu kecil membuat skala jatuh ke 16px sehingga perbaikan tidak terlihat. Kartu + padding setinggi ±36rem harus tetap muat di tinggi viewport.
 - **Tes:** buka login, uji juga di viewport 1909×871, zoom browser 100%, 67%, 50%, 33%, 25%. Kartu login harus selalu sekitar 28–31% lebar layar (viewport ≥ 1280px), tanpa scroll horizontal. Cek juga lebar 375px (mobile brand muncul, hero tersembunyi), tab Admin bisa dibuka, dan toast tampil. Console tidak boleh ada error JavaScript.
+
+## §10 Parameter opsional di lembar rapor tidak boleh tercetak sebagai "undefined"
+
+- Di `assets/rapor-resmi.js`, `kolom(peran, nama, nbm = '', tempat, opts)` dipanggil tiga kali (Orang Tua/Wali, Wali Kelas, Kepala Sekolah). Kolom Orang Tua/Wali **sengaja** tidak memberi `nbm`.
+- **Wajib:** nilai bawaan `nbm = ''` jangan dihapus. Tanpa itu, template string menyisipkan teks `undefined` di bawah garis tanda tangan orang tua.
+- Aturan umum: setiap parameter opsional yang disisipkan ke template HTML harus punya nilai bawaan `''` atau dibungkus `?? ''`. Jangan menyisipkan `${x}` mentah untuk nilai yang bisa kosong.
+- Saat menyalin ulang `raporHtml.ts` dari SDM01Penilaian ke portal, cek ulang signature `kolom()` dan pemanggilnya; versi TypeScript tidak memperlihatkan masalah ini karena parameter tidak bernilai `undefined` di sana.
+- Setelah ubah `rapor-resmi.js`, naikkan `?v=` di `rapor-sts.html` (lihat §5 dan §8).
+- **Tes:** buka `rapor-sts.html` untuk anak yang sudah dipublikasikan → bagian bawah kolom Orang Tua/Wali hanya `(………………………………)` tanpa teks apa pun. Wali Kelas dan Kepala Sekolah tetap menampilkan `NBM. …`. Tes juga lewat Cetak / simpan PDF. Cari kata `undefined` di sumber iframe: tidak boleh ada.

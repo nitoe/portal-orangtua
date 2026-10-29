@@ -114,7 +114,7 @@ function ruangTtd(opts) {
   return `<div class="rpr-ttd-space"></div>`;
 }
 
-function kolom(peran, nama, nbm, tempat, opts) {
+function kolom(peran, nama, nbm = '', tempat, opts) {
   return `<div class="rpr-ttd-col"><div class="rpr-ttd-tempat">${tempat || '&nbsp;'}</div><div class="rpr-ttd-jabatan">${peran}</div>${ruangTtd(opts || {})}<div class="rpr-ttd-name">${nama}</div><div class="rpr-ttd-nbm">${nbm}</div></div>`;
 }
 

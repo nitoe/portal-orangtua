@@ -71,3 +71,12 @@
 - `index.html`: seluruh ukuran halaman login diubah dari `px` ke `rem`. Pada viewport ≥ 1280px, ukuran dasar (`html font-size`) ikut membesar mengikuti lebar dan tinggi viewport (`clamp(16px, min(1.25vw, 2.6vh), 80px)`). Kartu login kini selalu sekitar 28–31% lebar layar pada zoom berapa pun.
 - Komponen bersama dari `style.css` (field, select, tombol, spinner) disesuaikan ke `rem` hanya di dalam `.panel-card` pada `index.html`; `style.css` tidak diubah, sehingga `beranda.html`, `admin.html`, dan `rapor-sts.html` tidak terpengaruh.
 - Tampilan di bawah 1280px (termasuk mobile ≤ 900px) tidak berubah. Logika JavaScript, id elemen, dan import `firebase.js` tidak diubah.
+
+## 2026-10-29c
+
+### Rapor STS: hilangkan tulisan "undefined" di bawah kolom Orang Tua/Wali
+- Perbaikan: di area tanda tangan rapor STS, di bawah garis `(………………………………)` kolom **Orang Tua/Wali** muncul tulisan `undefined`, sedangkan rapor cetak di aplikasi penilaian kosong.
+- Penyebab: `kolom()` di `assets/rapor-resmi.js` menerima parameter `nbm`, tetapi kolom Orang Tua/Wali dipanggil tanpa argumen itu, sehingga nilainya `undefined` dan ikut disisipkan ke template string.
+- `assets/rapor-resmi.js`: parameter `nbm` diberi nilai bawaan string kosong (`nbm = ''`). Kolom Orang Tua/Wali kini kosong di bawah garis, sama dengan rapor cetak aplikasi penilaian. Kolom Wali Kelas dan Kepala Sekolah tidak berubah (tetap `NBM. …` bila ada).
+- `rapor-sts.html`: `?v=` import `rapor-resmi.js` dinaikkan ke `20261029q` agar browser memuat modul baru.
+- Tidak ada perubahan di rumus capaian, `firebase.js`, data Firestore, maupun aplikasi penilaian (SDM01Penilaian). Tidak perlu publikasi ulang rapor.
