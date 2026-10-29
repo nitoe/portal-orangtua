@@ -5,8 +5,11 @@
   "targets": {
     "sdm01kukusan-2e735": {
       "hosting": {
-        "portal-ortu": ["sdm01-portal-ortu"]
+        "portal-ortu": [
+          "sdm01-portal-ortu"
+        ]
       }
     }
-  }
+  },
+  "etags": {}
 }
