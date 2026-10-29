@@ -112,3 +112,9 @@
 - Daftar “Perlu didampingi” di atas hanya menampilkan poin yang benar-benar perlu tindakan.
 - Batang nilai hanya muncul pada filter “Semua”.
 - Sumber data tetap `rapor_sts_ortu` (tidak ada angka baru). Lembar rapor resmi tidak diubah.
+
+## 2026-10-29g
+
+### Ringkasan Capaian: hilangkan kalimat teknis di bawah tabel nilai
+- Paragraf “Ambang dari LEVEL_RANGE_DEFAULT …” di bagian “Cara membaca nilai” dihapus.
+- Tabel ambang predikat tetap ada; keterangan teknis tidak perlu dibaca wali murid.
