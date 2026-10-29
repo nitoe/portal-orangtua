@@ -9,23 +9,37 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    body { background: var(--canvas-app); min-height: 100vh; }
+    /*
+      Skala fluid halaman login (lihat ANTIREGRESI §9).
+      Semua ukuran di halaman ini memakai rem. Pada layar lebar / browser di-zoom-out
+      (viewport CSS px membesar), ukuran dasar ikut membesar sehingga kartu dan panel
+      tetap proporsional dan tidak menyisakan ruang kosong di kiri-kanan.
+      Skala hanya diterapkan di index.html, BUKAN di style.css (dipakai halaman lain).
+      Media query tetap memakai px agar tidak ikut berubah oleh skala ini.
+    */
+    html { font-size: 16px; }
+    @media (min-width: 1600px) {
+      html { font-size: clamp(16px, min(1vw, 1.75vh), 64px); }
+    }
+
+    body { background: var(--canvas-app); min-height: 100vh; font-size: 0.875rem; }
     .shell {
       min-height: 100vh;
+      min-height: 100dvh;
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
     @media (max-width: 900px) {
       .shell { grid-template-columns: 1fr; }
       .hero { display: none; }
-      .panel { padding: 24px 16px 40px; }
+      .panel { padding: 1.5rem 1rem 2.5rem; }
       .mobile-brand { display: flex !important; }
     }
 
     .hero {
       background: var(--brand-sidebar);
       color: #fff;
-      padding: 48px 40px;
+      padding: 3rem 2.5rem;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -34,8 +48,8 @@
     .hero::after {
       content: '';
       position: absolute;
-      width: 320px; height: 320px;
-      right: -80px; bottom: -60px;
+      width: 20rem; height: 20rem;
+      right: -5rem; bottom: -3.75rem;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.04);
       pointer-events: none;
@@ -43,7 +57,7 @@
     .hero-inner {
       position: relative;
       z-index: 1;
-      max-width: 420px;
+      max-width: 26.25rem;
       margin: 0 auto;
       width: 100%;
       display: flex;
@@ -53,58 +67,58 @@
     .brand-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 48px;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
     }
     .brand-logo {
-      width: 48px; height: 48px;
-      border-radius: 10px;
+      width: 3rem; height: 3rem;
+      border-radius: 0.625rem;
       background: #fff;
-      padding: 6px;
+      padding: 0.375rem;
       object-fit: contain;
       flex-shrink: 0;
     }
-    .brand-name { font-size: 14px; font-weight: 600; line-height: 1.3; }
-    .brand-tag { font-size: 12px; opacity: 0.7; font-weight: 500; margin-top: 2px; }
+    .brand-name { font-size: 0.875rem; font-weight: 600; line-height: 1.3; }
+    .brand-tag { font-size: 0.75rem; opacity: 0.7; font-weight: 500; margin-top: 0.125rem; }
     .hero h1 {
-      margin: 0 0 12px;
-      font-size: 26px;
+      margin: 0 0 0.75rem;
+      font-size: 1.625rem;
       font-weight: 600;
       letter-spacing: -0.025em;
       line-height: 1.3;
     }
     .hero p {
       margin: 0;
-      font-size: 14px;
+      font-size: 0.875rem;
       line-height: 1.6;
       opacity: 0.85;
       font-weight: 400;
     }
     .hero-steps {
-      margin-top: 36px;
+      margin-top: 2.25rem;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 0.75rem;
     }
     .hero-step {
       display: flex;
-      gap: 12px;
+      gap: 0.75rem;
       align-items: flex-start;
-      font-size: 13px;
+      font-size: 0.8125rem;
       opacity: 0.9;
     }
     .hero-step-num {
-      width: 22px; height: 22px;
-      border-radius: 6px;
+      width: 1.375rem; height: 1.375rem;
+      border-radius: 0.375rem;
       background: rgba(255, 255, 255, 0.12);
       display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 600;
+      font-size: 0.75rem; font-weight: 600;
       flex-shrink: 0;
     }
     .hero-foot {
       margin-top: auto;
-      padding-top: 40px;
-      font-size: 12px;
+      padding-top: 2.5rem;
+      font-size: 0.75rem;
       opacity: 0.55;
     }
 
@@ -112,47 +126,47 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 24px;
+      padding: 2.5rem 1.5rem;
     }
     .panel-card {
       width: 100%;
-      max-width: 400px;
+      max-width: 25rem;
       background: var(--canvas);
       border: 1px solid var(--hairline);
-      border-radius: var(--radius-card);
-      padding: 28px 24px 24px;
+      border-radius: 0.75rem;
+      padding: 1.75rem 1.5rem 1.5rem;
     }
     .mobile-brand {
       display: none;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 0.625rem;
+      margin-bottom: 1.25rem;
     }
     .mobile-brand img {
-      width: 40px; height: 40px;
-      border-radius: 9px;
+      width: 2.5rem; height: 2.5rem;
+      border-radius: 0.5625rem;
       background: var(--brand-tint);
-      padding: 5px;
+      padding: 0.3125rem;
       object-fit: contain;
     }
-    .mobile-brand strong { display: block; font-size: 13px; font-weight: 600; }
-    .mobile-brand span { font-size: 12px; color: var(--ink-mute); }
+    .mobile-brand strong { display: block; font-size: 0.8125rem; font-weight: 600; }
+    .mobile-brand span { font-size: 0.75rem; color: var(--ink-mute); }
 
     .tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4px;
+      gap: 0.25rem;
       background: var(--canvas-app);
-      border-radius: var(--radius-control);
-      padding: 4px;
-      margin-bottom: 24px;
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+      margin-bottom: 1.5rem;
     }
     .tab {
       border: none;
       background: transparent;
-      padding: 9px 8px;
-      border-radius: 6px;
-      font-size: 13px;
+      padding: 0.5625rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
       font-weight: 600;
       color: var(--ink-mute);
       cursor: pointer;
@@ -164,17 +178,68 @@
     }
 
     .panel-title {
-      margin: 0 0 4px;
-      font-size: 18px;
+      margin: 0 0 0.25rem;
+      font-size: 1.125rem;
       font-weight: 600;
       letter-spacing: -0.02em;
       color: var(--ink);
     }
     .panel-sub {
-      margin: 0 0 22px;
-      font-size: 13px;
+      margin: 0 0 1.375rem;
+      font-size: 0.8125rem;
       color: var(--ink-mute);
       line-height: 1.5;
+    }
+
+    /*
+      Komponen bersama dari style.css (field, tombol, spinner) dalam rem,
+      HANYA di dalam .panel-card agar halaman lain tidak terpengaruh.
+    */
+    .panel-card .field { margin-bottom: 0.875rem; }
+    .panel-card .field label { font-size: 0.8125rem; margin-bottom: 0.375rem; }
+    .panel-card .field input,
+    .panel-card .field select {
+      font-size: 0.875rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: 0.5rem;
+    }
+    .panel-card .field select {
+      padding-right: 2rem;
+      background-position: right 0.75rem center;
+      background-size: 0.75rem 0.5rem;
+    }
+    .panel-card .password-wrap input { padding-right: 2.625rem; }
+    .panel-card .toggle-visibility {
+      right: 0.375rem;
+      padding: 0.375rem;
+      border-radius: 0.375rem;
+    }
+    .panel-card .toggle-visibility svg { width: 1.125rem; height: 1.125rem; }
+    .panel-card .field-hint { margin-top: 0.375rem; font-size: 0.75rem; }
+    .panel-card .field-error-msg {
+      gap: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.8125rem;
+      margin-bottom: 0.75rem;
+      border-radius: 0.5rem;
+    }
+    .panel-card .btn-primary {
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      padding: 0.625rem 1rem;
+      border-radius: 0.5rem;
+    }
+    .panel-card .spinner { width: 1.125rem; height: 1.125rem; }
+
+    .toast {
+      font-size: 0.8125rem;
+      padding: 0.75rem 1.125rem;
+      border-radius: 0.5rem;
+      max-width: min(92vw, 25rem);
+      bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    }
+    @media (min-width: 768px) {
+      .toast { bottom: 1.5rem; }
     }
   </style>
 </head>

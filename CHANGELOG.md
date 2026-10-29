@@ -63,3 +63,11 @@
 - Portal tidak lagi merata-ratakan `nilai_sts` (angka dan predikat itu bukan rapor resmi).
 - Halaman `rapor-sts.html` menampilkan salinan `rapor_sts_ortu`: identitas, muatan wajib/yayasan, nilai akhir, deskripsi capaian, tanda tangan wali + kepala sekolah, stempel.
 - Sumber data ditulis oleh SDM01Penilaian saat **Publikasikan** ulang. Publikasi lama tidak otomatis berubah.
+
+## 2026-10-29b
+
+### Login responsif saat zoom-out / layar lebar
+- Perbaikan: saat browser di-zoom-out (atau layar sangat lebar), kartu login dan panel hero tetap berukuran tetap sehingga muncul banyak ruang kosong di kiri dan kanan.
+- `index.html`: seluruh ukuran halaman login diubah dari `px` ke `rem`. Pada viewport ≥ 1600px, ukuran dasar (`html font-size`) ikut membesar mengikuti lebar dan tinggi viewport, dibatasi 16px–64px. Kartu login kini selalu sekitar 21–22% lebar layar pada zoom berapa pun.
+- Komponen bersama dari `style.css` (field, select, tombol, spinner) disesuaikan ke `rem` hanya di dalam `.panel-card` pada `index.html`; `style.css` tidak diubah, sehingga `beranda.html`, `admin.html`, dan `rapor-sts.html` tidak terpengaruh.
+- Tampilan di bawah 1600px (termasuk mobile ≤ 900px) tidak berubah. Logika JavaScript, id elemen, dan import `firebase.js` tidak diubah.
