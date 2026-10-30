@@ -1,5 +1,11 @@
 # Changelog — Portal Orang Tua
 
+## 2026-10-30f
+
+### Hapus badge “Ananda” yang menutupi nilai
+- Label **Ananda** di pojok kartu 5 Besar dihilangkan karena menutupi angka rata-rata.
+- Kartu anak sendiri tetap dibedakan dengan border/latar ungu lembut (`is-mine`), tanpa teks tambahan.
+
 ## 2026-10-30e
 
 ### Kembalikan pilihan kelas seperti semula

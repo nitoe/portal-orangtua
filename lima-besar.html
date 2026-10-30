@@ -76,24 +76,11 @@
       position: relative;
       overflow: hidden;
     }
+    /* Kartu ananda: hanya sorot border/latar, tanpa badge yang menutupi nilai */
     .rank-card.is-mine {
       border-color: #313083;
       box-shadow: 0 0 0 1px #313083;
       background: #f8faff;
-    }
-    .rank-card.is-mine::after {
-      content: 'Ananda';
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #313083;
-      background: #e0e7ff;
-      padding: 2px 7px;
-      border-radius: 4px;
     }
 
     /* ---- Rank icons ---- */
