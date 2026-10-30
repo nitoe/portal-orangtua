@@ -34,29 +34,62 @@
       margin-bottom: 14px;
     }
 
+    /* Filter kelas: di HP digeser horizontal agar semua kelas (mis. 6B) terlihat */
     .kelas-filters {
       display: flex;
       gap: 6px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
+      margin: 0 -16px 16px;
+      padding: 2px 16px 10px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x proximity;
+    }
+    .kelas-filters::-webkit-scrollbar {
+      height: 4px;
+    }
+    .kelas-filters::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    @media (min-width: 640px) {
+      .kelas-filters {
+        margin: 0 0 16px;
+        padding: 0 0 4px;
+        flex-wrap: wrap;
+        overflow-x: visible;
+      }
     }
     .kelas-btn {
       border: 1px solid var(--border);
       background: #fff;
       border-radius: 8px;
-      padding: 6px 12px;
+      padding: 7px 12px;
       font-size: 13px;
       font-weight: 600;
       color: #334155;
       cursor: pointer;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      white-space: nowrap;
+      min-height: 36px;
     }
     .kelas-btn.active {
       background: #313083;
       border-color: #313083;
       color: #fff;
     }
-    .kelas-btn.mine {
+    .kelas-btn.mine:not(.active) {
       box-shadow: 0 0 0 2px #a5b4fc;
+    }
+    /* Pastikan konten tidak tertutup bottom-nav di HP */
+    @media (max-width: 767px) {
+      .main-body {
+        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+      }
     }
 
     .rank-list {
@@ -203,38 +236,6 @@
       color: #0f172a;
     }
 
-    .legend-ranks {
-      margin-top: 18px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      padding: 12px 14px;
-    }
-    .legend-ranks h3 {
-      margin: 0 0 8px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #0f172a;
-    }
-    .legend-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 5px 0;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 12.5px;
-      color: #334155;
-    }
-    .legend-row:last-child { border-bottom: none; }
-    .legend-row .mini-icon {
-      width: 28px;
-      height: 28px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .legend-row .mini-icon svg { width: 24px; height: 24px; }
   </style>
 </head>
 <body>
@@ -489,12 +490,6 @@
         <span class="rank-num">5</span>`;
     }
 
-    function miniIcon(rank) {
-      // Versi kecil untuk legenda
-      const wrap = document.createElement('div');
-      wrap.innerHTML = `<div class="rank-icon r${rank}" style="width:28px;height:28px;transform:scale(0.58);transform-origin:center">${rankIconSvg(rank)}</div>`;
-      return wrap.innerHTML;
-    }
 
     let data = null;
     let kelasAktif = '';
@@ -535,18 +530,8 @@
       if (!data) return;
       const filters = data.kelasList.map((k) => {
         const mine = anakKelas && k === anakKelas;
-        return `<button type="button" class="kelas-btn${k === kelasAktif ? ' active' : ''}${mine ? ' mine' : ''}" data-kelas="${escapeHtml(k)}">Kelas ${escapeHtml(k)}</button>`;
+        return `<button type="button" class="kelas-btn${k === kelasAktif ? ' active' : ''}${mine ? ' mine' : ''}" data-kelas="${escapeHtml(k)}" aria-label="Kelas ${escapeHtml(k)}">${escapeHtml(k)}</button>`;
       }).join('');
-
-      const legend = `
-        <div class="legend-ranks">
-          <h3>Arti ikon peringkat</h3>
-          <div class="legend-row"><div class="mini-icon">${rankIconSvg(1).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 1</strong> — Piala emas (besar, bintang, glow)</div></div>
-          <div class="legend-row"><div class="mini-icon">${rankIconSvg(2).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 2</strong> — Piala perak (ramping, ring batang)</div></div>
-          <div class="legend-row"><div class="mini-icon">${rankIconSvg(3).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 3</strong> — Piala perunggu (lebih kecil, garis ornamen)</div></div>
-          <div class="legend-row"><div class="mini-icon">${rankIconSvg(4).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 4</strong> — Medali biru</div></div>
-          <div class="legend-row"><div class="mini-icon">${rankIconSvg(5).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 5</strong> — Medali hijau</div></div>
-        </div>`;
 
       if (!data.kelasList.length) {
         $('mainContent').innerHTML = `
@@ -571,8 +556,7 @@
         </div>
         <div class="periode-pill">${escapeHtml(data.periodeLabel || 'Periode berjalan')}</div>
         <div class="kelas-filters">${filters}</div>
-        ${renderList()}
-        ${legend}`;
+        ${renderList()}`;
 
       document.querySelectorAll('.kelas-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -580,6 +564,15 @@
           render();
         });
       });
+      // Pastikan kelas aktif (mis. 6B di ujung) terlihat di strip horizontal HP
+      const aktifBtn = document.querySelector('.kelas-btn.active');
+      if (aktifBtn && typeof aktifBtn.scrollIntoView === 'function') {
+        try {
+          aktifBtn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'instant' });
+        } catch (_) {
+          aktifBtn.scrollIntoView(false);
+        }
+      }
     }
 
     async function boot() {

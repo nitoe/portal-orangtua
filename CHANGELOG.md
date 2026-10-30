@@ -1,5 +1,20 @@
 # Changelog — Portal Orang Tua
 
+## 2026-10-30d
+
+### Hapus legenda “Arti ikon peringkat”
+- Bagian penjelasan ikon peringkat 1–5 di bawah daftar 5 Besar dihilangkan; ikon tetap tampil di kartu ranking saja.
+- Hanya UI `lima-besar.html`.
+
+## 2026-10-30c
+
+### Filter kelas 5 Besar terlihat di HP (termasuk 6B)
+- Strip filter kelas di `lima-besar.html` di layar HP: digeser **horizontal** (bukan hanya wrap yang terpotong), sehingga kelas di ujung seperti **6B** tetap bisa dijangkau.
+- Tombol filter menampilkan kode kelas singkat (`6B`) agar muat lebih banyak; `aria-label` tetap “Kelas 6B”.
+- Kelas aktif otomatis di-scroll ke tengah strip.
+- Padding bawah ditambah agar daftar ranking tidak tertutup bottom-nav.
+- Hanya UI mobile; logika ranking tidak berubah.
+
 ## 2026-10-30b
 
 ### Revisi ikon 5 Besar: piala (1–3) & medali (4–5)
