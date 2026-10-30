@@ -34,62 +34,29 @@
       margin-bottom: 14px;
     }
 
-    /* Filter kelas: di HP digeser horizontal agar semua kelas (mis. 6B) terlihat */
     .kelas-filters {
       display: flex;
       gap: 6px;
-      margin: 0 -16px 16px;
-      padding: 2px 16px 10px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-      overscroll-behavior-x: contain;
-      scroll-snap-type: x proximity;
-    }
-    .kelas-filters::-webkit-scrollbar {
-      height: 4px;
-    }
-    .kelas-filters::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    @media (min-width: 640px) {
-      .kelas-filters {
-        margin: 0 0 16px;
-        padding: 0 0 4px;
-        flex-wrap: wrap;
-        overflow-x: visible;
-      }
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
     .kelas-btn {
       border: 1px solid var(--border);
       background: #fff;
       border-radius: 8px;
-      padding: 7px 12px;
+      padding: 6px 12px;
       font-size: 13px;
       font-weight: 600;
       color: #334155;
       cursor: pointer;
-      flex-shrink: 0;
-      scroll-snap-align: start;
-      white-space: nowrap;
-      min-height: 36px;
     }
     .kelas-btn.active {
       background: #313083;
       border-color: #313083;
       color: #fff;
     }
-    .kelas-btn.mine:not(.active) {
+    .kelas-btn.mine {
       box-shadow: 0 0 0 2px #a5b4fc;
-    }
-    /* Pastikan konten tidak tertutup bottom-nav di HP */
-    @media (max-width: 767px) {
-      .main-body {
-        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
-      }
     }
 
     .rank-list {
@@ -530,7 +497,7 @@
       if (!data) return;
       const filters = data.kelasList.map((k) => {
         const mine = anakKelas && k === anakKelas;
-        return `<button type="button" class="kelas-btn${k === kelasAktif ? ' active' : ''}${mine ? ' mine' : ''}" data-kelas="${escapeHtml(k)}" aria-label="Kelas ${escapeHtml(k)}">${escapeHtml(k)}</button>`;
+        return `<button type="button" class="kelas-btn${k === kelasAktif ? ' active' : ''}${mine ? ' mine' : ''}" data-kelas="${escapeHtml(k)}">Kelas ${escapeHtml(k)}</button>`;
       }).join('');
 
       if (!data.kelasList.length) {
@@ -564,15 +531,6 @@
           render();
         });
       });
-      // Pastikan kelas aktif (mis. 6B di ujung) terlihat di strip horizontal HP
-      const aktifBtn = document.querySelector('.kelas-btn.active');
-      if (aktifBtn && typeof aktifBtn.scrollIntoView === 'function') {
-        try {
-          aktifBtn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'instant' });
-        } catch (_) {
-          aktifBtn.scrollIntoView(false);
-        }
-      }
     }
 
     async function boot() {

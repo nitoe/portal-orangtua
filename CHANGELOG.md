@@ -1,5 +1,11 @@
 # Changelog — Portal Orang Tua
 
+## 2026-10-30e
+
+### Kembalikan pilihan kelas seperti semula
+- Filter kelas di `lima-besar.html` kembali ke tombol wrap dengan label **Kelas …** (bukan strip geser horizontal).
+- Kelas hanya muncul jika rapor STS kelas tersebut sudah dipublikasikan wali kelas; jika 6B belum publish, memang tidak ada di daftar.
+
 ## 2026-10-30d
 
 ### Hapus legenda “Arti ikon peringkat”
