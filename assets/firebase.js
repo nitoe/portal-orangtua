@@ -1087,3 +1087,199 @@ export async function loadRaporStsResmi(siswaId) {
   };
 }
 
+
+/**
+ * 5 Besar Capaian per kelas (dan seluruh sekolah).
+ * Sumber: rapor_sts_ortu yang published + gerbang sts_publikasi.published.
+ * Ranking berdasarkan rata-rata nilaiAkhir lintas mapel (nilai resmi rapor).
+ * Tidak menghitung ulang rumus; hanya agregasi dokumen yang sudah dipublikasikan.
+ *
+ * @returns {{
+ *   periodeLabel: string,
+ *   tahunAjaran: string,
+ *   semester: string,
+ *   byKelas: Record<string, Array<{
+ *     ranking: number,
+ *     siswaId: string,
+ *     nama: string,
+ *     kelas: string,
+ *     rata: number,
+ *     nMapel: number,
+ *   }>>,
+ *   kelasList: string[],
+ * }}
+ */
+export async function loadLimaBesarCapaian() {
+  if (DEMO_MODE) {
+    _seedDemo();
+    await new Promise((r) => setTimeout(r, 180));
+    const demo = {
+      '5A': [
+        { ranking: 1, siswaId: 's1', nama: 'Ahmad Fauzan', kelas: '5A', rata: 91.2, nMapel: 6 },
+        { ranking: 2, siswaId: 's2', nama: 'Siti Aisyah', kelas: '5A', rata: 88.5, nMapel: 6 },
+        { ranking: 3, siswaId: 's3', nama: 'Muhammad Rizki', kelas: '5A', rata: 86.0, nMapel: 6 },
+        { ranking: 4, siswaId: 's-demo-4', nama: 'Anisa Putri', kelas: '5A', rata: 84.3, nMapel: 6 },
+        { ranking: 5, siswaId: 's-demo-5', nama: 'Dimas Pratama', kelas: '5A', rata: 82.1, nMapel: 6 },
+      ],
+      '5B': [
+        { ranking: 1, siswaId: 's4', nama: 'Nurul Hidayah', kelas: '5B', rata: 90.0, nMapel: 6 },
+        { ranking: 2, siswaId: 's5', nama: 'Budi Santoso', kelas: '5B', rata: 87.4, nMapel: 6 },
+        { ranking: 3, siswaId: 's-demo-6', nama: 'Laila Salsabila', kelas: '5B', rata: 85.2, nMapel: 6 },
+        { ranking: 4, siswaId: 's-demo-7', nama: 'Rafi Akbar', kelas: '5B', rata: 83.0, nMapel: 6 },
+        { ranking: 5, siswaId: 's-demo-8', nama: 'Zahra Melati', kelas: '5B', rata: 81.5, nMapel: 6 },
+      ],
+      '4A': [
+        { ranking: 1, siswaId: 's6', nama: 'Fatimah Zahra', kelas: '4A', rata: 92.5, nMapel: 5 },
+        { ranking: 2, siswaId: 's7', nama: 'Raka Pratama', kelas: '4A', rata: 89.0, nMapel: 5 },
+        { ranking: 3, siswaId: 's-demo-9', nama: 'Kirana Dewi', kelas: '4A', rata: 86.8, nMapel: 5 },
+        { ranking: 4, siswaId: 's-demo-10', nama: 'Omar Faruq', kelas: '4A', rata: 84.0, nMapel: 5 },
+        { ranking: 5, siswaId: 's-demo-11', nama: 'Nadia Safira', kelas: '4A', rata: 82.7, nMapel: 5 },
+      ],
+    };
+    return {
+      periodeLabel: 'STS · Semester 1 · 2025/2026',
+      tahunAjaran: '2025/2026',
+      semester: '1',
+      byKelas: demo,
+      kelasList: Object.keys(demo).sort((a, b) => a.localeCompare(b, 'id', { numeric: true })),
+    };
+  }
+
+  const { db, fsMod } = window.__fb;
+
+  // Periode aktif
+  let semester = '1';
+  let tahunAjaran = '';
+  try {
+    const cfg = await fsMod.getDoc(fsMod.doc(db, 'config', 'akademik'));
+    if (cfg.exists()) {
+      const c = cfg.data() || {};
+      semester = String(c.semesterAktif || c.semester || '1');
+      tahunAjaran = String(c.tahunAjaran || '');
+    }
+  } catch (err) {
+    console.warn('[Portal] config akademik:', err);
+  }
+
+  const periodeLabel = tahunAjaran
+    ? `STS · Semester ${semester} · ${tahunAjaran}`
+    : `STS · Semester ${semester}`;
+
+  // Gerbang: kelas mana yang sudah published untuk periode ini
+  const publishedKelas = new Set();
+  try {
+    const pubSnap = await fsMod.getDocs(fsMod.collection(db, 'sts_publikasi'));
+    pubSnap.forEach((docSnap) => {
+      const d = docSnap.data() || {};
+      if (d.published !== true) return;
+      const ta = String(d.tahunAjaran || '');
+      const sm = String(d.semester || '');
+      if (tahunAjaran && ta && ta !== tahunAjaran) return;
+      if (sm && sm !== semester) return;
+      if (d.kelas) publishedKelas.add(String(d.kelas));
+    });
+  } catch (err) {
+    console.warn('[Portal] sts_publikasi list:', err);
+  }
+
+  // Ambil semua rapor_sts_ortu periode ini yang published
+  let raporSnap;
+  try {
+    if (tahunAjaran) {
+      raporSnap = await fsMod.getDocs(
+        fsMod.query(
+          fsMod.collection(db, 'rapor_sts_ortu'),
+          fsMod.where('tahunAjaran', '==', tahunAjaran),
+          fsMod.where('semester', '==', semester),
+        ),
+      );
+    } else {
+      raporSnap = await fsMod.getDocs(
+        fsMod.query(
+          fsMod.collection(db, 'rapor_sts_ortu'),
+          fsMod.where('semester', '==', semester),
+        ),
+      );
+    }
+  } catch (err) {
+    console.warn('[Portal] rapor_sts_ortu list:', err);
+    return {
+      periodeLabel,
+      tahunAjaran,
+      semester,
+      byKelas: {},
+      kelasList: [],
+    };
+  }
+
+  /** @type {Record<string, Array<{siswaId:string,nama:string,kelas:string,rata:number,nMapel:number}>>} */
+  const buckets = {};
+
+  raporSnap.forEach((docSnap) => {
+    const d = docSnap.data() || {};
+    if (d.published !== true) return;
+    const kelas = String(d.kelas || '').trim();
+    if (!kelas) return;
+    // Jika ada gerbang published, hanya kelas yang published
+    if (publishedKelas.size > 0 && !publishedKelas.has(kelas)) return;
+
+    const siswaId = String(d.siswaId || docSnap.id || '');
+    const nama =
+      (d.siswa && (d.siswa.nama || d.siswa.namaLengkap)) ||
+      d.namaSiswa ||
+      d.nama ||
+      'Siswa';
+    const baris = Array.isArray(d.baris) ? d.baris : [];
+    const nilaiList = [];
+    for (const b of baris) {
+      const n = b && b.nilaiAkhir != null && b.nilaiAkhir !== '' ? Number(b.nilaiAkhir) : NaN;
+      if (Number.isFinite(n)) nilaiList.push(n);
+    }
+    if (nilaiList.length === 0) return;
+
+    const rata =
+      Math.round((nilaiList.reduce((s, x) => s + x, 0) / nilaiList.length) * 10) / 10;
+
+    if (!buckets[kelas]) buckets[kelas] = [];
+    buckets[kelas].push({
+      siswaId,
+      nama: String(nama),
+      kelas,
+      rata,
+      nMapel: nilaiList.length,
+    });
+  });
+
+  /** @type {Record<string, Array<{ranking:number,siswaId:string,nama:string,kelas:string,rata:number,nMapel:number}>>} */
+  const byKelas = {};
+  for (const kelas of Object.keys(buckets)) {
+    const sorted = buckets[kelas].sort((a, b) => {
+      if (b.rata !== a.rata) return b.rata - a.rata;
+      return a.nama.localeCompare(b.nama, 'id');
+    });
+    // Competition rank
+    const ranked = [];
+    for (let i = 0; i < sorted.length; i++) {
+      const item = sorted[i];
+      let ranking = 1;
+      if (i > 0) {
+        const prev = ranked[i - 1];
+        ranking = item.rata < prev.rata - 1e-9 ? i + 1 : prev.ranking;
+      }
+      ranked.push({ ranking, ...item });
+    }
+    byKelas[kelas] = ranked.filter((r) => r.ranking <= 5).slice(0, 5);
+  }
+
+  const kelasList = Object.keys(byKelas).sort((a, b) =>
+    a.localeCompare(b, 'id', { numeric: true }),
+  );
+
+  return {
+    periodeLabel,
+    tahunAjaran,
+    semester,
+    byKelas,
+    kelasList,
+  };
+}

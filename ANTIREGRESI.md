@@ -114,3 +114,13 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Saat clone baru: salin example → `firebase-config.js`, isi key, lalu deploy. Jangan `git add assets/firebase-config.js`.
 - Kunci ini adalah kunci klien. Setelah deploy tetap terlihat di browser. Wajib batasi HTTP referrer di Google Cloud Console ke domain portal dan penilaian.
 - `.env` portal tidak dipakai oleh situs statis ini. Jangan di-commit.
+
+## §13 5 Besar Capaian — halaman terpisah, bukan di Ringkasan Capaian
+
+- Ranking antar-siswa **tidak** ditampilkan di `capaian.html` (tetap berlaku §11).
+- Fitur 5 besar hanya di halaman `lima-besar.html` + fungsi `loadLimaBesarCapaian()`.
+- Sumber data: dokumen `rapor_sts_ortu` dengan `published === true`, difilter gerbang `sts_publikasi.published` untuk kelas/periode aktif.
+- Metrik ranking: rata-rata `baris[].nilaiAkhir` (nilai resmi rapor), bukan rata-rata kasar `nilai_sts`.
+- Portal **hanya membaca**; tidak menulis koleksi baru dan tidak mengubah aplikasi penilaian.
+- Jangan mengembalikan perbandingan ranking per mapel ke Ringkasan Capaian pribadi.
+- **Tes:** buka `lima-besar.html` setelah login ortu → filter kelas muncul untuk kelas yang sudah publish; kartu peringkat 1 punya animasi glow mahkota; jika ananda di 5 besar, label “Ananda” tampil. `capaian.html` tetap tanpa daftar ranking teman sekelas.

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#313083">
+  <title>5 Besar Capaian — Portal Orang Tua</title>
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .disclaimer {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.45;
+    }
+    .disclaimer strong { color: #0f172a; }
+
+    .periode-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #313083;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .kelas-filters {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .kelas-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+    }
+    .kelas-btn.active {
+      background: #313083;
+      border-color: #313083;
+      color: #fff;
+    }
+    .kelas-btn.mine {
+      box-shadow: 0 0 0 2px #a5b4fc;
+    }
+
+    .rank-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rank-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 12px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .rank-card.is-mine {
+      border-color: #313083;
+      box-shadow: 0 0 0 1px #313083;
+      background: #f8faff;
+    }
+    .rank-card.is-mine::after {
+      content: 'Ananda';
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #313083;
+      background: #e0e7ff;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    /* ---- Rank icons ---- */
+    .rank-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .rank-icon svg { display: block; }
+
+    /* Peringkat 1 — piala emas berkelip */
+    .rank-icon.r1 {
+      animation: trophy-glow 2.2s ease-in-out infinite;
+    }
+    @keyframes trophy-glow {
+      0%, 100% {
+        filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.4))
+                drop-shadow(0 0 6px rgba(245, 158, 11, 0.35));
+      }
+      50% {
+        filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.85))
+                drop-shadow(0 0 14px rgba(245, 158, 11, 0.55))
+                drop-shadow(0 0 22px rgba(252, 211, 77, 0.35));
+      }
+    }
+    .rank-num {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      pointer-events: none;
+      /* angka di badan piala / tengah medali */
+      padding-top: 4px;
+    }
+    .rank-icon.r1 .rank-num { color: #92400e; text-shadow: 0 0 4px rgba(251,191,36,0.7); padding-top: 6px; font-size: 13px; }
+    .rank-icon.r2 .rank-num { color: #334155; padding-top: 6px; }
+    .rank-icon.r3 .rank-num { color: #9a3412; padding-top: 6px; }
+    .rank-icon.r4 .rank-num { color: #1e3a8a; padding-top: 10px; }
+    .rank-icon.r5 .rank-num { color: #065f46; padding-top: 10px; }
+
+    .rank-body { flex: 1; min-width: 0; }
+    .rank-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rank-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .rank-score {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .rank-score .num {
+      font-size: 20px;
+      font-weight: 800;
+      color: #313083;
+      line-height: 1;
+    }
+    .rank-score .lbl {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .rank-card.r1-card {
+      background: linear-gradient(135deg, #fffbeb 0%, #fff 55%);
+      border-color: #fde68a;
+    }
+    .rank-card.r2-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #fff 55%);
+      border-color: #cbd5e1;
+    }
+    .rank-card.r3-card {
+      background: linear-gradient(135deg, #fff7ed 0%, #fff 55%);
+      border-color: #fdba74;
+    }
+
+    .empty-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .empty-box h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      color: #0f172a;
+    }
+
+    .legend-ranks {
+      margin-top: 18px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 12px 14px;
+    }
+    .legend-ranks h3 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 12.5px;
+      color: #334155;
+    }
+    .legend-row:last-child { border-bottom: none; }
+    .legend-row .mini-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .legend-row .mini-icon svg { width: 24px; height: 24px; }
+  </style>
+</head>
+<body>
+  <div class="app-frame">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="sidebar-brand" href="beranda.html">
+          <img src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
+          <div>
+            <div class="sidebar-brand-title">SDM 01 Kukusan</div>
+            <div class="sidebar-brand-sub">Portal Orang Tua</div>
+          </div>
+        </a>
+        <p class="sidebar-section">Menu</p>
+        <nav style="flex:1">
+          <a class="side-link" href="beranda.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+            Beranda
+          </a>
+          <a class="side-link" href="rapor-sts.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Rapor STS
+          </a>
+          <a class="side-link" href="capaian.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+            Ringkasan Capaian
+          </a>
+          <a class="side-link active" href="lima-besar.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
+            5 Besar Capaian
+          </a>
+        </nav>
+        <div class="hero-banner">
+          <div class="hb-label">Masuk sebagai</div>
+          <div class="hb-name" id="sideNama">—</div>
+          <div class="hb-role">Orang tua</div>
+        </div>
+        <button type="button" class="btn-logout" id="btnLogoutSide">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          Keluar
+        </button>
+      </aside>
+
+      <div class="main-col">
+        <header class="top-header">
+          <div>
+            <h1>5 Besar Capaian</h1>
+            <p class="date" id="tanggalHari">—</p>
+          </div>
+          <div class="top-actions">
+            <div class="avatar-btn" id="avatarInisial">—</div>
+            <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <main class="main-body">
+          <div class="main-inner" id="mainContent">
+            <p style="color:var(--muted);font-size:13px">Memuat…</p>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="beranda.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+      Beranda
+    </a>
+    <a href="rapor-sts.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Rapor
+    </a>
+    <a href="capaian.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+      Capaian
+    </a>
+    <a class="active" href="lima-besar.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/></svg>
+      5 Besar
+    </a>
+  </nav>
+
+  <script type="module">
+    import {
+      currentSession,
+      logout,
+      loadSiswaByIds,
+      loadLimaBesarCapaian,
+    } from './assets/firebase.js';
+
+    const $ = (id) => document.getElementById(id);
+    $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    }).format(new Date());
+
+    function inisial(nama) {
+      if (!nama) return '?';
+      const p = nama.trim().split(/\s+/);
+      return p.length === 1
+        ? p[0].slice(0, 2).toUpperCase()
+        : (p[0][0] + p[p.length - 1][0]).toUpperCase();
+    }
+    function escapeHtml(s) {
+      return String(s || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /** SVG ikon peringkat 1–5 */
+    function rankIconSvg(rank) {
+      const r = Math.min(5, Math.max(1, Number(rank) || 5));
+      // Rank 1–3: piala (ukuran, warna, bentuk, ornamen berbeda)
+      // Rank 4–5: medali
+      if (r === 1) {
+        // Piala emas besar — cup lebar, gagang melengkung, bintang di puncak, kaki berornamen
+        return `
+          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+            <defs>
+              <linearGradient id="tg1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fef3c7"/>
+                <stop offset="40%" stop-color="#fbbf24"/>
+                <stop offset="100%" stop-color="#b45309"/>
+              </linearGradient>
+              <linearGradient id="tg1b" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#f59e0b"/>
+                <stop offset="50%" stop-color="#fde68a"/>
+                <stop offset="100%" stop-color="#d97706"/>
+              </linearGradient>
+            </defs>
+            <!-- gagang kiri -->
+            <path d="M14 14 C6 14 5 24 12 26" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round"/>
+            <!-- gagang kanan -->
+            <path d="M34 14 C42 14 43 24 36 26" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round"/>
+            <!-- cup -->
+            <path d="M14 10 H34 L32 26 C32 30 28 32 24 32 C20 32 16 30 16 26 Z"
+              fill="url(#tg1)" stroke="#92400e" stroke-width="1.3" stroke-linejoin="round"/>
+            <!-- rim -->
+            <ellipse cx="24" cy="10" rx="11" ry="2.2" fill="url(#tg1b)" stroke="#92400e" stroke-width="1"/>
+            <!-- bintang puncak -->
+            <path d="M24 2 L25.2 5.2 H28.6 L25.9 7.2 L27 10.4 L24 8.6 L21 10.4 L22.1 7.2 L19.4 5.2 H22.8 Z"
+              fill="#fef08a" stroke="#b45309" stroke-width="0.6" stroke-linejoin="round"/>
+            <!-- batang -->
+            <rect x="21.5" y="32" width="5" height="6" rx="0.8" fill="#f59e0b" stroke="#92400e" stroke-width="0.9"/>
+            <!-- kaki -->
+            <path d="M16 44 H32 L30 38 H18 Z" fill="url(#tg1)" stroke="#92400e" stroke-width="1.1" stroke-linejoin="round"/>
+            <rect x="17" y="42.5" width="14" height="2.2" rx="0.6" fill="#fde68a" stroke="#92400e" stroke-width="0.7"/>
+          </svg>
+          <span class="rank-num">1</span>`;
+      }
+      if (r === 2) {
+        // Piala perak — sedikit lebih ramping, gagang sudut, tanpa bintang, ring di batang
+        return `
+          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+            <defs>
+              <linearGradient id="tg2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f8fafc"/>
+                <stop offset="45%" stop-color="#cbd5e1"/>
+                <stop offset="100%" stop-color="#64748b"/>
+              </linearGradient>
+            </defs>
+            <!-- gagang kiri (lebih sudut) -->
+            <path d="M15 15 L8 15 L8 23 L15 25" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- gagang kanan -->
+            <path d="M33 15 L40 15 L40 23 L33 25" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- cup ramping -->
+            <path d="M15 11 H33 L31.2 26 C31.2 29.5 28 31.5 24 31.5 C20 31.5 16.8 29.5 16.8 26 Z"
+              fill="url(#tg2)" stroke="#475569" stroke-width="1.25" stroke-linejoin="round"/>
+            <ellipse cx="24" cy="11" rx="9.5" ry="1.9" fill="#e2e8f0" stroke="#475569" stroke-width="0.9"/>
+            <!-- ring batang -->
+            <rect x="22" y="31.5" width="4" height="5.5" rx="0.6" fill="#94a3b8" stroke="#475569" stroke-width="0.85"/>
+            <ellipse cx="24" cy="34" rx="3.2" ry="1.1" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+            <!-- kaki -->
+            <path d="M17 44 H31 L29.5 38 H18.5 Z" fill="url(#tg2)" stroke="#475569" stroke-width="1" stroke-linejoin="round"/>
+            <rect x="18" y="42.8" width="12" height="1.8" rx="0.5" fill="#f1f5f9" stroke="#475569" stroke-width="0.65"/>
+          </svg>
+          <span class="rank-num">2</span>`;
+      }
+      if (r === 3) {
+        // Piala perunggu — cup lebih kecil/pendek, gagang kecil, ornamen garis horizontal
+        return `
+          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+            <defs>
+              <linearGradient id="tg3" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffedd5"/>
+                <stop offset="40%" stop-color="#fb923c"/>
+                <stop offset="100%" stop-color="#9a3412"/>
+              </linearGradient>
+            </defs>
+            <!-- gagang kecil -->
+            <path d="M16 16 C10 16 10 22 15 23.5" fill="none" stroke="#c2410c" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M32 16 C38 16 38 22 33 23.5" fill="none" stroke="#c2410c" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- cup lebih pendek -->
+            <path d="M16 12 H32 L30.5 25 C30.5 28 27.5 30 24 30 C20.5 30 17.5 28 17.5 25 Z"
+              fill="url(#tg3)" stroke="#9a3412" stroke-width="1.2" stroke-linejoin="round"/>
+            <!-- ornamen garis di cup -->
+            <path d="M18 18 H30" stroke="#ffedd5" stroke-width="1.1" stroke-linecap="round" opacity="0.85"/>
+            <path d="M18.5 21.5 H29.5" stroke="#ffedd5" stroke-width="0.9" stroke-linecap="round" opacity="0.7"/>
+            <ellipse cx="24" cy="12" rx="8.5" ry="1.7" fill="#fdba74" stroke="#9a3412" stroke-width="0.85"/>
+            <!-- batang pendek -->
+            <rect x="22.2" y="30" width="3.6" height="5" rx="0.5" fill="#ea580c" stroke="#9a3412" stroke-width="0.8"/>
+            <!-- kaki lebih kecil -->
+            <path d="M18 43.5 H30 L28.8 38 H19.2 Z" fill="url(#tg3)" stroke="#9a3412" stroke-width="1" stroke-linejoin="round"/>
+            <rect x="18.5" y="42.2" width="11" height="1.6" rx="0.4" fill="#fed7aa" stroke="#9a3412" stroke-width="0.6"/>
+          </svg>
+          <span class="rank-num">3</span>`;
+      }
+      if (r === 4) {
+        // Medali biru — pita + piringan
+        return `
+          <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+            <defs>
+              <linearGradient id="mg4" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#93c5fd"/>
+                <stop offset="100%" stop-color="#1d4ed8"/>
+              </linearGradient>
+              <linearGradient id="mg4r" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#60a5fa"/>
+                <stop offset="100%" stop-color="#1e40af"/>
+              </linearGradient>
+            </defs>
+            <!-- pita -->
+            <path d="M18 6 L24 14 L30 6" fill="none" stroke="#1e40af" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18 6 L15 16" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M30 6 L33 16" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+            <!-- piringan -->
+            <circle cx="24" cy="28" r="13" fill="url(#mg4)" stroke="#1e3a8a" stroke-width="1.5"/>
+            <circle cx="24" cy="28" r="9" fill="none" stroke="#bfdbfe" stroke-width="1.3"/>
+            <circle cx="24" cy="28" r="6.5" fill="url(#mg4r)" opacity="0.35"/>
+          </svg>
+          <span class="rank-num">4</span>`;
+      }
+      // Medali hijau (peringkat 5) — pita + piringan, sedikit lebih sederhana
+      return `
+        <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
+          <defs>
+            <linearGradient id="mg5" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6ee7b7"/>
+              <stop offset="100%" stop-color="#047857"/>
+            </linearGradient>
+          </defs>
+          <path d="M18 7 L24 14 L30 7" fill="none" stroke="#065f46" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 7 L16 15" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M30 7 L32 15" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="24" cy="28" r="12.5" fill="url(#mg5)" stroke="#065f46" stroke-width="1.4"/>
+          <circle cx="24" cy="28" r="8.5" fill="none" stroke="#a7f3d0" stroke-width="1.2"/>
+        </svg>
+        <span class="rank-num">5</span>`;
+    }
+
+    function miniIcon(rank) {
+      // Versi kecil untuk legenda
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `<div class="rank-icon r${rank}" style="width:28px;height:28px;transform:scale(0.58);transform-origin:center">${rankIconSvg(rank)}</div>`;
+      return wrap.innerHTML;
+    }
+
+    let data = null;
+    let kelasAktif = '';
+    let anakId = '';
+    let anakKelas = '';
+
+    function renderList() {
+      if (!data || !kelasAktif) return '';
+      const rows = data.byKelas[kelasAktif] || [];
+      if (!rows.length) {
+        return `<div class="empty-box"><h3>Belum ada data</h3><p>Belum ada rapor STS terpublikasi untuk kelas ${escapeHtml(kelasAktif)}.</p></div>`;
+      }
+      return `<div class="rank-list">${rows.map((r) => {
+        const isMine = anakId && r.siswaId === anakId;
+        const cardClass = [
+          'rank-card',
+          r.ranking === 1 ? 'r1-card' : '',
+          r.ranking === 2 ? 'r2-card' : '',
+          r.ranking === 3 ? 'r3-card' : '',
+          isMine ? 'is-mine' : '',
+        ].filter(Boolean).join(' ');
+        return `
+          <div class="${cardClass}">
+            <div class="rank-icon r${r.ranking}">${rankIconSvg(r.ranking)}</div>
+            <div class="rank-body">
+              <div class="rank-name">${escapeHtml(r.nama)}</div>
+              <div class="rank-meta">Kelas ${escapeHtml(r.kelas)} · ${r.nMapel} mapel</div>
+            </div>
+            <div class="rank-score">
+              <div class="num">${r.rata.toFixed(1)}</div>
+              <div class="lbl">Rata-rata</div>
+            </div>
+          </div>`;
+      }).join('')}</div>`;
+    }
+
+    function render() {
+      if (!data) return;
+      const filters = data.kelasList.map((k) => {
+        const mine = anakKelas && k === anakKelas;
+        return `<button type="button" class="kelas-btn${k === kelasAktif ? ' active' : ''}${mine ? ' mine' : ''}" data-kelas="${escapeHtml(k)}">Kelas ${escapeHtml(k)}</button>`;
+      }).join('');
+
+      const legend = `
+        <div class="legend-ranks">
+          <h3>Arti ikon peringkat</h3>
+          <div class="legend-row"><div class="mini-icon">${rankIconSvg(1).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 1</strong> — Piala emas (besar, bintang, glow)</div></div>
+          <div class="legend-row"><div class="mini-icon">${rankIconSvg(2).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 2</strong> — Piala perak (ramping, ring batang)</div></div>
+          <div class="legend-row"><div class="mini-icon">${rankIconSvg(3).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 3</strong> — Piala perunggu (lebih kecil, garis ornamen)</div></div>
+          <div class="legend-row"><div class="mini-icon">${rankIconSvg(4).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 4</strong> — Medali biru</div></div>
+          <div class="legend-row"><div class="mini-icon">${rankIconSvg(5).replace(/width="48"/g,'width="28"').replace(/height="48"/g,'height="28"')}</div><div><strong>Peringkat 5</strong> — Medali hijau</div></div>
+        </div>`;
+
+      if (!data.kelasList.length) {
+        $('mainContent').innerHTML = `
+          <div class="disclaimer">
+            <strong>Tentang 5 Besar Capaian.</strong>
+            Daftar ini menampilkan 5 siswa dengan rata-rata nilai akhir STS tertinggi di setiap kelas,
+            berdasarkan rapor yang sudah dipublikasikan wali kelas. Tujuannya memberi apresiasi dan semangat berprestasi.
+          </div>
+          <div class="empty-box">
+            <h3>Belum ada data terpublikasi</h3>
+            <p>Saat wali kelas mempublikasikan rapor STS, 5 besar per kelas akan muncul di sini.</p>
+          </div>`;
+        return;
+      }
+
+      $('mainContent').innerHTML = `
+        <div class="disclaimer">
+          <strong>Tentang 5 Besar Capaian.</strong>
+          Peringkat dihitung dari rata-rata nilai akhir mapel pada rapor STS resmi yang sudah dipublikasikan.
+          Orang tua dapat melihat 5 besar di seluruh kelas (bukan hanya kelas ananda) sebagai bentuk apresiasi warga sekolah.
+          Nilai lengkap ananda tetap hanya terlihat di halaman Rapor STS &amp; Ringkasan Capaian.
+        </div>
+        <div class="periode-pill">${escapeHtml(data.periodeLabel || 'Periode berjalan')}</div>
+        <div class="kelas-filters">${filters}</div>
+        ${renderList()}
+        ${legend}`;
+
+      document.querySelectorAll('.kelas-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          kelasAktif = btn.getAttribute('data-kelas') || '';
+          render();
+        });
+      });
+    }
+
+    async function boot() {
+      const s = currentSession();
+      if (!s || s.role !== 'orangtua') {
+        location.href = 'index.html';
+        return;
+      }
+      $('sideNama').textContent = s.nama || 'Orang tua';
+      anakId = s.siswaAktifId || (s.anakIds && s.anakIds[0]) || '';
+      let namaAnak = s.siswaNama || '';
+      anakKelas = s.siswaKelas || '';
+
+      if (anakId) {
+        try {
+          const list = await loadSiswaByIds([anakId]);
+          if (list[0]) {
+            namaAnak = list[0].nama || namaAnak;
+            anakKelas = list[0].kelas || anakKelas;
+          }
+        } catch (_) {}
+      }
+      $('avatarInisial').textContent = inisial(namaAnak || s.nama);
+
+      try {
+        data = await loadLimaBesarCapaian();
+        // Default: kelas ananda jika ada, else kelas pertama
+        if (anakKelas && data.kelasList.includes(anakKelas)) {
+          kelasAktif = anakKelas;
+        } else {
+          kelasAktif = data.kelasList[0] || '';
+        }
+        render();
+      } catch (err) {
+        console.error(err);
+        $('mainContent').innerHTML = `
+          <div class="empty-box">
+            <h3>Gagal memuat data</h3>
+            <p>Coba muat ulang halaman. Jika berlanjut, hubungi admin sekolah.</p>
+          </div>`;
+      }
+    }
+
+    async function doLogout() {
+      await logout();
+      location.href = 'index.html';
+    }
+    document.getElementById('btnLogoutSide')?.addEventListener('click', doLogout);
+    document.getElementById('btnLogoutTop')?.addEventListener('click', doLogout);
+    boot();
+  </script>
+</body>
+</html>
