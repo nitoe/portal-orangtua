@@ -1,5 +1,16 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-12b — Polish UI Hasil Try Out TKA
+
+- Tampilan `tryout-tka.html` diperhalus agar tidak terasa skeleton/generik:
+  - Intro header bermerek sekolah (gradient muh-600).
+  - Kartu tahap dengan head + badge status jelas (Dipublikasikan / Belum).
+  - Kartu nilai BI / Matematika / IPA lebih legible; ranking anak ditonjolkan.
+  - Tabel 10 besar lebih rapi, highlight baris anak, scroll horizontal di HP.
+  - Empty state & catatan wali lebih ramah orang tua.
+- **Tidak mengubah** logika data, query snapshot, atau alur publish di LMS.
+- File: `tryout-tka.html`.
+
 ## 2026-11-12 — Hasil Try Out TKA (kelas 6)
 
 - Menu **Try Out TKA** + halaman `tryout-tka.html`: nilai BI/MTK/IPA, rata-rata, peringkat gabungan 6A+6B, 10 besar.
@@ -83,4 +94,3 @@
   - Pesan singkat: belum dipublikasikan oleh wali kelas, silakan cek kembali nanti atau tanyakan ke wali kelas.
 - `loadRaporStsResmi` di `assets/firebase.js` sekarang juga mengembalikan `jadwalLabel` dan `periodeLabel` bila ada jadwal.
 - Tidak mengubah tampilan rapor yang sudah published. Tidak ada perubahan di aplikasi penilaian.
-
