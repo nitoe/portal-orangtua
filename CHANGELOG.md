@@ -8,6 +8,7 @@
 - **Selisih (▲/▼) per mapel** dibanding tahap sebelumnya yang memuat mapel yang sama, lengkap dengan legenda yang terlihat di HP.
 - **Sebaran capaian:** dilipat per mapel («Lihat sebaran capaian»), nama materi panjang dibungkus, bukan dipotong.
 - Empty state baru bila belum ada tahap yang dibuka. Mobile: label hero diringkas, tile 5 kolom tetap muat di 375px.
+- **Rata-rata selalu dua desimal** (mis. 80,00 / 81,67) di hero, tile, kartu rata-rata, dan tabel 10 besar; selisih rata-rata juga dua desimal. Nilai per mapel tetap bilangan apa adanya.
 - **Tidak mengubah** data, query, atau `assets/firebase.js`. Hanya `tryout-tka.html`.
 
 ## 2026-11-12d — Katalog Try Out + sebaran capaian + label lengkap

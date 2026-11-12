@@ -51,7 +51,7 @@
     .to-tile-no{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
     .to-tile-rom{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.05;color:var(--ink)}
     @media(min-width:640px){.to-tile-rom{font-size:30px}}
-    .to-tile-skor{margin-top:6px;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muh-700);line-height:1.2}
+    .to-tile-skor{margin-top:6px;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muh-700);line-height:1.2}
     .to-tile-skor small{display:none;font-size:10.5px;font-weight:600;color:var(--muted);margin-left:4px}
     @media(min-width:640px){.to-tile-skor small{display:inline}}
     .to-tile-extra{display:none;font-size:11.5px;color:var(--muted);line-height:1.35}
@@ -247,16 +247,22 @@
     const SVG_CEK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
     const SVG_KOSONG = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7"/></svg>';
 
+    /** Rata-rata selalu dua desimal (mis. 80,00 / 81,67). Nilai per mapel tetap memakai fmtNilai. */
+    function fmtRata(v) {
+      if (v == null || Number.isNaN(Number(v))) return null;
+      return Number(v).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
     function nilaiAda(v) { return v != null && !Number.isNaN(Number(v)); }
     function persenBar(v) { return Math.max(0, Math.min(100, Number(v) || 0)); }
 
     /** Ringkas selisih → chip. Naik/turun memakai simbol + teks, bukan warna saja. */
-    function chipDelta(sekarang, sebelum, namaPembanding) {
+    function chipDelta(sekarang, sebelum, namaPembanding, desimal = 1) {
       if (!nilaiAda(sekarang) || !nilaiAda(sebelum)) return '';
       const d = Number(sekarang) - Number(sebelum);
       const judul = `dibanding ${namaPembanding}`;
-      if (Math.abs(d) < 0.05) return `<span class="to-delta to-delta--tetap" title="${escapeHtml(judul)}">● tetap</span>`;
-      const teks = Math.abs(d).toLocaleString('id-ID', { maximumFractionDigits: 1 });
+      if (Math.abs(d) < 0.5 * Math.pow(10, -desimal)) return `<span class="to-delta to-delta--tetap" title="${escapeHtml(judul)}">● tetap</span>`;
+      const teks = Math.abs(d).toLocaleString('id-ID', { minimumFractionDigits: desimal > 1 ? desimal : 0, maximumFractionDigits: desimal });
       return d > 0
         ? `<span class="to-delta to-delta--naik" title="${escapeHtml(judul)}">▲ ${teks}</span>`
         : `<span class="to-delta to-delta--turun" title="${escapeHtml(judul)}">▼ ${teks}</span>`;
@@ -332,7 +338,7 @@
       for (let i = list.length - 1; i >= 0; i--) {
         if (list[i].published && (nilaiAda(list[i].rataRata) || list[i].peringkat != null)) { terbaru = list[i]; break; }
       }
-      const rata = terbaru && nilaiAda(terbaru.rataRata) ? fmtNilai(terbaru.rataRata) : null;
+      const rata = terbaru && nilaiAda(terbaru.rataRata) ? fmtRata(terbaru.rataRata) : null;
       const rank = terbaru && terbaru.peringkat != null ? terbaru : null;
       return `<section class="to-hero" aria-label="Ringkasan ananda">
         <div class="to-hero-top">
@@ -365,10 +371,10 @@
         const sebelum = adaRata && sidikMapel(t)
           ? tahapSebelumnya(list, i, (p) => (sidikMapel(p) === sidikMapel(t) ? p.rataRata : null))
           : null;
-        const delta = sebelum ? chipDelta(t.rataRata, sebelum.rataRata, sebelum.nama) : '';
-        return `<li><button type="button" class="to-tile" data-idx="${i}" aria-current="${i === pilih ? 'true' : 'false'}" aria-label="${escapeHtml(t.nama)}${adaRata ? ', rata-rata ' + fmtNilai(t.rataRata) : ''}">
+        const delta = sebelum ? chipDelta(t.rataRata, sebelum.rataRata, sebelum.nama, 2) : '';
+        return `<li><button type="button" class="to-tile" data-idx="${i}" aria-current="${i === pilih ? 'true' : 'false'}" aria-label="${escapeHtml(t.nama)}${adaRata ? ', rata-rata ' + fmtRata(t.rataRata) : ''}">
           <span class="to-tile-no">Tahap</span><span class="to-tile-rom">${rom}</span>
-          <span class="to-tile-skor">${adaRata ? fmtNilai(t.rataRata) : 'Dibuka'}${adaRata ? '<small>rata-rata</small>' : ''}</span>
+          <span class="to-tile-skor">${adaRata ? fmtRata(t.rataRata) : 'Dibuka'}${adaRata ? '<small>rata-rata</small>' : ''}</span>
           <span class="to-tile-extra">${t.peringkat != null ? 'Peringkat #' + t.peringkat : '&nbsp;'}</span>
           <span class="to-tile-extra">${delta || '&nbsp;'}</span>
           <span class="to-tile-bar" aria-hidden="true"><i style="width:${adaRata ? persenBar(t.rataRata) : 0}%"></i></span>
@@ -391,7 +397,7 @@
       const sebelumRata = nilaiAda(t.rataRata) && sidikMapel(t)
         ? tahapSebelumnya(list, idx, (p) => (sidikMapel(p) === sidikMapel(t) ? p.rataRata : null))
         : null;
-      const deltaRata = sebelumRata ? chipDelta(t.rataRata, sebelumRata.rataRata, sebelumRata.nama) : '';
+      const deltaRata = sebelumRata ? chipDelta(t.rataRata, sebelumRata.rataRata, sebelumRata.nama, 2) : '';
       if (t.peringkat != null && t.jumlahPesertaRanking) {
         rank = `<div class="to-rank">
           <div class="to-rank-num" aria-hidden="true">#${t.peringkat}</div>
@@ -414,7 +420,7 @@
       const avg = nilaiAda(t.rataRata)
         ? `<div class="to-avg">
             <span class="to-avg-lbl">Rata-rata ananda</span>
-            <span class="to-avg-val">${fmtNilai(t.rataRata)}<small>/ 100</small></span>
+            <span class="to-avg-val">${fmtRata(t.rataRata)}<small>/ 100</small></span>
             <span class="to-avg-sub">${deltaRata ? deltaRata + ' <span style="margin-left:4px">dibanding ' + escapeHtml(sebelumRata.nama) + '</span>' : 'dari mapel yang diujikan'}</span>
           </div>`
         : '';
@@ -447,7 +453,7 @@
             <td><span class="to-pos${pos <= 3 ? ' to-pos--' + pos : ''}">${escapeHtml(r.peringkat)}</span></td>
             <td>${escapeHtml(r.siswaNama)}${me ? ' <span style="color:var(--muh-700)">(ananda)</span>' : ''}</td>
             <td>${escapeHtml(r.kelas)}</td>
-            <td class="num">${fmtNilai(r.rataRata) ?? '—'}</td>
+            <td class="num">${fmtRata(r.rataRata) ?? '—'}</td>
           </tr>`;
         }).join('');
         const posisiSaya = !adaSaya && t.peringkat != null && t.jumlahPesertaRanking

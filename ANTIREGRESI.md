@@ -135,3 +135,4 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Kelas CSS halaman ini berawalan `.to-*` dan hanya berada di `<style>` `tryout-tka.html`; `style.css` bersama tidak diubah. Jangan memakai kembali awalan lama `.tka-*` (tidak dipakai halaman lain).
 - Pemilih tahap hanya berupa `<button>` untuk tahap yang dibuka; tahap terkunci berupa `<div>` ber-`aria-label`. Jangan menjadikan tahap terkunci bisa diklik.
 - **Tes:** (1) akun 6A dengan tahap I dan II dibuka: tile II tidak menampilkan selisih rata-rata, kartu BI/MTK menampilkan ▲/▼; (2) tanpa tahap dibuka: muncul empty state; (3) lebar 375px: label hero tidak terpotong dan 5 tile muat tanpa scroll horizontal; (4) kelas non-6: pesan «Khusus orang tua kelas 6».
+- Rata-rata (hero, tile, kartu, 10 besar, selisih rata-rata) wajib lewat `fmtRata` (dua desimal, `id-ID`). Jangan kembali memakai `fmtNilai` untuk rata-rata; `fmtNilai` hanya untuk nilai per mapel.
