@@ -8,61 +8,162 @@
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    .tka-child{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-    .tka-child-av{width:44px;height:44px;border-radius:10px;background:var(--muh-50);color:var(--muh-700);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
-    .tka-child-name{font-size:15px;font-weight:700;color:#0f172a}
-    .tka-child-meta{font-size:12.5px;color:var(--muted);margin-top:2px}
-    .tka-disclaimer{background:#f8fafc;border:1px solid var(--border);border-radius:var(--radius-card);padding:10px 12px;font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5}
-    .tka-disclaimer strong{color:#0f172a}
-    .tka-section-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#64748b;margin:0 0 10px}
-    .tka-catalog{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
-    .tka-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden}
-    .tka-card-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;cursor:pointer;user-select:none}
-    .tka-card-head:hover{background:#fafbfc}
-    .tka-card-head h2{margin:0;font-size:15px;font-weight:700;color:#0f172a;letter-spacing:-.01em}
-    .tka-card-head .chev{font-size:12px;color:var(--muted);transition:transform .15s}
-    .tka-card.open .chev{transform:rotate(90deg)}
-    .tka-card-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
-    .tka-card.open .tka-card-body{display:block;padding-top:14px}
-    .badge-ok{display:inline-flex;align-items:center;background:var(--ok-tint);color:var(--ok);border:1px solid #a7f3d0;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700}
-    .badge-wait{display:inline-flex;align-items:center;background:var(--attention-tint);color:var(--attention);border:1px solid #fde68a;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700}
-    .tka-meta{font-size:12px;color:var(--muted);margin:0 0 12px}
-    .tka-mapel-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}
-    @media(min-width:520px){.tka-mapel-grid{grid-template-columns:repeat(3,1fr)}}
-    .tka-mapel-card{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px 12px}
-    .tka-mapel-card .lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
-    .tka-mapel-card .val{font-size:28px;font-weight:800;color:#0f172a;font-variant-numeric:tabular-nums;line-height:1.1}
-    .tka-mapel-card .val.muted{font-size:13px;font-weight:600;color:#94a3b8}
-    .tka-mapel-card .sub{font-size:11px;color:var(--muted);margin-top:4px}
-    .tka-rank-hero{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;background:var(--muh-50);border:1px solid var(--muh-200);border-radius:12px;padding:14px 16px;margin-bottom:12px}
-    .tka-rank-num{font-size:32px;font-weight:800;color:var(--muh-700);font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em}
-    .tka-rank-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muh-700);margin-bottom:2px}
-    .tka-rank-detail{font-size:13px;color:#0f172a;line-height:1.45}
-    .tka-rank-detail strong{color:var(--muh-700)}
-    .tka-catatan{font-size:13px;color:#334155;background:#f8fafc;border-radius:8px;padding:10px 12px;border:1px dashed #cbd5e1;margin-bottom:12px;line-height:1.45}
-    .tka-catatan-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#64748b;margin-bottom:4px}
-    .tka-warn,.tka-wait-box{font-size:13px;color:#92400e;background:var(--attention-tint);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;line-height:1.5;margin-bottom:12px}
-    .tka-warn strong,.tka-wait-box strong{display:block;margin-bottom:4px}
-    .tka-empty-note{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
-    .tka-sebaran{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-    .tka-sebaran h4{margin:0 0 8px;font-size:12px;font-weight:700;color:#334155}
-    .tka-sebaran-block{margin-bottom:12px}
-    .tka-sebaran-block:last-child{margin-bottom:0}
-    .tka-sebaran ul{list-style:none;margin:0;padding:0}
-    .tka-sebaran li{display:grid;grid-template-columns:1fr 80px 40px;gap:8px;align-items:center;margin-bottom:6px;font-size:12.5px}
-    .tka-sebaran li span.nm{color:#0f172a;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .tka-sebaran-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
-    .tka-sebaran-bar>i{display:block;height:100%;background:var(--muh-600);border-radius:4px}
-    .tka-sebaran li b{font-variant-numeric:tabular-nums;color:#334155;text-align:right;font-size:12px}
-    .tka-top10-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:10px;margin-top:8px}
-    .tka-top10 table{width:100%;border-collapse:collapse;font-size:13px;min-width:280px}
-    .tka-top10 th,.tka-top10 td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:left}
-    .tka-top10 th{font-size:11px;color:#64748b;font-weight:700;background:#f8fafc;white-space:nowrap}
-    .tka-top10 tr:last-child td{border-bottom:none}
-    .tka-top10 tr.me{background:var(--muh-50);font-weight:600}
-    .tka-top10 tr.me td:first-child{color:var(--muh-700)}
-    .tka-footer-hint{margin:8px 0 24px;font-size:12px;color:var(--muted);line-height:1.45;text-align:center}
-    .tka-rank-card .tka-card-body{padding-bottom:16px}
+    /* ── Try Out TKA (orang tua) — prefiks .to-* ───────────────────────── */
+    .to-hero{position:relative;overflow:hidden;border-radius:16px;padding:18px 18px 16px;color:#fff;margin-bottom:12px;
+      background:radial-gradient(ellipse 80% 120% at 100% -20%,rgba(255,255,255,.16),transparent 55%),
+                 radial-gradient(circle at 0% 110%,rgba(99,102,241,.28),transparent 45%),
+                 linear-gradient(135deg,var(--muh-800) 0%,var(--muh-600) 55%,#4a4fa3 100%);
+      box-shadow:0 8px 24px rgba(31,31,80,.18)}
+    .to-hero-top{display:flex;align-items:center;gap:12px;position:relative}
+    .to-hero-av{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
+      display:grid;place-items:center;font-weight:800;font-size:15px;letter-spacing:.02em;flex:none}
+    .to-hero-eyebrow{margin:0;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.75}
+    .to-hero-name{margin:2px 0 0;font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+    .to-hero-kelas{margin:2px 0 0;font-size:12.5px;opacity:.85}
+    .to-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;position:relative}
+    .to-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:9px 11px;min-width:0}
+    .to-stat-lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .to-stat-val{font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-top:2px;font-variant-numeric:tabular-nums}
+    .to-stat-val small{font-size:12px;font-weight:600;opacity:.75;letter-spacing:0;margin-left:2px}
+    .to-stat-lbl .sm{display:none}.to-stat-sub .sm{display:none}
+    @media(max-width:479px){.to-stat-lbl .lg,.to-stat-sub .lg{display:none}.to-stat-lbl .sm,.to-stat-sub .sm{display:inline}}
+    .to-stat-sub{font-size:11px;opacity:.75;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    @media(min-width:640px){.to-hero{padding:22px 24px 20px}.to-hero-name{font-size:22px}.to-stat{padding:11px 14px}.to-stat-val{font-size:28px}}
+
+    .to-note{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.5;color:var(--muted);
+      background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:18px}
+    .to-note svg{flex:none;margin-top:2px;color:var(--muh-600)}
+    .to-note strong{color:var(--ink)}
+
+    .to-sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px;margin:0 0 10px}
+    .to-sec-label{margin:0;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#64748b}
+    .to-sec-hint{margin:0;font-size:12px;color:var(--muted)}
+
+    .to-jalur{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+    @media(min-width:640px){.to-jalur{gap:10px}}
+    .to-tile{width:100%;height:100%;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;cursor:pointer;
+      font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:10px 9px 9px;
+      position:relative;overflow:hidden;transition:border-color .12s,box-shadow .12s,transform .12s}
+    @media(min-width:640px){.to-tile{padding:13px 14px 12px;border-radius:16px}}
+    .to-tile:hover{border-color:var(--muh-200);box-shadow:0 6px 18px rgba(23,23,57,.07);transform:translateY(-1px)}
+    .to-tile:focus-visible{outline:2px solid var(--muh-600);outline-offset:2px}
+    .to-tile[aria-current="true"]{border-color:var(--muh-600);background:var(--muh-50);box-shadow:inset 0 0 0 1px var(--muh-600)}
+    .to-tile-no{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+    .to-tile-rom{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.05;color:var(--ink)}
+    @media(min-width:640px){.to-tile-rom{font-size:30px}}
+    .to-tile-skor{margin-top:6px;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--muh-700);line-height:1.2}
+    .to-tile-skor small{display:none;font-size:10.5px;font-weight:600;color:var(--muted);margin-left:4px}
+    @media(min-width:640px){.to-tile-skor small{display:inline}}
+    .to-tile-extra{display:none;font-size:11.5px;color:var(--muted);line-height:1.35}
+    @media(min-width:640px){.to-tile-extra{display:block}}
+    .to-tile-bar{width:100%;height:4px;border-radius:999px;background:#e8eaf2;overflow:hidden;margin-top:auto}
+    .to-tile-bar i{display:block;height:100%;border-radius:999px;background:var(--muh-600)}
+    .to-tile-spacer{flex:1}
+    .to-tile--kunci{cursor:default;background:repeating-linear-gradient(135deg,#fafbfd 0 8px,#f4f5f9 8px 16px);border-style:dashed;color:#94a3b8}
+    .to-tile--kunci .to-tile-rom{color:#a3abbd}
+    .to-tile--kunci .to-tile-no{color:#a3abbd}
+    .to-tile-kunci{margin-top:6px;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#8b93a7;line-height:1.2}
+    .to-tile-kunci span.long{display:none}
+    @media(min-width:640px){.to-tile-kunci span.long{display:inline}.to-tile-kunci span.short{display:none}}
+
+    .to-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 1px 3px rgba(23,23,57,.04)}
+    @media(min-width:640px){.to-panel{padding:20px 22px 22px}}
+    .to-panel-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;margin-bottom:14px}
+    .to-panel-head h2{margin:0;font-size:18px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+    .to-panel-head p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .to-badge{display:inline-flex;align-items:center;gap:5px;background:var(--ok-tint);color:var(--ok);border:1px solid #a7f3d0;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700}
+
+    .to-ringkas{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:12px}
+    @media(min-width:760px){.to-ringkas{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+    .to-rank{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--muh-50),#fff 85%);border:1px solid var(--muh-200);border-radius:14px;padding:14px 16px}
+    .to-rank-num{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--muh-700);font-variant-numeric:tabular-nums}
+    .to-rank-lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muh-700)}
+    .to-rank-det{font-size:13px;line-height:1.45;color:var(--ink)}
+    .to-rank-det strong{color:var(--muh-700)}
+    .to-chip{display:inline-block;margin-top:5px;font-size:11px;font-weight:700;color:var(--muh-700);background:#fff;border:1px solid var(--muh-200);border-radius:999px;padding:2px 9px}
+    .to-avg{background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+    .to-avg-lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .to-avg-val{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
+    .to-avg-val small{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:3px}
+    .to-avg-sub{font-size:12px;color:var(--muted)}
+    .to-delta{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 8px;white-space:nowrap}
+    .to-delta--naik{background:var(--ok-tint);color:var(--ok)}
+    .to-delta--turun{background:var(--attention-tint);color:var(--attention)}
+    .to-delta--tetap{background:#f1f5f9;color:#475569}
+
+    .to-mapel-grid{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:14px;align-items:start}
+    @media(min-width:720px){.to-mapel-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    .to-mapel{--ac:#313083;--ac-soft:#eff0fa;--ac-line:#bfc3e8;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative}
+    .to-mapel::before{content:'';position:absolute;inset:0 auto 0 0;width:4px;background:var(--ac)}
+    .to-mapel--bi{--ac:#1d4ed8;--ac-soft:#eff6ff;--ac-line:#bfdbfe}
+    .to-mapel--mtk{--ac:#0f766e;--ac-soft:#f0fdfa;--ac-line:#99f6e4}
+    .to-mapel--ipa{--ac:#be123c;--ac-soft:#fff1f2;--ac-line:#fecdd3}
+    .to-mapel-body{padding:13px 14px 13px 18px}
+    .to-mapel-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px}
+    .to-mapel-lbl{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ac)}
+    .to-mapel-skor{margin-top:6px;font-size:36px;font-weight:800;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+    .to-mapel-skor small{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:3px}
+    .to-meter{height:7px;border-radius:999px;background:#e8eaf2;overflow:hidden;margin-top:10px}
+    .to-meter i{display:block;height:100%;border-radius:999px;background:var(--ac)}
+    .to-mapel--kosong{border-style:dashed;background:#fafbfd}
+    .to-mapel--kosong::before{background:#cbd5e1}
+    .to-mapel--kosong .to-mapel-lbl{color:#64748b}
+    .to-mapel-belum{margin:8px 0 0;font-size:13px;font-weight:600;color:#7a8296;line-height:1.4}
+    .to-mapel-belum span{display:block;font-size:12px;font-weight:500;color:#94a3b8;margin-top:2px}
+
+    .to-legend{margin:-4px 0 14px;font-size:12px;color:var(--muted);line-height:1.5}
+    .to-det{border-top:1px solid var(--border)}
+    .to-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;
+      padding:10px 14px 10px 18px;font-size:12.5px;font-weight:700;color:var(--ac);background:var(--ac-soft);user-select:none}
+    .to-det>summary::-webkit-details-marker{display:none}
+    .to-det>summary:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+    .to-det>summary .chev{transition:transform .15s;flex:none}
+    .to-det[open]>summary .chev{transform:rotate(90deg)}
+    .to-det-isi{padding:12px 14px 14px 18px;display:grid;gap:14px}
+    .to-seb h4{margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#64748b}
+    .to-seb ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+    .to-seb li{display:grid;gap:4px}
+    .to-seb .nm{font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.35;overflow-wrap:anywhere}
+    .to-seb .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+    .to-seb .bar{height:7px;border-radius:999px;background:#e8eaf2;overflow:hidden}
+    .to-seb .bar i{display:block;height:100%;border-radius:999px;background:var(--ac)}
+    .to-seb b{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;color:#334155;min-width:2.8em;text-align:right}
+
+    .to-warn{font-size:13px;color:#92400e;background:var(--attention-tint);border:1px solid #fde68a;border-radius:12px;padding:12px 14px;line-height:1.5;margin-bottom:12px}
+    .to-warn strong{display:block;margin-bottom:2px}
+    .to-catatan{position:relative;margin:0 0 14px;padding:14px 16px 14px 18px;background:#fbfbfe;border:1px solid var(--border);border-left:4px solid var(--muh-600);border-radius:12px}
+    .to-catatan-lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muh-700);margin-bottom:4px}
+    .to-catatan p{margin:0;font-size:13.5px;line-height:1.6;color:#334155;white-space:pre-line}
+
+    .to-top{border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .to-top>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;background:var(--surface-2);font-size:13px;font-weight:700;color:var(--ink);user-select:none}
+    .to-top>summary::-webkit-details-marker{display:none}
+    .to-top>summary:focus-visible{outline:2px solid var(--muh-600);outline-offset:-2px}
+    .to-top>summary small{font-weight:500;color:var(--muted);margin-left:6px}
+    .to-top>summary .chev{transition:transform .15s;color:var(--muted);flex:none}
+    .to-top[open]>summary .chev{transform:rotate(90deg)}
+    .to-top-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .to-top table{width:100%;border-collapse:collapse;font-size:13px;min-width:300px}
+    .to-top th,.to-top td{padding:9px 12px;border-top:1px solid var(--border);text-align:left}
+    .to-top th{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#64748b;background:#fff;white-space:nowrap}
+    .to-top td.num{font-variant-numeric:tabular-nums;font-weight:700}
+    .to-top tr.me td{background:var(--muh-50);font-weight:700}
+    .to-top tr.me td:first-child{box-shadow:inset 3px 0 0 var(--muh-600)}
+    .to-pos{display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:8px;background:#f1f5f9;color:#334155;font-weight:800;font-size:12.5px;font-variant-numeric:tabular-nums}
+    .to-pos--1{background:#fef3c7;color:#92400e}
+    .to-pos--2{background:#e2e8f0;color:#334155}
+    .to-pos--3{background:#ffedd5;color:#9a3412}
+    .to-top-me{margin:0;padding:10px 14px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted);background:#fff}
+    .to-top-me strong{color:var(--muh-700)}
+
+    .to-kosong{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:var(--surface);border:1.5px dashed var(--muh-200);border-radius:16px;padding:28px 20px}
+    .to-kosong-ikon{width:52px;height:52px;border-radius:16px;background:var(--muh-50);color:var(--muh-600);display:grid;place-items:center;margin-bottom:4px}
+    .to-kosong h2{margin:0;font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+    .to-kosong p{margin:0;max-width:34rem;font-size:13px;line-height:1.6;color:var(--muted)}
+    .to-wait{font-size:13px;color:#92400e;background:var(--attention-tint);border:1px solid #fde68a;border-radius:12px;padding:12px 14px;line-height:1.5}
+    .to-wait strong{display:block;margin-bottom:4px}
+    .to-footer{margin:14px 0 24px;font-size:12px;color:var(--muted);line-height:1.5;text-align:center}
+    @media(prefers-reduced-motion:reduce){.to-tile,.to-det>summary .chev,.to-top>summary .chev{transition:none}.to-tile:hover{transform:none}}
   </style>
 </head>
 <body>
@@ -138,181 +239,289 @@
       return ['BI','MTK','IPA'].some((k) => nilai[k] != null && !Number.isNaN(Number(nilai[k])));
     }
 
+    const ROMAWI = { I: 'I', II: 'II', III: 'III', IV: 'IV', V: 'V' };
+    const ACCENT = { BI: 'bi', MTK: 'mtk', IPA: 'ipa' };
+    const SVG_KUNCI = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+    const SVG_CHEV = '<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+    const SVG_INFO = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
+    const SVG_CEK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+    const SVG_KOSONG = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7"/></svg>';
+
+    function nilaiAda(v) { return v != null && !Number.isNaN(Number(v)); }
+    function persenBar(v) { return Math.max(0, Math.min(100, Number(v) || 0)); }
+
+    /** Ringkas selisih → chip. Naik/turun memakai simbol + teks, bukan warna saja. */
+    function chipDelta(sekarang, sebelum, namaPembanding) {
+      if (!nilaiAda(sekarang) || !nilaiAda(sebelum)) return '';
+      const d = Number(sekarang) - Number(sebelum);
+      const judul = `dibanding ${namaPembanding}`;
+      if (Math.abs(d) < 0.05) return `<span class="to-delta to-delta--tetap" title="${escapeHtml(judul)}">● tetap</span>`;
+      const teks = Math.abs(d).toLocaleString('id-ID', { maximumFractionDigits: 1 });
+      return d > 0
+        ? `<span class="to-delta to-delta--naik" title="${escapeHtml(judul)}">▲ ${teks}</span>`
+        : `<span class="to-delta to-delta--turun" title="${escapeHtml(judul)}">▼ ${teks}</span>`;
+    }
+
+    /** Mapel yang punya nilai pada sebuah tahap (urut tetap). */
+    function sidikMapel(t) {
+      const n = (t && t.nilai) || {};
+      return ['BI', 'MTK', 'IPA'].filter((k) => nilaiAda(n[k])).join('+');
+    }
+
+    /** Tahap sebelumnya (yang dibuka) yang punya nilai pada pengujian `ambil`. */
+    function tahapSebelumnya(list, idx, ambil) {
+      for (let i = idx - 1; i >= 0; i--) {
+        const p = list[i];
+        if (p && p.published && nilaiAda(ambil(p))) return p;
+      }
+      return null;
+    }
+
     function barSebaran(list) {
       if (!list || !list.length) return '';
       return `<ul>${list.map((b) => {
-        const pct = typeof b.persen === 'number' ? b.persen : (b.total ? Math.round(b.benar/b.total*1000)/10 : 0);
+        const pct = typeof b.persen === 'number' ? b.persen : (b.total ? Math.round(b.benar / b.total * 1000) / 10 : 0);
         return `<li>
-          <span class="nm" title="${escapeHtml(b.nama)}">${escapeHtml(b.nama)}</span>
-          <span class="tka-sebaran-bar" aria-hidden><i style="width:${Math.min(100,pct)}%"></i></span>
-          <b>${pct}%</b>
+          <span class="nm">${escapeHtml(b.nama)}</span>
+          <span class="row"><span class="bar" aria-hidden="true"><i style="width:${persenBar(pct)}%"></i></span><b>${pct}%</b></span>
         </li>`;
       }).join('')}</ul>`;
     }
 
-    function blokSebaranMapel(key, seb) {
+    function blokSebaranMapel(seb) {
       if (!seb) return '';
       const parts = [];
-      if (seb.kompleksitas?.length) {
-        parts.push(`<div class="tka-sebaran-block"><h4>Per tingkat kompleksitas</h4>${barSebaran(seb.kompleksitas)}</div>`);
+      if (seb.kompleksitas && seb.kompleksitas.length) {
+        parts.push(`<div class="to-seb"><h4>Per tingkat kompleksitas</h4>${barSebaran(seb.kompleksitas)}</div>`);
       }
-      if (seb.materi?.length) {
-        parts.push(`<div class="tka-sebaran-block"><h4>Per materi / capaian</h4>${barSebaran(seb.materi)}</div>`);
+      if (seb.materi && seb.materi.length) {
+        parts.push(`<div class="to-seb"><h4>Per materi / capaian</h4>${barSebaran(seb.materi)}</div>`);
       }
-      if (seb.domain?.length) {
-        parts.push(`<div class="tka-sebaran-block"><h4>Domain (Pengetahuan / Proses Sains)</h4>${barSebaran(seb.domain)}</div>`);
+      if (seb.domain && seb.domain.length) {
+        parts.push(`<div class="to-seb"><h4>Domain (Pengetahuan / Proses Sains)</h4>${barSebaran(seb.domain)}</div>`);
       }
       if (!parts.length) return '';
-      return `<div class="tka-sebaran">${parts.join('')}</div>`;
+      return `<details class="to-det"><summary><span>Lihat sebaran capaian</span>${SVG_CHEV}</summary><div class="to-det-isi">${parts.join('')}</div></details>`;
     }
 
-    function kartuMapel(key, nilai, seb) {
+    function kartuMapel(key, nilai, seb, sebelumnya) {
+      const ac = ACCENT[key] || '';
       const f = fmtNilai(nilai);
-      const val = f == null
-        ? `<div class="val muted">Belum diujikan</div>`
-        : `<div class="val">${f}</div><div class="sub">dari 100</div>`;
-      return `<div class="tka-mapel-card">
-        <div class="lbl">${LABEL[key] || key}</div>
-        ${val}
-        ${blokSebaranMapel(key, seb)}
-      </div>`;
+      if (f == null) {
+        return `<article class="to-mapel to-mapel--kosong to-mapel--${ac}">
+          <div class="to-mapel-body">
+            <div class="to-mapel-top"><span class="to-mapel-lbl">${escapeHtml(LABEL[key] || key)}</span></div>
+            <p class="to-mapel-belum">Belum diujikan<span>Mapel ini tidak termasuk di tahap ini.</span></p>
+          </div>
+        </article>`;
+      }
+      const delta = sebelumnya ? chipDelta(nilai, sebelumnya.nilai[key], sebelumnya.nama) : '';
+      return `<article class="to-mapel to-mapel--${ac}">
+        <div class="to-mapel-body">
+          <div class="to-mapel-top"><span class="to-mapel-lbl">${escapeHtml(LABEL[key] || key)}</span>${delta}</div>
+          <div class="to-mapel-skor">${f}<small>/ 100</small></div>
+          <div class="to-meter" role="img" aria-label="${escapeHtml(LABEL[key] || key)}: ${f} dari 100"><i style="width:${persenBar(nilai)}%"></i></div>
+        </div>
+        ${blokSebaranMapel(seb)}
+      </article>`;
+    }
+
+    function ringkasHero(anak, list) {
+      const dibuka = list.filter((t) => t.published).length;
+      let terbaru = null;
+      for (let i = list.length - 1; i >= 0; i--) {
+        if (list[i].published && (nilaiAda(list[i].rataRata) || list[i].peringkat != null)) { terbaru = list[i]; break; }
+      }
+      const rata = terbaru && nilaiAda(terbaru.rataRata) ? fmtNilai(terbaru.rataRata) : null;
+      const rank = terbaru && terbaru.peringkat != null ? terbaru : null;
+      return `<section class="to-hero" aria-label="Ringkasan ananda">
+        <div class="to-hero-top">
+          <div class="to-hero-av" aria-hidden="true">${escapeHtml(inisial(anak.nama))}</div>
+          <div style="min-width:0">
+            <p class="to-hero-eyebrow">Try Out TKA</p>
+            <h2 class="to-hero-name">${escapeHtml(anak.nama)}</h2>
+            <p class="to-hero-kelas">Kelas ${escapeHtml(anak.kelas || '—')}</p>
+          </div>
+        </div>
+        <div class="to-stats">
+          <div class="to-stat"><div class="to-stat-lbl"><span class="lg">Tahap dibuka</span><span class="sm">Dibuka</span></div><div class="to-stat-val">${dibuka}<small>/ ${list.length}</small></div><div class="to-stat-sub">oleh wali kelas</div></div>
+          <div class="to-stat"><div class="to-stat-lbl">Rata-rata</div><div class="to-stat-val">${rata ?? '—'}</div><div class="to-stat-sub">${terbaru && rata ? escapeHtml(terbaru.nama) : 'belum ada'}</div></div>
+          <div class="to-stat"><div class="to-stat-lbl">Peringkat</div><div class="to-stat-val">${rank ? '#' + rank.peringkat : '—'}</div><div class="to-stat-sub">${rank && rank.jumlahPesertaRanking ? '<span class="lg">dari ' + rank.jumlahPesertaRanking + ' peserta</span><span class="sm">dari ' + rank.jumlahPesertaRanking + '</span>' : 'belum ada'}</div></div>
+        </div>
+      </section>`;
+    }
+
+    function jalurTahap(list, pilih) {
+      const items = list.map((t, i) => {
+        const rom = ROMAWI[t.tahap] || escapeHtml(t.tahap);
+        if (!t.published) {
+          return `<li><div class="to-tile to-tile--kunci" aria-label="${escapeHtml(t.nama)}, belum dibuka">
+            <span class="to-tile-no">Tahap</span><span class="to-tile-rom">${rom}</span>
+            <span class="to-tile-kunci">${SVG_KUNCI}<span class="long">Belum dibuka</span><span class="short">Belum</span></span>
+            <span class="to-tile-spacer"></span>
+          </div></li>`;
+        }
+        const adaRata = nilaiAda(t.rataRata);
+        const sebelum = adaRata && sidikMapel(t)
+          ? tahapSebelumnya(list, i, (p) => (sidikMapel(p) === sidikMapel(t) ? p.rataRata : null))
+          : null;
+        const delta = sebelum ? chipDelta(t.rataRata, sebelum.rataRata, sebelum.nama) : '';
+        return `<li><button type="button" class="to-tile" data-idx="${i}" aria-current="${i === pilih ? 'true' : 'false'}" aria-label="${escapeHtml(t.nama)}${adaRata ? ', rata-rata ' + fmtNilai(t.rataRata) : ''}">
+          <span class="to-tile-no">Tahap</span><span class="to-tile-rom">${rom}</span>
+          <span class="to-tile-skor">${adaRata ? fmtNilai(t.rataRata) : 'Dibuka'}${adaRata ? '<small>rata-rata</small>' : ''}</span>
+          <span class="to-tile-extra">${t.peringkat != null ? 'Peringkat #' + t.peringkat : '&nbsp;'}</span>
+          <span class="to-tile-extra">${delta || '&nbsp;'}</span>
+          <span class="to-tile-bar" aria-hidden="true"><i style="width:${adaRata ? persenBar(t.rataRata) : 0}%"></i></span>
+        </button></li>`;
+      }).join('');
+      return `<ol class="to-jalur" aria-label="Tahap Try Out">${items}</ol>`;
+    }
+
+    function panelTahap(anak, data, list, idx) {
+      const t = list[idx];
+      const n = t.nilai || {};
+      const seb = t.sebaran || {};
+      const adaNilai = punyaNilai(n);
+
+      const warn = adaNilai ? '' : `<div class="to-warn"><strong>Nilai ananda belum tersedia</strong>
+        Tahap ini sudah dibuka, tetapi snapshot nilai ananda belum ada. Minta wali kelas mempublikasikan ulang dari LMS.</div>`;
+
+      // Peringkat + rata-rata
+      let rank = '';
+      const sebelumRata = nilaiAda(t.rataRata) && sidikMapel(t)
+        ? tahapSebelumnya(list, idx, (p) => (sidikMapel(p) === sidikMapel(t) ? p.rataRata : null))
+        : null;
+      const deltaRata = sebelumRata ? chipDelta(t.rataRata, sebelumRata.rataRata, sebelumRata.nama) : '';
+      if (t.peringkat != null && t.jumlahPesertaRanking) {
+        rank = `<div class="to-rank">
+          <div class="to-rank-num" aria-hidden="true">#${t.peringkat}</div>
+          <div class="to-rank-det">
+            <div class="to-rank-lbl">Peringkat ananda</div>
+            Peringkat <strong>${t.peringkat}</strong> dari <strong>${t.jumlahPesertaRanking}</strong> peserta
+            <br><span style="color:var(--muted);font-size:12px">gabungan kelas 6A &amp; 6B</span>
+            ${t.peringkat <= 10 ? '<br><span class="to-chip">Masuk 10 besar</span>' : ''}
+          </div>
+        </div>`;
+      } else {
+        rank = `<div class="to-rank">
+          <div class="to-rank-det">
+            <div class="to-rank-lbl">Peringkat ananda</div>
+            Belum masuk ranking.
+            <br><span style="color:var(--muted);font-size:12px">Peringkat dihitung setelah mapel wajib tahap ini lengkap.</span>
+          </div>
+        </div>`;
+      }
+      const avg = nilaiAda(t.rataRata)
+        ? `<div class="to-avg">
+            <span class="to-avg-lbl">Rata-rata ananda</span>
+            <span class="to-avg-val">${fmtNilai(t.rataRata)}<small>/ 100</small></span>
+            <span class="to-avg-sub">${deltaRata ? deltaRata + ' <span style="margin-left:4px">dibanding ' + escapeHtml(sebelumRata.nama) + '</span>' : 'dari mapel yang diujikan'}</span>
+          </div>`
+        : '';
+      const ringkas = `<div class="to-ringkas">${rank}${avg}</div>`;
+
+      // Per mapel (+ pembanding tahap sebelumnya untuk mapel yang sama)
+      const kartu = ['BI', 'MTK', 'IPA'].map((k) => {
+        const sebelum = tahapSebelumnya(list, idx, (p) => (p.nilai ? p.nilai[k] : null));
+        return kartuMapel(k, n[k], seb[k], sebelum);
+      }).join('');
+
+      const adaPembanding = ['BI', 'MTK', 'IPA'].some((k) => nilaiAda(n[k]) && tahapSebelumnya(list, idx, (p) => (p.nilai ? p.nilai[k] : null)));
+      const legenda = adaPembanding
+        ? '<p class="to-legend"><span class="to-delta to-delta--naik">▲</span> naik, <span class="to-delta to-delta--turun">▼</span> turun dibanding Try Out sebelumnya yang memuat mapel yang sama.</p>'
+        : '';
+
+      const catatan = t.catatanOrtu
+        ? `<blockquote class="to-catatan" style="margin-left:0;margin-right:0"><span class="to-catatan-lbl">Catatan wali kelas</span><p>${escapeHtml(t.catatanOrtu)}</p></blockquote>`
+        : '';
+
+      // 10 besar
+      const top = (data.top10ByTahap && data.top10ByTahap[t.tahap]) || [];
+      let topHtml = '';
+      if (top.length) {
+        const adaSaya = top.some((r) => r.siswaId === anak.id);
+        const rows = top.map((r) => {
+          const me = r.siswaId === anak.id;
+          const pos = Number(r.peringkat);
+          return `<tr${me ? ' class="me"' : ''}>
+            <td><span class="to-pos${pos <= 3 ? ' to-pos--' + pos : ''}">${escapeHtml(r.peringkat)}</span></td>
+            <td>${escapeHtml(r.siswaNama)}${me ? ' <span style="color:var(--muh-700)">(ananda)</span>' : ''}</td>
+            <td>${escapeHtml(r.kelas)}</td>
+            <td class="num">${fmtNilai(r.rataRata) ?? '—'}</td>
+          </tr>`;
+        }).join('');
+        const posisiSaya = !adaSaya && t.peringkat != null && t.jumlahPesertaRanking
+          ? `<p class="to-top-me">Ananda berada di peringkat <strong>${t.peringkat}</strong> dari ${t.jumlahPesertaRanking} peserta.</p>` : '';
+        topHtml = `<details class="to-top">
+          <summary><span>Peringkat 10 besar<small>gabungan 6A &amp; 6B</small></span>${SVG_CHEV}</summary>
+          <div class="to-top-wrap"><table>
+            <thead><tr><th>#</th><th>Nama</th><th>Kelas</th><th>Rata-rata</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table></div>
+          ${posisiSaya}
+        </details>`;
+      }
+
+      return `<section class="to-panel" id="panelTahap" aria-live="polite" aria-label="Rincian ${escapeHtml(t.nama)}">
+        <div class="to-panel-head">
+          <div><h2>${escapeHtml(t.nama)}</h2>${t.publishedAt ? `<p>Dibuka wali kelas pada ${escapeHtml(t.publishedAt)}</p>` : ''}</div>
+          <span class="to-badge">${SVG_CEK} Dipublikasikan</span>
+        </div>
+        ${warn}
+        ${adaNilai ? ringkas : ''}
+        <div class="to-mapel-grid">${kartu}</div>
+        ${legenda}
+        ${catatan}
+        ${topHtml}
+      </section>`;
     }
 
     function render(anak, data) {
       if (!data.khususKelas6) {
-        $('mainContent').innerHTML = `<div class="tka-wait-box"><strong>Khusus orang tua kelas 6</strong>
-          Hasil Try Out TKA untuk siswa kelas 6A dan 6B. Anak Anda di kelas <strong>${escapeHtml(anak.kelas||'—')}</strong>.</div>`;
+        $('mainContent').innerHTML = `<div class="to-wait"><strong>Khusus orang tua kelas 6</strong>
+          Hasil Try Out TKA untuk siswa kelas 6A dan 6B. Anak Anda di kelas <strong>${escapeHtml(anak.kelas || '—')}</strong>.</div>`;
         return;
       }
 
-      const parts = [];
-      parts.push(`
-        <div class="tka-child">
-          <div class="tka-child-av">${escapeHtml(inisial(anak.nama))}</div>
-          <div>
-            <div class="tka-child-name">${escapeHtml(anak.nama)}</div>
-            <div class="tka-child-meta">Kelas ${escapeHtml(anak.kelas||'—')} · Try Out TKA</div>
-          </div>
-        </div>
-        <div class="tka-disclaimer">
-          <strong>Bukan rapor semester resmi.</strong>
-          Setiap tahap Try Out ditampilkan terpisah. Nilai ananda dilengkapi sebaran capaian (kompleksitas & materi) bila data tersedia dari LMS.
-        </div>
-        <p class="tka-section-label">Katalog Try Out</p>
-        <div class="tka-catalog" id="katalogTahap">
-      `);
+      const list = data.tahapList || [];
+      let pilih = -1;
+      for (let i = list.length - 1; i >= 0; i--) { if (list[i].published) { pilih = i; break; } }
 
-      let adaPublished = false;
-      let firstOpen = true;
-      for (const t of data.tahapList || []) {
-        if (!t.published) {
-          parts.push(`
-            <section class="tka-card">
-              <div class="tka-card-head" data-toggle>
-                <h2>${escapeHtml(t.nama)}</h2>
-                <span class="badge-wait">Belum dipublikasikan</span>
-              </div>
-              <div class="tka-card-body">
-                <p class="tka-empty-note">Menunggu wali kelas membuka hasil tahap ini.</p>
-              </div>
-            </section>`);
-          continue;
-        }
-        adaPublished = true;
-        const n = t.nilai || {};
-        const seb = t.sebaran || {};
-        const adaNilai = punyaNilai(n);
-        const openCls = firstOpen ? ' open' : '';
-        firstOpen = false;
+      const head = ringkasHero(anak, list) + `
+        <div class="to-note">${SVG_INFO}<div><strong>Bukan rapor semester resmi.</strong>
+          Setiap tahap Try Out ditampilkan terpisah, dilengkapi sebaran capaian bila kuis dikerjakan lewat LMS.</div></div>`;
 
-        let warn = '';
-        if (!adaNilai) {
-          warn = `<div class="tka-warn"><strong>Nilai ananda belum tersedia</strong>
-            Tahap ini sudah dibuka, tetapi snapshot nilai ananda belum ada. Minta wali kelas mempublikasikan ulang dari LMS.</div>`;
-        }
-
-        let rank = '';
-        if (t.peringkat != null && t.jumlahPesertaRanking) {
-          rank = `<div class="tka-rank-hero">
-            <div><div class="tka-rank-label">Peringkat ananda</div><div class="tka-rank-num">#${t.peringkat}</div></div>
-            <div class="tka-rank-detail" style="flex:1;min-width:140px">
-              dari <strong>${t.jumlahPesertaRanking}</strong> peserta (gabungan 6A &amp; 6B)
-              ${t.rataRata != null ? `<br>Rata-rata ananda: <strong>${fmtNilai(t.rataRata)}</strong>` : ''}
-            </div>
+      if (pilih === -1) {
+        $('mainContent').innerHTML = head + `
+          <div class="to-sec-head"><h3 class="to-sec-label">Jalur Try Out</h3></div>
+          ${jalurTahap(list, -1)}
+          <div class="to-kosong">
+            <div class="to-kosong-ikon">${SVG_KOSONG}</div>
+            <h2>Belum ada hasil yang dibuka</h2>
+            <p>Hasil ananda akan muncul di sini setelah wali kelas membuka nilai Try Out. Setiap tahap dibuka satu per satu, jadi Anda bisa kembali lagi nanti.</p>
           </div>`;
-        } else if (t.rataRata != null) {
-          rank = `<div class="tka-rank-hero"><div class="tka-rank-detail">
-            Rata-rata ananda: <strong>${fmtNilai(t.rataRata)}</strong>
-            <span style="display:block;font-size:12px;color:#64748b;margin-top:4px">Belum masuk ranking — mapel wajib belum lengkap</span>
-          </div></div>`;
-        }
-
-        const top = (data.top10ByTahap && data.top10ByTahap[t.tahap]) || [];
-        let topHtml = '';
-        if (top.length) {
-          const rows = top.map((r) => {
-            const me = r.siswaId === anak.id;
-            return `<tr${me?' class="me"':''}>
-              <td>${r.peringkat}</td>
-              <td>${escapeHtml(r.siswaNama)}${me?' <span style="color:var(--muh-700)">(ananda)</span>':''}</td>
-              <td>${escapeHtml(r.kelas)}</td>
-              <td style="font-variant-numeric:tabular-nums">${fmtNilai(r.rataRata)??'—'}</td>
-            </tr>`;
-          }).join('');
-          topHtml = `
-            <section class="tka-card tka-rank-card" style="margin-top:10px;border-style:dashed">
-              <div class="tka-card-head" data-toggle>
-                <h2 style="font-size:13px">Peringkat 10 besar · ${escapeHtml(t.nama)}</h2>
-                <span class="chev">▸</span>
-              </div>
-              <div class="tka-card-body">
-                <div class="tka-top10-wrap"><table>
-                  <thead><tr><th>#</th><th>Nama</th><th>Kelas</th><th>Rata-rata</th></tr></thead>
-                  <tbody>${rows}</tbody>
-                </table></div>
-              </div>
-            </section>`;
-        }
-
-        parts.push(`
-          <section class="tka-card${openCls}">
-            <div class="tka-card-head" data-toggle>
-              <h2>${escapeHtml(t.nama)}</h2>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span class="badge-ok">Dipublikasikan</span>
-                <span class="chev">▸</span>
-              </div>
-            </div>
-            <div class="tka-card-body">
-              ${t.publishedAt?`<p class="tka-meta">Dibuka ${escapeHtml(t.publishedAt)}</p>`:''}
-              ${warn}
-              <div class="tka-mapel-grid">
-                ${kartuMapel('BI', n.BI, seb.BI)}
-                ${kartuMapel('MTK', n.MTK, seb.MTK)}
-                ${kartuMapel('IPA', n.IPA, seb.IPA)}
-              </div>
-              ${rank}
-              ${t.catatanOrtu?`<div class="tka-catatan"><span class="tka-catatan-label">Catatan wali kelas</span>${escapeHtml(t.catatanOrtu)}</div>`:''}
-              ${topHtml}
-            </div>
-          </section>`);
+        return;
       }
 
-      parts.push('</div>');
-      if (!adaPublished) {
-        parts.push(`<p class="tka-footer-hint">Belum ada tahap yang dipublikasikan. Hasil ananda muncul setelah wali kelas membuka nilai Try Out.</p>`);
-      } else {
-        parts.push(`<p class="tka-footer-hint">Snapshot dari wali kelas. Bukan rapor semester. Sebaran capaian tampil bila kuis dikerjakan lewat LMS.</p>`);
-      }
+      const gambar = () => {
+        $('mainContent').innerHTML = head + `
+          <div class="to-sec-head"><h3 class="to-sec-label">Jalur Try Out</h3><p class="to-sec-hint">Pilih tahap untuk melihat rincian</p></div>
+          ${jalurTahap(list, pilih)}
+          ${panelTahap(anak, data, list, pilih)}
+          <p class="to-footer">Snapshot dari wali kelas. Bukan rapor semester. Sebaran capaian tampil bila kuis dikerjakan lewat LMS.</p>`;
+      };
+      gambar();
 
-      $('mainContent').innerHTML = parts.join('');
-
-      // Toggle katalog
-      $('mainContent').querySelectorAll('[data-toggle]').forEach((el) => {
-        el.addEventListener('click', () => {
-          const card = el.closest('.tka-card');
-          if (card) card.classList.toggle('open');
-        });
+      // Pilih tahap (delegasi klik; hanya tile yang dibuka berupa <button>)
+      $('mainContent').addEventListener('click', (ev) => {
+        const tile = ev.target.closest('button.to-tile[data-idx]');
+        if (!tile) return;
+        const i = Number(tile.dataset.idx);
+        if (i === pilih) return;
+        pilih = i;
+        gambar();
+        const aktif = $('mainContent').querySelector('button.to-tile[aria-current="true"]');
+        if (aktif) aktif.focus({ preventScroll: true });
       });
     }
 

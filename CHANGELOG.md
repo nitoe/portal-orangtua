@@ -1,5 +1,15 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-12e — Dashboard Try Out TKA: ringkasan, jalur tahap, rincian satu tahap
+
+- **Hero ringkasan ananda:** nama, kelas, dan tiga angka (tahap dibuka, rata-rata terbaru, peringkat terbaru). Menggantikan blok identitas kecil yang menggandakan avatar header.
+- **Jalur Try Out:** lima tahap sebagai tile ringkas (rata-rata, peringkat, selisih, bar mini). Tahap yang belum dibuka menjadi tile terkunci kecil, tidak lagi lima baris lebar yang identik.
+- **Rincian satu tahap sekaligus:** pilih tile untuk membuka panel; default tahap terbaru yang dibuka. Berisi kartu peringkat, rata-rata, tiga kartu mapel berwarna (Bahasa Indonesia biru, Matematika teal, IPA rose, selaras LMS) dengan meter 0–100, catatan wali kelas, dan 10 besar (lencana 1–3, catatan posisi ananda bila di luar 10 besar).
+- **Selisih (▲/▼) per mapel** dibanding tahap sebelumnya yang memuat mapel yang sama, lengkap dengan legenda yang terlihat di HP.
+- **Sebaran capaian:** dilipat per mapel («Lihat sebaran capaian»), nama materi panjang dibungkus, bukan dipotong.
+- Empty state baru bila belum ada tahap yang dibuka. Mobile: label hero diringkas, tile 5 kolom tetap muat di 375px.
+- **Tidak mengubah** data, query, atau `assets/firebase.js`. Hanya `tryout-tka.html`.
+
 ## 2026-11-12d — Katalog Try Out + sebaran capaian + label lengkap
 
 - **Katalog per tahap**: Try Out I, II, … sebagai kartu terpisah (buka/tutup), tidak menumpuk.

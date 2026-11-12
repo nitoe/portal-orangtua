@@ -124,3 +124,14 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Portal **hanya membaca**; tidak menulis koleksi baru dan tidak mengubah aplikasi penilaian.
 - Jangan mengembalikan perbandingan ranking per mapel ke Ringkasan Capaian pribadi.
 - **Tes:** buka `lima-besar.html` setelah login ortu → filter kelas muncul untuk kelas yang sudah publish; kartu peringkat 1 punya animasi glow mahkota; jika ananda di 5 besar, label “Ananda” tampil. `capaian.html` tetap tanpa daftar ranking teman sekelas.
+
+## §15 Halaman Try Out TKA: selisih nilai hanya apel-dengan-apel
+
+- Tahap I hanya memuat BI + Matematika; tahap II–V memuat BI + Matematika + IPA (aturan rata-rata ranking di LMS, §106.3). Jadi **rata-rata tahap I tidak sebanding dengan rata-rata tahap II**.
+- Selisih rata-rata (▲/▼) hanya boleh ditampilkan bila dua tahap memiliki himpunan mapel bernilai yang sama (`sidikMapel`). Selisih per mapel boleh, dibanding tahap sebelumnya yang punya nilai mapel itu.
+- Jangan menampilkan selisih hanya dengan warna: wajib simbol ▲/▼ + angka, dan legenda teks (tooltip `title` tidak muncul di HP).
+- Portal tetap **hanya membaca snapshot** `lms_tka_*` via `loadTryOutTkaAnak`. Jangan menambah perhitungan nilai/peringkat baru di halaman ini; selisih adalah satu-satunya turunan yang diizinkan.
+- Semua teks dinamis (nama tahap, nama siswa, materi, catatan wali) wajib lewat `escapeHtml`. Catatan wali memakai `white-space:pre-line`, jangan diganti `innerHTML` mentah.
+- Kelas CSS halaman ini berawalan `.to-*` dan hanya berada di `<style>` `tryout-tka.html`; `style.css` bersama tidak diubah. Jangan memakai kembali awalan lama `.tka-*` (tidak dipakai halaman lain).
+- Pemilih tahap hanya berupa `<button>` untuk tahap yang dibuka; tahap terkunci berupa `<div>` ber-`aria-label`. Jangan menjadikan tahap terkunci bisa diklik.
+- **Tes:** (1) akun 6A dengan tahap I dan II dibuka: tile II tidak menampilkan selisih rata-rata, kartu BI/MTK menampilkan ▲/▼; (2) tanpa tahap dibuka: muncul empty state; (3) lebar 375px: label hero tidak terpotong dan 5 tile muat tanpa scroll horizontal; (4) kelas non-6: pesan «Khusus orang tua kelas 6».
