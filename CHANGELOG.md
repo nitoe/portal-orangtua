@@ -1,5 +1,12 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-12 — Hasil Try Out TKA (kelas 6)
+
+- Menu **Try Out TKA** + halaman `tryout-tka.html`: nilai BI/MTK/IPA, rata-rata, peringkat gabungan 6A+6B, 10 besar.
+- Hanya tahap yang sudah dipublikasikan wali di LMS.
+- Khusus sesi anak kelas 6A/6B; kelas lain mendapat penjelasan.
+- File: `tryout-tka.html`, `beranda.html`, `assets/firebase.js` (`loadTryOutTkaAnak`).
+
 ## 2026-10-30f
 
 ### Hapus badge “Ananda” yang menutupi nilai

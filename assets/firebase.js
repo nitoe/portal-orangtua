@@ -1283,3 +1283,153 @@ export async function loadLimaBesarCapaian() {
     kelasList,
   };
 }
+
+
+/* ========== Try Out TKA (kelas 6, snapshot publish) ========== */
+
+const TAHAP_TKA = ['I', 'II', 'III', 'IV', 'V'];
+const NAMA_TAHAP_TKA = {
+  I: 'Try Out I',
+  II: 'Try Out II',
+  III: 'Try Out III',
+  IV: 'Try Out IV',
+  V: 'Try Out V',
+};
+
+/**
+ * Muat status publikasi + hasil anak untuk semua tahap.
+ * Hanya relevan kelas 6A/6B.
+ * @returns {Promise<{kelas:string, tahapList: Array}>}
+ */
+export async function loadTryOutTkaAnak(siswaId, kelas) {
+  const k = String(kelas || '').toUpperCase();
+  if (k !== '6A' && k !== '6B') {
+    return { kelas: k, tahapList: [], khususKelas6: false };
+  }
+  if (!siswaId) return { kelas: k, tahapList: [], khususKelas6: true };
+
+  if (DEMO_MODE) {
+    return {
+      kelas: k,
+      khususKelas6: true,
+      tahapList: [
+        {
+          tahap: 'I',
+          nama: NAMA_TAHAP_TKA.I,
+          published: true,
+          publishedAt: '12 Nov 2026',
+          catatanOrtu: 'Demo: Try Out I (BI & Matematika).',
+          nilai: { BI: 78, MTK: 82, IPA: null },
+          rataRata: 80,
+          peringkat: 5,
+          jumlahPesertaRanking: 52,
+        },
+        {
+          tahap: 'II',
+          nama: NAMA_TAHAP_TKA.II,
+          published: false,
+          publishedAt: null,
+          catatanOrtu: '',
+          nilai: null,
+          rataRata: null,
+          peringkat: null,
+          jumlahPesertaRanking: 0,
+        },
+      ],
+      top10ByTahap: {
+        I: [
+          { peringkat: 1, siswaNama: 'Siswa Demo A', kelas: '6A', rataRata: 95 },
+          { peringkat: 2, siswaNama: 'Siswa Demo B', kelas: '6B', rataRata: 92 },
+        ],
+      },
+    };
+  }
+
+  const { db, fsMod } = window.__fb;
+  const tahapList = [];
+  const top10ByTahap = {};
+
+  await Promise.all(
+    TAHAP_TKA.map(async (tahap) => {
+      const pubId = `${k}_${tahap}`;
+      const hasilId = `${k}_${tahap}_${siswaId}`;
+      let published = false;
+      let publishedAt = null;
+      let catatanOrtu = '';
+      let nilai = null;
+      let rataRata = null;
+      let peringkat = null;
+      let jumlahPesertaRanking = 0;
+
+      try {
+        const pubSnap = await fsMod.getDoc(fsMod.doc(db, 'lms_tka_publikasi', pubId));
+        if (pubSnap.exists()) {
+          const p = pubSnap.data();
+          published = p.published === true;
+          catatanOrtu = p.catatanOrtu || '';
+          if (p.publishedAt) {
+            const ts = p.publishedAt.toDate ? p.publishedAt.toDate() : new Date(p.publishedAt);
+            publishedAt = ts.toLocaleDateString('id-ID', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('loadTryOutTka publikasi', pubId, e);
+      }
+
+      if (published) {
+        try {
+          const hSnap = await fsMod.getDoc(fsMod.doc(db, 'lms_tka_hasil_ortu', hasilId));
+          if (hSnap.exists()) {
+            const h = hSnap.data();
+            if (h.published === false) {
+              published = false;
+            } else {
+              nilai = h.nilai || null;
+              rataRata = typeof h.rataRata === 'number' ? h.rataRata : null;
+              peringkat = typeof h.peringkat === 'number' ? h.peringkat : null;
+              jumlahPesertaRanking =
+                typeof h.jumlahPesertaRanking === 'number' ? h.jumlahPesertaRanking : 0;
+              if (h.catatanOrtu) catatanOrtu = h.catatanOrtu;
+            }
+          }
+        } catch (e) {
+          console.warn('loadTryOutTka hasil', hasilId, e);
+        }
+
+        try {
+          const rSnap = await fsMod.getDoc(fsMod.doc(db, 'lms_tka_peringkat', tahap));
+          if (rSnap.exists()) {
+            const r = rSnap.data();
+            top10ByTahap[tahap] = Array.isArray(r.top10) ? r.top10 : [];
+          }
+        } catch (e) {
+          console.warn('loadTryOutTka peringkat', tahap, e);
+        }
+      }
+
+      tahapList.push({
+        tahap,
+        nama: NAMA_TAHAP_TKA[tahap] || tahap,
+        published,
+        publishedAt,
+        catatanOrtu,
+        nilai: published ? nilai : null,
+        rataRata: published ? rataRata : null,
+        peringkat: published ? peringkat : null,
+        jumlahPesertaRanking: published ? jumlahPesertaRanking : 0,
+      });
+    }),
+  );
+
+  tahapList.sort((a, b) => TAHAP_TKA.indexOf(a.tahap) - TAHAP_TKA.indexOf(b.tahap));
+  return { kelas: k, khususKelas6: true, tahapList, top10ByTahap };
+}
+
+export function isKelasEnamTka(kelas) {
+  const k = String(kelas || '').toUpperCase();
+  return k === '6A' || k === '6B';
+}

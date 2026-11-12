@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#313083">
+  <title>Hasil Try Out TKA — Portal Orang Tua</title>
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .tka-intro {
+      background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 12px;
+      padding: 12px 14px; margin-bottom: 14px; font-size: 13px; color: #312e81; line-height: 1.45;
+    }
+    .tka-tahap {
+      background: #fff; border: 1px solid var(--border, #e2e8f0); border-radius: 12px;
+      padding: 14px; margin-bottom: 12px;
+    }
+    .tka-tahap h2 { margin: 0 0 4px; font-size: 15px; color: #0f172a; }
+    .tka-meta { font-size: 12px; color: #64748b; margin-bottom: 10px; }
+    .tka-nilai-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px;
+    }
+    .tka-nilai-card {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 10px 8px; text-align: center;
+    }
+    .tka-nilai-card .lbl { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .tka-nilai-card .val { font-size: 22px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+    .tka-nilai-card .val.muted { font-size: 13px; font-weight: 600; color: #94a3b8; }
+    .tka-rank {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      font-size: 13px; color: #0f172a; margin-bottom: 8px;
+    }
+    .tka-rank strong { color: #313083; }
+    .tka-catatan {
+      font-size: 12.5px; color: #475569; background: #f8fafc; border-radius: 8px;
+      padding: 8px 10px; border: 1px dashed #cbd5e1;
+    }
+    .tka-wait {
+      font-size: 13px; color: #92400e; background: #fffbeb; border: 1px solid #fde68a;
+      border-radius: 10px; padding: 12px;
+    }
+    .tka-top10 { margin-top: 10px; }
+    .tka-top10 h3 { margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em; }
+    .tka-top10 table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .tka-top10 th, .tka-top10 td { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+    .tka-top10 th { font-size: 11px; color: #64748b; font-weight: 700; }
+    .tka-top10 tr.me { background: #eef2ff; font-weight: 600; }
+    .badge-ok { display: inline-block; background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+    .badge-wait { display: inline-block; background: #fffbeb; color: #92400e; border: 1px solid #fde68a; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="app-frame">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="sidebar-brand" href="beranda.html">
+          <img src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
+          <div>
+            <div class="sidebar-brand-title">SDM 01 Kukusan</div>
+            <div class="sidebar-brand-sub">Portal Orang Tua</div>
+          </div>
+        </a>
+        <p class="sidebar-section">Menu</p>
+        <nav style="flex:1">
+          <a class="side-link" href="beranda.html">Beranda</a>
+          <a class="side-link" href="rapor-sts.html">Rapor STS</a>
+          <a class="side-link" href="capaian.html">Ringkasan Capaian</a>
+          <a class="side-link" href="lima-besar.html">Lima Besar</a>
+          <a class="side-link active" href="tryout-tka.html">Try Out TKA</a>
+        </nav>
+        <button type="button" class="side-link" id="btnLogoutSide" style="border:0;background:transparent;width:100%;text-align:left;cursor:pointer">Keluar</button>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <div class="topbar-title">Hasil Try Out TKA</div>
+            <div class="topbar-sub" id="subAnak">—</div>
+          </div>
+          <button type="button" class="btn-ghost" id="btnLogoutTop">Keluar</button>
+        </header>
+        <div class="main-inner" id="mainContent">
+          <p class="text-muted">Memuat…</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      currentSession,
+      logout,
+      loadSiswaByIds,
+      loadTryOutTkaAnak,
+      isKelasEnamTka,
+    } from './assets/firebase.js';
+
+    const $ = (id) => document.getElementById(id);
+
+    function escapeHtml(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function fmtNilai(v) {
+      if (v == null || Number.isNaN(Number(v))) return null;
+      const n = Number(v);
+      return Number.isInteger(n) ? String(n) : n.toLocaleString('id-ID', { maximumFractionDigits: 1 });
+    }
+
+    function kartuNilai(label, val) {
+      const f = fmtNilai(val);
+      if (f == null) {
+        return `<div class="tka-nilai-card"><div class="lbl">${label}</div><div class="val muted">Belum diujikan</div></div>`;
+      }
+      return `<div class="tka-nilai-card"><div class="lbl">${label}</div><div class="val">${f}</div></div>`;
+    }
+
+    function render(anak, data) {
+      if (!data.khususKelas6) {
+        $('mainContent').innerHTML = `
+          <div class="tka-wait">
+            <strong>Khusus orang tua kelas 6</strong>
+            <p style="margin:6px 0 0">Hasil Try Out TKA ditampilkan untuk siswa kelas 6A dan 6B.
+            Anak Anda saat ini di kelas <strong>${escapeHtml(anak.kelas || '—')}</strong>.</p>
+          </div>`;
+        return;
+      }
+
+      const parts = [];
+      parts.push(`
+        <div class="tka-intro">
+          Try Out TKA memantau kesiapan akademik (Bahasa Indonesia, Matematika, IPA).
+          Nilai muncul di sini setelah <strong>wali kelas mempublikasikan</strong> tahap terkait.
+          Ini bukan rapor semester.
+        </div>`);
+
+      for (const t of data.tahapList || []) {
+        if (!t.published) {
+          parts.push(`
+            <section class="tka-tahap">
+              <h2>${escapeHtml(t.nama)} <span class="badge-wait">Belum dipublikasikan</span></h2>
+              <p class="tka-meta">Menunggu wali kelas membuka hasil tahap ini.</p>
+            </section>`);
+          continue;
+        }
+
+        const n = t.nilai || {};
+        let rankHtml = '';
+        if (t.peringkat != null && t.jumlahPesertaRanking) {
+          rankHtml = `<div class="tka-rank">Peringkat anak: <strong>#${t.peringkat}</strong>
+            dari ${t.jumlahPesertaRanking} peserta (gabungan 6A &amp; 6B)
+            ${t.rataRata != null ? ` · Rata-rata <strong>${fmtNilai(t.rataRata)}</strong>` : ''}</div>`;
+        } else if (t.rataRata != null) {
+          rankHtml = `<div class="tka-rank">Rata-rata: <strong>${fmtNilai(t.rataRata)}</strong>
+            <span style="color:#64748b;font-weight:500">(belum masuk ranking — nilai mapel belum lengkap)</span></div>`;
+        }
+
+        const top = (data.top10ByTahap && data.top10ByTahap[t.tahap]) || [];
+        let topHtml = '';
+        if (top.length) {
+          const rows = top.map((r) => {
+            const me = r.siswaId === anak.id ? ' class="me"' : '';
+            return `<tr${me}>
+              <td>${r.peringkat}</td>
+              <td>${escapeHtml(r.siswaNama)}${r.siswaId === anak.id ? ' (anak Anda)' : ''}</td>
+              <td>${escapeHtml(r.kelas)}</td>
+              <td>${fmtNilai(r.rataRata) ?? '—'}</td>
+            </tr>`;
+          }).join('');
+          topHtml = `
+            <div class="tka-top10">
+              <h3>10 besar kelas 6 (6A + 6B)</h3>
+              <table>
+                <thead><tr><th>#</th><th>Nama</th><th>Kelas</th><th>Rata-rata</th></tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>`;
+        }
+
+        parts.push(`
+          <section class="tka-tahap">
+            <h2>${escapeHtml(t.nama)} <span class="badge-ok">Dipublikasikan</span></h2>
+            <p class="tka-meta">${t.publishedAt ? 'Dibuka ' + escapeHtml(t.publishedAt) : ''}</p>
+            <div class="tka-nilai-grid">
+              ${kartuNilai('BI', n.BI)}
+              ${kartuNilai('Matematika', n.MTK)}
+              ${kartuNilai('IPA', n.IPA)}
+            </div>
+            ${rankHtml}
+            ${t.catatanOrtu ? `<div class="tka-catatan">${escapeHtml(t.catatanOrtu)}</div>` : ''}
+            ${topHtml}
+          </section>`);
+      }
+
+      $('mainContent').innerHTML = parts.join('');
+    }
+
+    async function doLogout() {
+      await logout();
+      location.href = 'index.html';
+    }
+    $('btnLogoutSide')?.addEventListener('click', doLogout);
+    $('btnLogoutTop')?.addEventListener('click', doLogout);
+
+    async function boot() {
+      const s = currentSession();
+      if (!s || s.role !== 'orangtua') {
+        location.href = 'index.html';
+        return;
+      }
+      const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
+      if (!aktifId) {
+        $('mainContent').innerHTML = '<div class="tka-wait">Data anak tidak ditemukan.</div>';
+        return;
+      }
+      let anak = { id: aktifId, nama: s.siswaNama || aktifId, kelas: s.siswaKelas || '' };
+      try {
+        const list = await loadSiswaByIds([aktifId]);
+        if (list[0]) anak = { id: list[0].id, nama: list[0].nama, kelas: list[0].kelas || '' };
+      } catch (_) {}
+      $('subAnak').textContent = `${anak.nama} · ${anak.kelas || '—'}`;
+
+      try {
+        const data = await loadTryOutTkaAnak(anak.id, anak.kelas);
+        render(anak, data);
+      } catch (e) {
+        console.error(e);
+        $('mainContent').innerHTML = `<div class="tka-wait"><strong>Gagal memuat</strong>
+          <p style="margin:6px 0 0">Periksa koneksi. Pastikan rules koleksi lms_tka_* sudah di-deploy.</p></div>`;
+      }
+    }
+    boot();
+  </script>
+</body>
+</html>
