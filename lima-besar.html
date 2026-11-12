@@ -217,6 +217,10 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
             Ringkasan Capaian
           </a>
+          <a class="side-link" href="tryout-tka.html" id="navTryOutTka">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
+            Try Out TKA
+          </a>
           <a class="side-link active" href="lima-besar.html">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
             5 Besar Capaian
@@ -227,8 +231,8 @@
           <div class="hb-name" id="sideNama">—</div>
           <div class="hb-role">Orang tua</div>
         </div>
-        <button type="button" class="btn-logout" id="btnLogoutSide">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        <button type="button" class="side-logout" id="btnLogoutSide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
           Keluar
         </button>
       </aside>
@@ -269,10 +273,18 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
       Capaian
     </a>
+    <a href="tryout-tka.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
+      TKA
+    </a>
     <a class="active" href="lima-besar.html">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
       5 Besar
     </a>
+    <button type="button" id="btnLogoutNav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+      Keluar
+    </button>
   </nav>
 
   <script type="module">
@@ -567,6 +579,7 @@
     }
     document.getElementById('btnLogoutSide')?.addEventListener('click', doLogout);
     document.getElementById('btnLogoutTop')?.addEventListener('click', doLogout);
+    document.getElementById('btnLogoutNav')?.addEventListener('click', doLogout);
     boot();
   </script>
 </body>

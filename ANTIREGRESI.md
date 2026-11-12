@@ -136,3 +136,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Pemilih tahap hanya berupa `<button>` untuk tahap yang dibuka; tahap terkunci berupa `<div>` ber-`aria-label`. Jangan menjadikan tahap terkunci bisa diklik.
 - **Tes:** (1) akun 6A dengan tahap I dan II dibuka: tile II tidak menampilkan selisih rata-rata, kartu BI/MTK menampilkan ▲/▼; (2) tanpa tahap dibuka: muncul empty state; (3) lebar 375px: label hero tidak terpotong dan 5 tile muat tanpa scroll horizontal; (4) kelas non-6: pesan «Khusus orang tua kelas 6».
 - Rata-rata (hero, tile, kartu, 10 besar, selisih rata-rata) wajib lewat `fmtRata` (dua desimal, `id-ID`). Jangan kembali memakai `fmtNilai` untuk rata-rata; `fmtNilai` hanya untuk nilai per mapel.
+
+## §16 Menu sidebar, bottom-nav, dan tombol Keluar harus identik di semua halaman ortu
+
+- Halaman ortu: `beranda`, `rapor-sts`, `capaian`, `tryout-tka`, `lima-besar`. Urutan **sidebar**: Beranda, Rapor STS, Ringkasan Capaian, Try Out TKA, 5 Besar Capaian. Urutan **bottom-nav**: Beranda, Rapor, Capaian, TKA, 5 Besar, Keluar.
+- Menambah/mengubah/menghapus item menu = **ubah di kelima halaman sekaligus**. Hanya `class="active"` yang berbeda per halaman. (`admin.html` punya menu sendiri dan tidak termasuk.)
+- Tombol Keluar sidebar wajib `class="side-logout"` + `id="btnLogoutSide"`. Jangan memakai kelas lain (`btn-logout` tidak ada di CSS → tampil sebagai tombol bawaan browser).
+- Setiap halaman wajib memasang handler untuk `btnLogoutSide`, `btnLogoutTop`, dan `btnLogoutNav` (lihat §13).
+- Bottom-nav berisi 6 item; jangan menambah item ke-7 tanpa menguji lebar 320px.
+- **Tes:** buka tiap halaman lalu pindah ke halaman lain lewat sidebar dan bottom-nav; menu dan tombol Keluar tidak boleh berubah selain item aktif. Cek lebar 320, 360, dan ≥768px.

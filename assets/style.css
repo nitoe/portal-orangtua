@@ -337,6 +337,13 @@ button, input, select { font-family: inherit; font-size: inherit; }
 }
 .bottom-nav a.active,
 .bottom-nav button.active { color: var(--muh-700); }
+/* 6 item (Beranda, Rapor, Capaian, TKA, 5 Besar, Keluar) harus muat di layar sempit */
+.bottom-nav a,
+.bottom-nav button { min-width: 0; line-height: 1.4; }
+@media (max-width: 359px) {
+  .bottom-nav a,
+  .bottom-nav button { font-size: 10px; padding: 6px 2px; }
+}
 
 /* ========== Content patterns ========== */
 .page-header {

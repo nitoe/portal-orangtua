@@ -1,5 +1,13 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-12f — Menu dan tombol Keluar konsisten di semua halaman
+
+- **Gejala:** berpindah dari Try Out TKA ke 5 Besar Capaian (atau Rapor / Capaian) membuat menu **Try Out TKA hilang** dari sidebar, dan tombol **Keluar** berubah menjadi tombol bawaan browser.
+- **Akar:** menu ditulis ulang per halaman dan sudah menyimpang. `rapor-sts`, `capaian`, `lima-besar` tidak punya link Try Out TKA; `lima-besar` memakai kelas `btn-logout` yang tidak ada di CSS (bukan `side-logout`) dan bottom-nav-nya tidak punya tombol Keluar; bottom-nav HP tidak memuat TKA di mana pun kecuali `tryout-tka`, dan `tryout-tka` justru tidak memuat Capaian.
+- **Perbaikan:** kelima halaman (`beranda`, `rapor-sts`, `capaian`, `lima-besar`, `tryout-tka`) kini memakai menu yang sama persis. Sidebar: Beranda, Rapor STS, Ringkasan Capaian, Try Out TKA, 5 Besar Capaian. Bottom-nav HP: Beranda, Rapor, Capaian, TKA, 5 Besar, Keluar. Tombol Keluar sidebar selalu `.side-logout`; `lima-besar` mendapat handler Keluar bottom-nav.
+- `assets/style.css`: bottom-nav 6 item muat di layar sempit (`min-width:0`, font 10px di bawah 360px) dan tinggi baris label disamakan.
+- File: `beranda.html`, `rapor-sts.html`, `capaian.html`, `lima-besar.html`, `tryout-tka.html`, `assets/style.css`.
+
 ## 2026-11-12e — Dashboard Try Out TKA: ringkasan, jalur tahap, rincian satu tahap
 
 - **Hero ringkasan ananda:** nama, kelas, dan tiga angka (tahap dibuka, rata-rata terbaru, peringkat terbaru). Menggantikan blok identitas kecil yang menggandakan avatar header.
