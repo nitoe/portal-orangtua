@@ -8,228 +8,61 @@
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    /* Try Out TKA — polish visual, tetap token portal */
-    .tka-page-intro {
-      background: linear-gradient(145deg, var(--muh-600) 0%, var(--muh-800) 100%);
-      color: #fff;
-      border-radius: var(--radius-card);
-      padding: 16px 18px;
-      margin-bottom: 16px;
-    }
-    .tka-page-intro h2 {
-      margin: 0 0 6px;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-    .tka-page-intro p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.5;
-      opacity: 0.92;
-    }
-
-    .tka-tahap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      padding: 0;
-      margin-bottom: 14px;
-      overflow: hidden;
-    }
-    .tka-tahap-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      background: #fafbfc;
-    }
-    .tka-tahap-head h2 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 700;
-      color: #0f172a;
-      letter-spacing: -0.01em;
-    }
-    .tka-tahap-body { padding: 14px; }
-
-    .tka-meta {
-      font-size: 12px;
-      color: var(--muted);
-      margin: 0 0 12px;
-    }
-
-    .tka-nilai-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    @media (max-width: 380px) {
-      .tka-nilai-grid { grid-template-columns: 1fr; }
-    }
-    .tka-nilai-card {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 10px;
-      text-align: center;
-    }
-    .tka-nilai-card .lbl {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .tka-nilai-card .val {
-      font-size: 24px;
-      font-weight: 700;
-      color: #0f172a;
-      margin-top: 4px;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.15;
-    }
-    .tka-nilai-card .val.muted {
-      font-size: 13px;
-      font-weight: 600;
-      color: #94a3b8;
-    }
-
-    .tka-rank-box {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 16px;
-      align-items: center;
-      background: var(--muh-50);
-      border: 1px solid var(--muh-200);
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
-      font-size: 13px;
-      color: #0f172a;
-    }
-    .tka-rank-box strong { color: var(--muh-700); }
-    .tka-rank-num {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--muh-700);
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-    }
-
-    .tka-catatan {
-      font-size: 13px;
-      color: #334155;
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 10px 12px;
-      border: 1px dashed #cbd5e1;
-      margin-bottom: 10px;
-      line-height: 1.45;
-    }
-    .tka-catatan-label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #64748b;
-      margin-bottom: 4px;
-    }
-
-    .tka-wait-box {
-      font-size: 13px;
-      color: #92400e;
-      background: var(--attention-tint);
-      border: 1px solid #fde68a;
-      border-radius: 10px;
-      padding: 14px;
-      line-height: 1.5;
-    }
-    .tka-wait-box strong { display: block; margin-bottom: 4px; }
-
-    .tka-empty-note {
-      font-size: 13px;
-      color: var(--muted);
-      margin: 0;
-      padding: 4px 0 2px;
-    }
-
-    .tka-top10 { margin-top: 4px; }
-    .tka-top10 h3 {
-      margin: 0 0 8px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #334155;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .tka-top10-wrap {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
-    .tka-top10 table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      min-width: 280px;
-    }
-    .tka-top10 th,
-    .tka-top10 td {
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-    .tka-top10 th {
-      font-size: 11px;
-      color: #64748b;
-      font-weight: 700;
-      background: #f8fafc;
-      white-space: nowrap;
-    }
-    .tka-top10 tr:last-child td { border-bottom: none; }
-    .tka-top10 tr.me {
-      background: var(--muh-50);
-      font-weight: 600;
-    }
-    .tka-top10 tr.me td:first-child { color: var(--muh-700); }
-
-    .badge-ok {
-      display: inline-flex;
-      align-items: center;
-      background: var(--ok-tint);
-      color: var(--ok);
-      border: 1px solid #a7f3d0;
-      border-radius: 999px;
-      padding: 2px 9px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .badge-wait {
-      display: inline-flex;
-      align-items: center;
-      background: var(--attention-tint);
-      color: var(--attention);
-      border: 1px solid #fde68a;
-      border-radius: 999px;
-      padding: 2px 9px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .tka-footer-hint {
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.45;
-      text-align: center;
-    }
+    .tka-child{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .tka-child-av{width:44px;height:44px;border-radius:10px;background:var(--muh-50);color:var(--muh-700);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+    .tka-child-name{font-size:15px;font-weight:700;color:#0f172a}
+    .tka-child-meta{font-size:12.5px;color:var(--muted);margin-top:2px}
+    .tka-disclaimer{background:#f8fafc;border:1px solid var(--border);border-radius:var(--radius-card);padding:10px 12px;font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+    .tka-disclaimer strong{color:#0f172a}
+    .tka-section-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#64748b;margin:0 0 10px}
+    .tka-catalog{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+    .tka-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-card);overflow:hidden}
+    .tka-card-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;cursor:pointer;user-select:none}
+    .tka-card-head:hover{background:#fafbfc}
+    .tka-card-head h2{margin:0;font-size:15px;font-weight:700;color:#0f172a;letter-spacing:-.01em}
+    .tka-card-head .chev{font-size:12px;color:var(--muted);transition:transform .15s}
+    .tka-card.open .chev{transform:rotate(90deg)}
+    .tka-card-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+    .tka-card.open .tka-card-body{display:block;padding-top:14px}
+    .badge-ok{display:inline-flex;align-items:center;background:var(--ok-tint);color:var(--ok);border:1px solid #a7f3d0;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700}
+    .badge-wait{display:inline-flex;align-items:center;background:var(--attention-tint);color:var(--attention);border:1px solid #fde68a;border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700}
+    .tka-meta{font-size:12px;color:var(--muted);margin:0 0 12px}
+    .tka-mapel-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}
+    @media(min-width:520px){.tka-mapel-grid{grid-template-columns:repeat(3,1fr)}}
+    .tka-mapel-card{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px 12px}
+    .tka-mapel-card .lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
+    .tka-mapel-card .val{font-size:28px;font-weight:800;color:#0f172a;font-variant-numeric:tabular-nums;line-height:1.1}
+    .tka-mapel-card .val.muted{font-size:13px;font-weight:600;color:#94a3b8}
+    .tka-mapel-card .sub{font-size:11px;color:var(--muted);margin-top:4px}
+    .tka-rank-hero{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;background:var(--muh-50);border:1px solid var(--muh-200);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+    .tka-rank-num{font-size:32px;font-weight:800;color:var(--muh-700);font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em}
+    .tka-rank-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muh-700);margin-bottom:2px}
+    .tka-rank-detail{font-size:13px;color:#0f172a;line-height:1.45}
+    .tka-rank-detail strong{color:var(--muh-700)}
+    .tka-catatan{font-size:13px;color:#334155;background:#f8fafc;border-radius:8px;padding:10px 12px;border:1px dashed #cbd5e1;margin-bottom:12px;line-height:1.45}
+    .tka-catatan-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#64748b;margin-bottom:4px}
+    .tka-warn,.tka-wait-box{font-size:13px;color:#92400e;background:var(--attention-tint);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;line-height:1.5;margin-bottom:12px}
+    .tka-warn strong,.tka-wait-box strong{display:block;margin-bottom:4px}
+    .tka-empty-note{font-size:13px;color:var(--muted);margin:0;line-height:1.5}
+    .tka-sebaran{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+    .tka-sebaran h4{margin:0 0 8px;font-size:12px;font-weight:700;color:#334155}
+    .tka-sebaran-block{margin-bottom:12px}
+    .tka-sebaran-block:last-child{margin-bottom:0}
+    .tka-sebaran ul{list-style:none;margin:0;padding:0}
+    .tka-sebaran li{display:grid;grid-template-columns:1fr 80px 40px;gap:8px;align-items:center;margin-bottom:6px;font-size:12.5px}
+    .tka-sebaran li span.nm{color:#0f172a;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .tka-sebaran-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+    .tka-sebaran-bar>i{display:block;height:100%;background:var(--muh-600);border-radius:4px}
+    .tka-sebaran li b{font-variant-numeric:tabular-nums;color:#334155;text-align:right;font-size:12px}
+    .tka-top10-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:10px;margin-top:8px}
+    .tka-top10 table{width:100%;border-collapse:collapse;font-size:13px;min-width:280px}
+    .tka-top10 th,.tka-top10 td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:left}
+    .tka-top10 th{font-size:11px;color:#64748b;font-weight:700;background:#f8fafc;white-space:nowrap}
+    .tka-top10 tr:last-child td{border-bottom:none}
+    .tka-top10 tr.me{background:var(--muh-50);font-weight:600}
+    .tka-top10 tr.me td:first-child{color:var(--muh-700)}
+    .tka-footer-hint{margin:8px 0 24px;font-size:12px;color:var(--muted);line-height:1.45;text-align:center}
+    .tka-rank-card .tka-card-body{padding-bottom:16px}
   </style>
 </head>
 <body>
@@ -245,225 +78,272 @@
         </a>
         <p class="sidebar-section">Menu</p>
         <nav style="flex:1">
-          <a class="side-link" href="beranda.html">Beranda</a>
-          <a class="side-link" href="rapor-sts.html">Rapor STS</a>
-          <a class="side-link" href="capaian.html">Ringkasan Capaian</a>
-          <a class="side-link" href="lima-besar.html">Lima Besar</a>
-          <a class="side-link active" href="tryout-tka.html">Try Out TKA</a>
+          <a class="side-link" href="beranda.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg> Beranda</a>
+          <a class="side-link" href="rapor-sts.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Rapor STS</a>
+          <a class="side-link" href="capaian.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg> Ringkasan Capaian</a>
+          <a class="side-link active" href="tryout-tka.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg> Try Out TKA</a>
+          <a class="side-link" href="lima-besar.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg> 5 Besar Capaian</a>
         </nav>
-        <button type="button" class="side-link" id="btnLogoutSide" style="border:0;background:transparent;width:100%;text-align:left;cursor:pointer">Keluar</button>
-      </aside>
-      <main class="main">
-        <header class="topbar">
-          <div>
-            <div class="topbar-title">Hasil Try Out TKA</div>
-            <div class="topbar-sub" id="subAnak">—</div>
-          </div>
-          <button type="button" class="btn-ghost" id="btnLogoutTop">Keluar</button>
-        </header>
-        <div class="main-inner" id="mainContent">
-          <p class="text-muted">Memuat…</p>
+        <div class="hero-banner">
+          <div class="hb-label">Masuk sebagai</div>
+          <div class="hb-name" id="sideNama">—</div>
+          <div class="hb-role">Orang tua</div>
         </div>
-      </main>
+        <button type="button" class="side-logout" id="btnLogoutSide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg> Keluar</button>
+      </aside>
+      <div class="main-col">
+        <header class="top-header">
+          <div>
+            <h1>Hasil Try Out TKA</h1>
+            <p class="date" id="subAnak">—</p>
+          </div>
+          <div class="top-actions">
+            <div class="avatar-btn" id="avatarInisial">—</div>
+            <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
+          </div>
+        </header>
+        <main class="main-body">
+          <div class="main-inner" id="mainContent"><p class="text-muted">Memuat…</p></div>
+        </main>
+      </div>
     </div>
+    <nav class="bottom-nav">
+      <a href="beranda.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg> Beranda</a>
+      <a href="rapor-sts.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Rapor</a>
+      <a href="tryout-tka.html" class="active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg> TKA</a>
+      <a href="lima-besar.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg> 5 Besar</a>
+      <button type="button" id="btnLogoutNav"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg> Keluar</button>
+    </nav>
   </div>
-
   <script type="module">
-    import {
-      currentSession,
-      logout,
-      loadSiswaByIds,
-      loadTryOutTkaAnak,
-      isKelasEnamTka,
-    } from './assets/firebase.js';
-
+    import { currentSession, logout, loadSiswaByIds, loadTryOutTkaAnak } from './assets/firebase.js';
     const $ = (id) => document.getElementById(id);
+    const LABEL = { BI: 'Bahasa Indonesia', MTK: 'Matematika', IPA: 'IPA' };
 
     function escapeHtml(s) {
-      return String(s ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-
+    function inisial(nama) {
+      if (!nama) return '?';
+      const p = String(nama).trim().split(/\s+/);
+      return p.length === 1 ? p[0].slice(0,2).toUpperCase() : (p[0][0]+p[p.length-1][0]).toUpperCase();
+    }
     function fmtNilai(v) {
       if (v == null || Number.isNaN(Number(v))) return null;
       const n = Number(v);
-      return Number.isInteger(n) ? String(n) : n.toLocaleString('id-ID', { maximumFractionDigits: 1 });
+      return Number.isInteger(n) ? String(n) : n.toLocaleString('id-ID',{maximumFractionDigits:1});
+    }
+    function punyaNilai(nilai) {
+      if (!nilai || typeof nilai !== 'object') return false;
+      return ['BI','MTK','IPA'].some((k) => nilai[k] != null && !Number.isNaN(Number(nilai[k])));
     }
 
-    function kartuNilai(label, val) {
-      const f = fmtNilai(val);
-      if (f == null) {
-        return `<div class="tka-nilai-card"><div class="lbl">${label}</div><div class="val muted">Belum diujikan</div></div>`;
+    function barSebaran(list) {
+      if (!list || !list.length) return '';
+      return `<ul>${list.map((b) => {
+        const pct = typeof b.persen === 'number' ? b.persen : (b.total ? Math.round(b.benar/b.total*1000)/10 : 0);
+        return `<li>
+          <span class="nm" title="${escapeHtml(b.nama)}">${escapeHtml(b.nama)}</span>
+          <span class="tka-sebaran-bar" aria-hidden><i style="width:${Math.min(100,pct)}%"></i></span>
+          <b>${pct}%</b>
+        </li>`;
+      }).join('')}</ul>`;
+    }
+
+    function blokSebaranMapel(key, seb) {
+      if (!seb) return '';
+      const parts = [];
+      if (seb.kompleksitas?.length) {
+        parts.push(`<div class="tka-sebaran-block"><h4>Per tingkat kompleksitas</h4>${barSebaran(seb.kompleksitas)}</div>`);
       }
-      return `<div class="tka-nilai-card"><div class="lbl">${label}</div><div class="val">${f}</div></div>`;
+      if (seb.materi?.length) {
+        parts.push(`<div class="tka-sebaran-block"><h4>Per materi / capaian</h4>${barSebaran(seb.materi)}</div>`);
+      }
+      if (seb.domain?.length) {
+        parts.push(`<div class="tka-sebaran-block"><h4>Domain (Pengetahuan / Proses Sains)</h4>${barSebaran(seb.domain)}</div>`);
+      }
+      if (!parts.length) return '';
+      return `<div class="tka-sebaran">${parts.join('')}</div>`;
+    }
+
+    function kartuMapel(key, nilai, seb) {
+      const f = fmtNilai(nilai);
+      const val = f == null
+        ? `<div class="val muted">Belum diujikan</div>`
+        : `<div class="val">${f}</div><div class="sub">dari 100</div>`;
+      return `<div class="tka-mapel-card">
+        <div class="lbl">${LABEL[key] || key}</div>
+        ${val}
+        ${blokSebaranMapel(key, seb)}
+      </div>`;
     }
 
     function render(anak, data) {
       if (!data.khususKelas6) {
-        $('mainContent').innerHTML = `
-          <div class="tka-wait-box">
-            <strong>Khusus orang tua kelas 6</strong>
-            Hasil Try Out TKA ditampilkan untuk siswa kelas 6A dan 6B.
-            Anak Anda saat ini di kelas <strong>${escapeHtml(anak.kelas || '—')}</strong>.
-          </div>`;
+        $('mainContent').innerHTML = `<div class="tka-wait-box"><strong>Khusus orang tua kelas 6</strong>
+          Hasil Try Out TKA untuk siswa kelas 6A dan 6B. Anak Anda di kelas <strong>${escapeHtml(anak.kelas||'—')}</strong>.</div>`;
         return;
       }
 
       const parts = [];
       parts.push(`
-        <div class="tka-page-intro">
-          <h2>Try Out TKA — Kelas 6</h2>
-          <p>
-            Memantau kesiapan akademik (Bahasa Indonesia, Matematika, IPA).
-            Nilai muncul setelah <strong>wali kelas mempublikasikan</strong> tahap terkait.
-            Ini bukan rapor semester resmi.
-          </p>
-        </div>`);
+        <div class="tka-child">
+          <div class="tka-child-av">${escapeHtml(inisial(anak.nama))}</div>
+          <div>
+            <div class="tka-child-name">${escapeHtml(anak.nama)}</div>
+            <div class="tka-child-meta">Kelas ${escapeHtml(anak.kelas||'—')} · Try Out TKA</div>
+          </div>
+        </div>
+        <div class="tka-disclaimer">
+          <strong>Bukan rapor semester resmi.</strong>
+          Setiap tahap Try Out ditampilkan terpisah. Nilai ananda dilengkapi sebaran capaian (kompleksitas & materi) bila data tersedia dari LMS.
+        </div>
+        <p class="tka-section-label">Katalog Try Out</p>
+        <div class="tka-catalog" id="katalogTahap">
+      `);
 
       let adaPublished = false;
+      let firstOpen = true;
       for (const t of data.tahapList || []) {
         if (!t.published) {
           parts.push(`
-            <section class="tka-tahap">
-              <div class="tka-tahap-head">
+            <section class="tka-card">
+              <div class="tka-card-head" data-toggle>
                 <h2>${escapeHtml(t.nama)}</h2>
                 <span class="badge-wait">Belum dipublikasikan</span>
               </div>
-              <div class="tka-tahap-body">
-                <p class="tka-empty-note">Menunggu wali kelas membuka hasil tahap ini. Silakan cek kembali nanti.</p>
+              <div class="tka-card-body">
+                <p class="tka-empty-note">Menunggu wali kelas membuka hasil tahap ini.</p>
               </div>
             </section>`);
           continue;
         }
         adaPublished = true;
-
         const n = t.nilai || {};
-        let rankHtml = '';
+        const seb = t.sebaran || {};
+        const adaNilai = punyaNilai(n);
+        const openCls = firstOpen ? ' open' : '';
+        firstOpen = false;
+
+        let warn = '';
+        if (!adaNilai) {
+          warn = `<div class="tka-warn"><strong>Nilai ananda belum tersedia</strong>
+            Tahap ini sudah dibuka, tetapi snapshot nilai ananda belum ada. Minta wali kelas mempublikasikan ulang dari LMS.</div>`;
+        }
+
+        let rank = '';
         if (t.peringkat != null && t.jumlahPesertaRanking) {
-          rankHtml = `
-            <div class="tka-rank-box">
-              <div>
-                <span style="font-size:11px;font-weight:700;color:var(--muh-700);text-transform:uppercase;letter-spacing:0.04em">Peringkat anak</span>
-                <div class="tka-rank-num">#${t.peringkat}</div>
-              </div>
-              <div style="flex:1;min-width:140px">
-                dari <strong>${t.jumlahPesertaRanking}</strong> peserta (gabungan 6A &amp; 6B)
-                ${t.rataRata != null ? `<br>Rata-rata: <strong>${fmtNilai(t.rataRata)}</strong>` : ''}
-              </div>
-            </div>`;
+          rank = `<div class="tka-rank-hero">
+            <div><div class="tka-rank-label">Peringkat ananda</div><div class="tka-rank-num">#${t.peringkat}</div></div>
+            <div class="tka-rank-detail" style="flex:1;min-width:140px">
+              dari <strong>${t.jumlahPesertaRanking}</strong> peserta (gabungan 6A &amp; 6B)
+              ${t.rataRata != null ? `<br>Rata-rata ananda: <strong>${fmtNilai(t.rataRata)}</strong>` : ''}
+            </div>
+          </div>`;
         } else if (t.rataRata != null) {
-          rankHtml = `
-            <div class="tka-rank-box">
-              <div>
-                Rata-rata: <strong>${fmtNilai(t.rataRata)}</strong>
-                <span style="display:block;font-size:12px;color:#64748b;font-weight:500;margin-top:2px">
-                  Belum masuk ranking — nilai mapel wajib belum lengkap
-                </span>
-              </div>
-            </div>`;
+          rank = `<div class="tka-rank-hero"><div class="tka-rank-detail">
+            Rata-rata ananda: <strong>${fmtNilai(t.rataRata)}</strong>
+            <span style="display:block;font-size:12px;color:#64748b;margin-top:4px">Belum masuk ranking — mapel wajib belum lengkap</span>
+          </div></div>`;
         }
 
         const top = (data.top10ByTahap && data.top10ByTahap[t.tahap]) || [];
         let topHtml = '';
         if (top.length) {
           const rows = top.map((r) => {
-            const me = r.siswaId === anak.id ? ' class="me"' : '';
-            const nama = escapeHtml(r.siswaNama) + (r.siswaId === anak.id ? ' <span style="color:var(--muh-700)">(anak Anda)</span>' : '');
-            return `<tr${me}>
+            const me = r.siswaId === anak.id;
+            return `<tr${me?' class="me"':''}>
               <td>${r.peringkat}</td>
-              <td>${nama}</td>
+              <td>${escapeHtml(r.siswaNama)}${me?' <span style="color:var(--muh-700)">(ananda)</span>':''}</td>
               <td>${escapeHtml(r.kelas)}</td>
-              <td class="tabular">${fmtNilai(r.rataRata) ?? '—'}</td>
+              <td style="font-variant-numeric:tabular-nums">${fmtNilai(r.rataRata)??'—'}</td>
             </tr>`;
           }).join('');
           topHtml = `
-            <div class="tka-top10">
-              <h3>10 besar kelas 6 (6A + 6B)</h3>
-              <div class="tka-top10-wrap">
-                <table>
-                  <thead>
-                    <tr><th>#</th><th>Nama</th><th>Kelas</th><th>Rata-rata</th></tr>
-                  </thead>
-                  <tbody>${rows}</tbody>
-                </table>
+            <section class="tka-card tka-rank-card" style="margin-top:10px;border-style:dashed">
+              <div class="tka-card-head" data-toggle>
+                <h2 style="font-size:13px">Peringkat 10 besar · ${escapeHtml(t.nama)}</h2>
+                <span class="chev">▸</span>
               </div>
-            </div>`;
+              <div class="tka-card-body">
+                <div class="tka-top10-wrap"><table>
+                  <thead><tr><th>#</th><th>Nama</th><th>Kelas</th><th>Rata-rata</th></tr></thead>
+                  <tbody>${rows}</tbody>
+                </table></div>
+              </div>
+            </section>`;
         }
 
         parts.push(`
-          <section class="tka-tahap">
-            <div class="tka-tahap-head">
+          <section class="tka-card${openCls}">
+            <div class="tka-card-head" data-toggle>
               <h2>${escapeHtml(t.nama)}</h2>
-              <span class="badge-ok">Dipublikasikan</span>
-            </div>
-            <div class="tka-tahap-body">
-              ${t.publishedAt ? `<p class="tka-meta">Dibuka ${escapeHtml(t.publishedAt)}</p>` : ''}
-              <div class="tka-nilai-grid">
-                ${kartuNilai('BI', n.BI)}
-                ${kartuNilai('Matematika', n.MTK)}
-                ${kartuNilai('IPA', n.IPA)}
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="badge-ok">Dipublikasikan</span>
+                <span class="chev">▸</span>
               </div>
-              ${rankHtml}
-              ${t.catatanOrtu ? `<div class="tka-catatan"><span class="tka-catatan-label">Catatan wali kelas</span>${escapeHtml(t.catatanOrtu)}</div>` : ''}
+            </div>
+            <div class="tka-card-body">
+              ${t.publishedAt?`<p class="tka-meta">Dibuka ${escapeHtml(t.publishedAt)}</p>`:''}
+              ${warn}
+              <div class="tka-mapel-grid">
+                ${kartuMapel('BI', n.BI, seb.BI)}
+                ${kartuMapel('MTK', n.MTK, seb.MTK)}
+                ${kartuMapel('IPA', n.IPA, seb.IPA)}
+              </div>
+              ${rank}
+              ${t.catatanOrtu?`<div class="tka-catatan"><span class="tka-catatan-label">Catatan wali kelas</span>${escapeHtml(t.catatanOrtu)}</div>`:''}
               ${topHtml}
             </div>
           </section>`);
       }
 
+      parts.push('</div>');
       if (!adaPublished) {
-        parts.push(`
-          <p class="tka-footer-hint">
-            Belum ada tahap yang dipublikasikan. Hasil akan muncul di sini setelah wali kelas 6A/6B membuka nilai Try Out.
-          </p>`);
+        parts.push(`<p class="tka-footer-hint">Belum ada tahap yang dipublikasikan. Hasil ananda muncul setelah wali kelas membuka nilai Try Out.</p>`);
       } else {
-        parts.push(`
-          <p class="tka-footer-hint">
-            Nilai di halaman ini adalah snapshot yang dipublikasikan wali kelas. Bukan rapor semester.
-          </p>`);
+        parts.push(`<p class="tka-footer-hint">Snapshot dari wali kelas. Bukan rapor semester. Sebaran capaian tampil bila kuis dikerjakan lewat LMS.</p>`);
       }
 
       $('mainContent').innerHTML = parts.join('');
+
+      // Toggle katalog
+      $('mainContent').querySelectorAll('[data-toggle]').forEach((el) => {
+        el.addEventListener('click', () => {
+          const card = el.closest('.tka-card');
+          if (card) card.classList.toggle('open');
+        });
+      });
     }
 
-    async function doLogout() {
-      await logout();
-      location.href = 'index.html';
-    }
+    async function doLogout(){ await logout(); location.href='index.html'; }
     $('btnLogoutSide')?.addEventListener('click', doLogout);
     $('btnLogoutTop')?.addEventListener('click', doLogout);
+    $('btnLogoutNav')?.addEventListener('click', doLogout);
 
     async function boot() {
       const s = currentSession();
-      if (!s || s.role !== 'orangtua') {
-        location.href = 'index.html';
-        return;
-      }
+      if (!s || s.role !== 'orangtua') { location.href='index.html'; return; }
+      $('sideNama').textContent = s.nama || 'Orang tua';
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
-        $('mainContent').innerHTML = '<div class="tka-wait-box"><strong>Data anak tidak ditemukan.</strong></div>';
+        $('mainContent').innerHTML='<div class="tka-wait-box"><strong>Data anak tidak ditemukan.</strong></div>';
         return;
       }
-      let anak = { id: aktifId, nama: s.siswaNama || aktifId, kelas: s.siswaKelas || '' };
+      let anak = { id: aktifId, nama: s.siswaNama||aktifId, kelas: s.siswaKelas||'' };
       try {
         const list = await loadSiswaByIds([aktifId]);
-        if (list[0]) anak = { id: list[0].id, nama: list[0].nama, kelas: list[0].kelas || '' };
-      } catch (_) {}
-      $('subAnak').textContent = `${anak.nama} · ${anak.kelas || '—'}`;
-
+        if (list[0]) anak = { id: list[0].id, nama: list[0].nama, kelas: list[0].kelas||'' };
+      } catch(_){}
+      $('subAnak').textContent = `${anak.nama} · ${anak.kelas||'—'}`;
+      $('avatarInisial').textContent = inisial(anak.nama);
       try {
         const data = await loadTryOutTkaAnak(anak.id, anak.kelas);
         render(anak, data);
       } catch (e) {
         console.error(e);
-        $('mainContent').innerHTML = `
-          <div class="tka-wait-box">
-            <strong>Gagal memuat hasil</strong>
-            Periksa koneksi internet. Jika berlanjut, pastikan rules koleksi
-            <code>lms_tka_*</code> sudah di-deploy di Firebase.
-          </div>`;
+        $('mainContent').innerHTML=`<div class="tka-wait-box"><strong>Gagal memuat hasil</strong>
+          Periksa koneksi. Pastikan rules <code>lms_tka_*</code> sudah di-deploy.</div>`;
       }
     }
     boot();

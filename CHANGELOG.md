@@ -1,5 +1,17 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-12d — Katalog Try Out + sebaran capaian + label lengkap
+
+- **Katalog per tahap**: Try Out I, II, … sebagai kartu terpisah (buka/tutup), tidak menumpuk.
+- **Ranking** sebagai kartu tersendiri di dalam tahap (10 besar collapsible).
+- Label mapel **Bahasa Indonesia** (bukan BI), Matematika, IPA.
+- Tampilkan **sebaran capaian** per mapel bila snapshot memuatnya:
+  - per tingkat kompleksitas (L1/L2/L3)
+  - per materi / capaian
+  - domain IPA (Pengetahuan / Keterampilan Proses Sains)
+- Shell modern (top-header, sidebar, bottom-nav) dipertahankan.
+- File: `tryout-tka.html`, `assets/firebase.js` (`sebaran` dari `lms_tka_hasil_ortu`).
+
 ## 2026-11-12b — Polish UI Hasil Try Out TKA
 
 - Tampilan `tryout-tka.html` diperhalus agar tidak terasa skeleton/generik:

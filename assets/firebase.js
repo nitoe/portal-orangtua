@@ -1360,6 +1360,7 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
       let rataRata = null;
       let peringkat = null;
       let jumlahPesertaRanking = 0;
+      let sebaran = null;
 
       try {
         const pubSnap = await fsMod.getDoc(fsMod.doc(db, 'lms_tka_publikasi', pubId));
@@ -1394,6 +1395,7 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
               jumlahPesertaRanking =
                 typeof h.jumlahPesertaRanking === 'number' ? h.jumlahPesertaRanking : 0;
               if (h.catatanOrtu) catatanOrtu = h.catatanOrtu;
+              if (h.sebaran && typeof h.sebaran === 'object') sebaran = h.sebaran;
             }
           }
         } catch (e) {
@@ -1421,6 +1423,7 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
         rataRata: published ? rataRata : null,
         peringkat: published ? peringkat : null,
         jumlahPesertaRanking: published ? jumlahPesertaRanking : 0,
+        sebaran: published ? sebaran : null,
       });
     }),
   );
