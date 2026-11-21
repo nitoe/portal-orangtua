@@ -145,3 +145,10 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Setiap halaman wajib memasang handler untuk `btnLogoutSide`, `btnLogoutTop`, dan `btnLogoutNav` (lihat §13).
 - Bottom-nav berisi 6 item; jangan menambah item ke-7 tanpa menguji lebar 320px.
 - **Tes:** buka tiap halaman lalu pindah ke halaman lain lewat sidebar dan bottom-nav; menu dan tombol Keluar tidak boleh berubah selain item aktif. Cek lebar 320, 360, dan ≥768px.
+
+## §17 Peringkat TKA: jangan tampilkan peringkat yang saling bertentangan
+
+- Peringkat ananda dan tabel 10 besar berasal dari dua dokumen. `loadTryOutTkaAnak` WAJIB memeriksa kesinkronannya (`rankingId`; cadangan: jumlah peserta, posisi ananda di 10 besar) dan mengosongkan peringkat + 10 besar bila tidak cocok. Jangan menampilkan keduanya "apa adanya".
+- Peringkat selalu gabungan 6A & 6B. Bila `sementara === true`, label «sementara» dan keterangan «baru n dari N» wajib tampil.
+- Rata-rata tetap lewat `fmtRata` (§15).
+- **Tes:** (1) dokumen ananda peringkat 6 padahal tidak ada di 10 besar → tampil «sedang diperbarui»; (2) `rankingId` sama → peringkat tampil normal; (3) `sementara` → label tampil.

@@ -1,5 +1,13 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-21 — Try Out TKA: peringkat tidak boleh kontradiktif + label «sementara»
+
+- **Gejala:** kartu «Peringkat 6 dari 26 · rata-rata 65,40» tetapi tabel 10 besar menampilkan #6 = 72,00 dan hanya 6B; label «gabungan 6A & 6B» menyesatkan.
+- **Akar:** peringkat ananda (`lms_tka_hasil_ortu`) dan 10 besar (`lms_tka_peringkat`) adalah dua snapshot terpisah yang bisa ditulis pada waktu berbeda.
+- `assets/firebase.js` (`loadTryOutTkaAnak`): membandingkan `rankingId` kedua dokumen (data lama tanpa id: jumlah peserta, baris ananda di 10 besar, dan batas peringkat ke-10). Bila tidak sinkron, peringkat dan 10 besar tahap itu disembunyikan.
+- `tryout-tka.html`: pesan «Peringkat sedang diperbarui oleh sekolah» bila tidak sinkron; label «sementara» + «baru n dari N siswa yang nilainya lengkap» bila peringkat belum mencakup semua siswa.
+- Antiregresi: §17.
+
 ## 2026-11-12f — Menu dan tombol Keluar konsisten di semua halaman
 
 - **Gejala:** berpindah dari Try Out TKA ke 5 Besar Capaian (atau Rapor / Capaian) membuat menu **Try Out TKA hilang** dari sidebar, dan tombol **Keluar** berubah menjadi tombol bawaan browser.

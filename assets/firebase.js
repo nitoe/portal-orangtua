@@ -1361,6 +1361,11 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
       let peringkat = null;
       let jumlahPesertaRanking = 0;
       let sebaran = null;
+      let rankingId = null;
+      let sementara = false;
+      let jumlahSiswaGabungan = 0;
+      let rankingTertunda = false;
+      let topMeta = null;
 
       try {
         const pubSnap = await fsMod.getDoc(fsMod.doc(db, 'lms_tka_publikasi', pubId));
@@ -1394,6 +1399,10 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
               peringkat = typeof h.peringkat === 'number' ? h.peringkat : null;
               jumlahPesertaRanking =
                 typeof h.jumlahPesertaRanking === 'number' ? h.jumlahPesertaRanking : 0;
+              rankingId = typeof h.rankingId === 'string' ? h.rankingId : null;
+              sementara = h.sementara === true;
+              jumlahSiswaGabungan =
+                typeof h.jumlahSiswaGabungan === 'number' ? h.jumlahSiswaGabungan : 0;
               if (h.catatanOrtu) catatanOrtu = h.catatanOrtu;
               if (h.sebaran && typeof h.sebaran === 'object') sebaran = h.sebaran;
             }
@@ -1407,9 +1416,42 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
           if (rSnap.exists()) {
             const r = rSnap.data();
             top10ByTahap[tahap] = Array.isArray(r.top10) ? r.top10 : [];
+            topMeta = {
+              rankingId: typeof r.rankingId === 'string' ? r.rankingId : null,
+              jumlahPeserta: typeof r.jumlahPeserta === 'number' ? r.jumlahPeserta : 0,
+            };
           }
         } catch (e) {
           console.warn('loadTryOutTka peringkat', tahap, e);
+        }
+      }
+
+      // Konsistensi peringkat ananda (dokumen siswa) vs 10 besar (dokumen gabungan): keduanya
+      // snapshot terpisah. Bila tidak cocok, JANGAN tampilkan peringkat yang saling bertentangan.
+      if (published && topMeta && (peringkat != null || (top10ByTahap[tahap] || []).length)) {
+        const top = top10ByTahap[tahap] || [];
+        let cocok = true;
+        if (rankingId && topMeta.rankingId) {
+          cocok = rankingId === topMeta.rankingId;
+        } else {
+          if (jumlahPesertaRanking !== topMeta.jumlahPeserta) cocok = false;
+          const saya = top.find((x) => x.siswaId === siswaId);
+          if (saya) {
+            if (Number(saya.peringkat) !== peringkat) cocok = false;
+            if (rataRata != null && Math.abs(Number(saya.rataRata) - rataRata) > 0.051) cocok = false;
+          } else if (peringkat != null && peringkat <= top.length) {
+            cocok = false; // peringkat 10 besar tetapi tidak ada di tabel 10 besar
+          } else if (
+            rataRata != null && top.length >= 10 && rataRata > Number(top[top.length - 1].rataRata) + 0.051
+          ) {
+            cocok = false; // rata-rata di atas peringkat ke-10 tetapi tidak masuk 10 besar
+          }
+        }
+        if (!cocok) {
+          rankingTertunda = true;
+          peringkat = null;
+          jumlahPesertaRanking = 0;
+          top10ByTahap[tahap] = [];
         }
       }
 
@@ -1424,6 +1466,9 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
         peringkat: published ? peringkat : null,
         jumlahPesertaRanking: published ? jumlahPesertaRanking : 0,
         sebaran: published ? sebaran : null,
+        sementara: published ? sementara : false,
+        jumlahSiswaGabungan: published ? jumlahSiswaGabungan : 0,
+        rankingTertunda,
       });
     }),
   );

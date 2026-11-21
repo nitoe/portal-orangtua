@@ -441,7 +441,8 @@
           <div class="to-rank-det">
             <div class="to-rank-lbl">Peringkat ananda</div>
             Peringkat <strong>${t.peringkat}</strong> dari <strong>${t.jumlahPesertaRanking}</strong> peserta
-            <br><span style="color:var(--muted);font-size:12px">gabungan kelas 6A &amp; 6B</span>
+            <br><span style="color:var(--muted);font-size:12px">gabungan kelas 6A &amp; 6B${t.sementara ? ' · <strong>sementara</strong>' : ''}</span>
+            ${t.sementara && t.jumlahSiswaGabungan ? `<br><span style="color:var(--muted);font-size:12px">Baru ${t.jumlahPesertaRanking} dari ${t.jumlahSiswaGabungan} siswa yang nilainya lengkap; peringkat dapat berubah.</span>` : ''}
             ${t.peringkat <= 10 ? '<br><span class="to-chip">Masuk 10 besar</span>' : ''}
           </div>
         </div>`;
@@ -449,8 +450,8 @@
         rank = `<div class="to-rank">
           <div class="to-rank-det">
             <div class="to-rank-lbl">Peringkat ananda</div>
-            Belum masuk ranking.
-            <br><span style="color:var(--muted);font-size:12px">Peringkat dihitung setelah mapel wajib tahap ini lengkap.</span>
+            ${t.rankingTertunda ? 'Peringkat sedang diperbarui oleh sekolah.' : 'Belum masuk ranking.'}
+            <br><span style="color:var(--muted);font-size:12px">${t.rankingTertunda ? 'Data peringkat belum sinkron dengan 10 besar; mohon cek kembali nanti.' : 'Peringkat dihitung setelah mapel wajib tahap ini lengkap.'}</span>
           </div>
         </div>`;
       }
@@ -496,7 +497,7 @@
         const posisiSaya = !adaSaya && t.peringkat != null && t.jumlahPesertaRanking
           ? `<p class="to-top-me">Ananda berada di peringkat <strong>${t.peringkat}</strong> dari ${t.jumlahPesertaRanking} peserta.</p>` : '';
         topHtml = `<details class="to-top">
-          <summary><span>Peringkat 10 besar<small>gabungan 6A &amp; 6B</small></span>${SVG_CHEV}</summary>
+          <summary><span>Peringkat 10 besar<small>gabungan 6A &amp; 6B${t.sementara ? ' · sementara' : ''}</small></span>${SVG_CHEV}</summary>
           <div class="to-top-wrap"><table>
             <thead><tr><th>#</th><th>Nama</th><th>Kelas</th><th>Rata-rata</th></tr></thead>
             <tbody>${rows}</tbody>
