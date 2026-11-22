@@ -152,3 +152,5 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Peringkat selalu gabungan 6A & 6B. Bila `sementara === true`, label «sementara» dan keterangan «baru n dari N» wajib tampil.
 - Rata-rata tetap lewat `fmtRata` (§15).
 - **Tes:** (1) dokumen ananda peringkat 6 padahal tidak ada di 10 besar → tampil «sedang diperbarui»; (2) `rankingId` sama → peringkat tampil normal; (3) `sementara` → label tampil.
+
+- §17 butir 4 (2026-11-21b): bila peringkat ananda tidak sinkron, sembunyikan HANYA peringkat ananda. Tabel 10 besar (`lms_tka_peringkat`) tidak boleh ikut dikosongkan — itu dokumen terbaru dan tetap benar. **Tes:** dokumen ananda basi (peringkat 6, tidak ada di 10 besar) → kartu «sedang diperbarui», tabel 10 besar tetap tampil.

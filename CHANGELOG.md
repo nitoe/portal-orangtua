@@ -1,5 +1,11 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-21b — Try Out TKA: tabel 10 besar tetap tampil saat peringkat ananda belum sinkron
+
+- **Gejala:** setelah pemeriksaan sinkron ditambahkan, kartu «Peringkat sedang diperbarui» tampil dan tabel 10 besar ikut hilang.
+- **Perbaikan:** `loadTryOutTkaAnak` hanya menyembunyikan peringkat ananda; `top10ByTahap` tidak lagi dikosongkan karena dokumen 10 besar selalu yang terbaru.
+- File: `assets/firebase.js`. Antiregresi: §17 butir 4.
+
 ## 2026-11-21 — Try Out TKA: peringkat tidak boleh kontradiktif + label «sementara»
 
 - **Gejala:** kartu «Peringkat 6 dari 26 · rata-rata 65,40» tetapi tabel 10 besar menampilkan #6 = 72,00 dan hanya 6B; label «gabungan 6A & 6B» menyesatkan.

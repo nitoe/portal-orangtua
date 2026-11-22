@@ -1448,10 +1448,11 @@ export async function loadTryOutTkaAnak(siswaId, kelas) {
           }
         }
         if (!cocok) {
+          // Hanya peringkat ananda yang disembunyikan (dokumen siswa basi). Tabel 10 besar tetap
+          // tampil: dokumen itu ditulis ulang tiap publish sehingga selalu yang terbaru.
           rankingTertunda = true;
           peringkat = null;
           jumlahPesertaRanking = 0;
-          top10ByTahap[tahap] = [];
         }
       }
 
