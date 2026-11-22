@@ -1237,8 +1237,10 @@ export async function loadLimaBesarCapaian() {
     }
     if (nilaiList.length === 0) return;
 
-    const rata =
-      Math.round((nilaiList.reduce((s, x) => s + x, 0) / nilaiList.length) * 10) / 10;
+    // Peringkat memakai JUMLAH nilai akhir mapel (sama dengan Leger STS di aplikasi penilaian),
+    // bukan rata-rata yang sudah dibulatkan. `rata` hanya untuk tampilan.
+    const total = nilaiList.reduce((s, x) => s + x, 0);
+    const rata = Math.round((total / nilaiList.length) * 10) / 10;
 
     if (!buckets[kelas]) buckets[kelas] = [];
     buckets[kelas].push({
@@ -1246,29 +1248,40 @@ export async function loadLimaBesarCapaian() {
       nama: String(nama),
       kelas,
       rata,
+      total,
       nMapel: nilaiList.length,
     });
   });
 
   /** @type {Record<string, Array<{ranking:number,siswaId:string,nama:string,kelas:string,rata:number,nMapel:number}>>} */
   const byKelas = {};
+  /** Per kelas: jumlah mapel yang menjadi dasar peringkat & jumlah siswa yang belum lengkap. */
+  const infoKelas = {};
   for (const kelas of Object.keys(buckets)) {
-    const sorted = buckets[kelas].sort((a, b) => {
-      if (b.rata !== a.rata) return b.rata - a.rata;
+    // Hanya siswa dengan nilai mapel LENGKAP (jumlah mapel terbanyak di kelas) yang diperingkat:
+    // jumlah/rata-rata dari mapel yang tidak sama banyak tidak sebanding (ANTIREGRESI §18).
+    const nLengkap = buckets[kelas].reduce((m, x) => Math.max(m, x.nMapel), 0);
+    const layak = buckets[kelas].filter((x) => x.nMapel === nLengkap);
+    infoKelas[kelas] = {
+      nMapelLengkap: nLengkap,
+      belumLengkap: buckets[kelas].length - layak.length,
+    };
+    const sorted = layak.sort((a, b) => {
+      if (b.total !== a.total) return b.total - a.total;
       return a.nama.localeCompare(b.nama, 'id');
     });
-    // Competition rank
+    // Competition rank pada jumlah nilai (seri = peringkat sama)
     const ranked = [];
     for (let i = 0; i < sorted.length; i++) {
       const item = sorted[i];
       let ranking = 1;
       if (i > 0) {
         const prev = ranked[i - 1];
-        ranking = item.rata < prev.rata - 1e-9 ? i + 1 : prev.ranking;
+        ranking = item.total < prev.total ? i + 1 : prev.ranking;
       }
       ranked.push({ ranking, ...item });
     }
-    byKelas[kelas] = ranked.filter((r) => r.ranking <= 5).slice(0, 5);
+    byKelas[kelas] = ranked.filter((r) => r.ranking <= 5);
   }
 
   const kelasList = Object.keys(byKelas).sort((a, b) =>
@@ -1281,6 +1294,7 @@ export async function loadLimaBesarCapaian() {
     semester,
     byKelas,
     kelasList,
+    infoKelas,
   };
 }
 

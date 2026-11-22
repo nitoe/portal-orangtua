@@ -154,3 +154,9 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - **Tes:** (1) dokumen ananda peringkat 6 padahal tidak ada di 10 besar → tampil «sedang diperbarui»; (2) `rankingId` sama → peringkat tampil normal; (3) `sementara` → label tampil.
 
 - §17 butir 4 (2026-11-21b): bila peringkat ananda tidak sinkron, sembunyikan HANYA peringkat ananda. Tabel 10 besar (`lms_tka_peringkat`) tidak boleh ikut dikosongkan — itu dokumen terbaru dan tetap benar. **Tes:** dokumen ananda basi (peringkat 6, tidak ada di 10 besar) → kartu «sedang diperbarui», tabel 10 besar tetap tampil.
+
+## §18 5 Besar Capaian: aturan peringkat sama dengan Leger STS
+
+- `loadLimaBesarCapaian` meranking dari JUMLAH nilai akhir mapel (bukan rata-rata terbulat), hanya siswa dengan jumlah mapel terbanyak di kelas; seri = peringkat sama. Siswa yang belum lengkap tidak diperingkat dan jumlahnya ditampilkan (`infoKelas`).
+- Aturan ini harus identik dengan Leger STS (repo SDM01Penilaian, ANTIREGRESI §Peringkat-STS). Ubah keduanya sekaligus.
+- **Tes:** kelas dengan satu siswa kehilangan 1 mapel → siswa itu tidak masuk daftar walau rata-ratanya tertinggi; keterangan «n siswa belum diperingkat» tampil.

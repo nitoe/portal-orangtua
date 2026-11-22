@@ -1,5 +1,12 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-22 — 5 Besar Capaian: aturan peringkat disamakan dengan Leger STS
+
+- **Sebab:** peringkat dihitung dari rata-rata nilai akhir yang dibulatkan 1 desimal dan menerima siswa dengan jumlah mapel berbeda, berbeda dari Leger STS (jumlah nilai, hanya mapel lengkap).
+- `assets/firebase.js` (`loadLimaBesarCapaian`): ranking dari jumlah nilai akhir, hanya siswa bermapel lengkap, seri berbagi peringkat; menambah `infoKelas`.
+- `lima-besar.html`: penjelasan aturan peringkat dan keterangan jumlah siswa yang belum lengkap.
+- Antiregresi: §18.
+
 ## 2026-11-21b — Try Out TKA: tabel 10 besar tetap tampil saat peringkat ananda belum sinkron
 
 - **Gejala:** setelah pemeriksaan sinkron ditambahkan, kartu «Peringkat sedang diperbarui» tampil dan tabel 10 besar ikut hilang.

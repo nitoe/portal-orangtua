@@ -516,13 +516,19 @@
       $('mainContent').innerHTML = `
         <div class="disclaimer">
           <strong>Tentang 5 Besar Capaian.</strong>
-          Peringkat dihitung dari rata-rata nilai akhir mapel pada rapor STS resmi yang sudah dipublikasikan.
+          Peringkat dihitung dari jumlah nilai akhir seluruh mapel pada rapor STS resmi yang sudah dipublikasikan, hanya untuk siswa yang nilai mapelnya lengkap. Nilai rata-rata ditampilkan sebagai informasi.
           Orang tua dapat melihat 5 besar di seluruh kelas (bukan hanya kelas ananda) sebagai bentuk apresiasi warga sekolah.
           Nilai lengkap ananda tetap hanya terlihat di halaman Rapor STS &amp; Ringkasan Capaian.
         </div>
         <div class="periode-pill">${escapeHtml(data.periodeLabel || 'Periode berjalan')}</div>
         <div class="kelas-filters">${filters}</div>
-        ${renderList()}`;
+        ${renderList()}
+        ${(() => {
+          const inf = data.infoKelas && data.infoKelas[kelasAktif];
+          return inf && inf.belumLengkap > 0
+            ? `<p class="periode-pill" style="margin-top:12px">${inf.belumLengkap} siswa kelas ${escapeHtml(kelasAktif)} belum diperingkat karena nilai mapelnya belum lengkap (${inf.nMapelLengkap} mapel).</p>`
+            : '';
+        })()}`;
 
       document.querySelectorAll('.kelas-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
