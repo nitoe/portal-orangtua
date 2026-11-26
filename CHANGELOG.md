@@ -1,5 +1,15 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26 — Riwayat Tugas: nilai dan status tugas yang dibagikan guru
+
+- **Baru:** halaman `riwayat-tugas.html`, dibuka dari baris «Riwayat Tugas» di Beranda (bagian «Yang dibagikan sekolah»). Menampilkan per tugas: judul, mata pelajaran, tanggal dibagikan, nilai, predikat, dan status («Sudah dinilai», «Perlu perbaikan», «Belum ada nilai»). Ada filter mata pelajaran bila lebih dari satu.
+- **Isi sengaja hanya nilai dan status.** Tidak ada catatan guru, poin perbaikan, bukti, ranking, atau rata-rata.
+- `assets/firebase.js`: fungsi baru `loadRiwayatTugasAnak(siswaId)` (hanya menambah ekspor; ekspor lain tidak berubah). Membaca `lms_tugas_hasil_ortu` dengan `siswaId == anak` dan `published == true`.
+- `beranda.html`: satu baris hub baru + `?v=` firebase.js dinaikkan ke `20261126a`. Sidebar dan bottom-nav TIDAK berubah (tetap 5 menu + Keluar), halaman baru memakai menu yang sama dengan «Beranda» aktif.
+- Sumber data ditulis oleh aplikasi LMS (tombol «Bagikan ke orang tua» di Daftar nilai tugas). Sebelum guru membagikan, halaman menampilkan «Belum ada tugas yang dibagikan guru.»
+- **Deploy:** deploy `firestore.rules` terbaru dulu (koleksi baru `lms_tugas_hasil_ortu`), lalu hosting portal.
+- Antiregresi: §19.
+
 ## 2026-11-22 — 5 Besar Capaian: aturan peringkat disamakan dengan Leger STS
 
 - **Sebab:** peringkat dihitung dari rata-rata nilai akhir yang dibulatkan 1 desimal dan menerima siswa dengan jumlah mapel berbeda, berbeda dari Leger STS (jumlah nilai, hanya mapel lengkap).

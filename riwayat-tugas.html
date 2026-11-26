@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#313083">
+  <title>Riwayat Tugas — Portal Orang Tua</title>
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    .child-line { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .child-av {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: var(--muh-50); color: var(--muh-700);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; flex-shrink: 0;
+    }
+    .child-name { font-size: 14px; font-weight: 600; color: #0f172a; }
+    .child-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    .rt-note {
+      background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-card);
+      padding: 10px 12px; font-size: 12.5px; color: var(--muted); line-height: 1.45; margin-bottom: 14px;
+    }
+    .rt-note strong { color: #0f172a; }
+    .rt-filter { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .rt-filter label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+    .rt-filter select {
+      border: 1px solid var(--border); border-radius: var(--radius-control);
+      padding: 7px 10px; background: var(--surface); color: var(--ink); min-width: 12rem; max-width: 100%;
+    }
+    .rt-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 14px; border-bottom: 1px solid var(--border);
+    }
+    .rt-row:last-child { border-bottom: none; }
+    .rt-main { min-width: 0; flex: 1; }
+    .rt-title { font-size: 14px; font-weight: 600; color: #0f172a; overflow-wrap: anywhere; }
+    .rt-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .rt-side { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .rt-skor { text-align: right; min-width: 3.2rem; }
+    .rt-nilai { font-size: 18px; font-weight: 700; color: var(--muh-700); line-height: 1.1; }
+    .rt-pred { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+    .rt-kosong { padding: 22px 14px; text-align: center; font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .rt-back { display: inline-block; margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--muh-700); text-decoration: none; }
+    .rt-back:hover { text-decoration: underline; }
+    @media (max-width: 480px) {
+      .rt-row { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .rt-side { width: 100%; justify-content: space-between; }
+      .rt-skor { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-frame">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="sidebar-brand" href="beranda.html">
+          <img src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
+          <div>
+            <div class="sidebar-brand-title">SDM 01 Kukusan</div>
+            <div class="sidebar-brand-sub">Portal Orang Tua</div>
+          </div>
+        </a>
+        <p class="sidebar-section">Menu</p>
+        <nav style="flex:1">
+          <a class="side-link active" href="beranda.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+            Beranda
+          </a>
+          <a class="side-link" href="rapor-sts.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Rapor STS
+          </a>
+          <a class="side-link" href="capaian.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+            Ringkasan Capaian
+          </a>
+          <a class="side-link" href="tryout-tka.html" id="navTryOutTka">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
+            Try Out TKA
+          </a>
+          <a class="side-link" href="lima-besar.html">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
+            5 Besar Capaian
+          </a>
+        </nav>
+        <div class="hero-banner">
+          <div class="hb-label">Masuk sebagai</div>
+          <div class="hb-name" id="sideNama">—</div>
+          <div class="hb-role">Orang tua</div>
+        </div>
+        <button type="button" class="side-logout" id="btnLogoutSide">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+          Keluar
+        </button>
+      </aside>
+
+      <div class="main-col">
+        <header class="top-header">
+          <div>
+            <h1>Riwayat Tugas</h1>
+            <p class="date" id="tanggalHari">—</p>
+          </div>
+          <div class="top-actions">
+            <div class="avatar-btn" id="avatarInisial">—</div>
+            <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <main class="main-body">
+          <div class="main-inner">
+            <div class="page-header">
+              <h2>Riwayat tugas</h2>
+              <p>Nilai dan status tugas ananda yang sudah dibagikan oleh guru.</p>
+            </div>
+
+            <div class="child-line">
+              <div class="child-av" id="childAv">—</div>
+              <div>
+                <div class="child-name" id="profilNama">—</div>
+                <div class="child-meta" id="profilMeta">—</div>
+              </div>
+            </div>
+
+            <div class="rt-note">
+              <strong>Yang tampil di sini:</strong> hanya nilai dan status tugas. Tugas baru muncul setelah guru membagikannya,
+              dan nilai bisa berubah bila guru membagikan ulang. Rapor resmi tetap di halaman Rapor STS.
+            </div>
+
+            <div class="stat-strip" id="statStrip">
+              <div>
+                <div class="label">Tugas dibagikan</div>
+                <div class="value" id="statJumlah" style="font-size:16px;padding-top:4px">…</div>
+              </div>
+              <div>
+                <div class="label">Sudah ada nilai</div>
+                <div class="value" id="statNilai" style="font-size:16px;padding-top:4px">…</div>
+              </div>
+            </div>
+
+            <div class="rt-filter" id="rtFilter" hidden>
+              <label for="rtMapel">Mata pelajaran</label>
+              <select id="rtMapel"><option value="">Semua</option></select>
+            </div>
+
+            <section class="card-soft hub-panel">
+              <h3 class="hub-panel-title">Daftar tugas</h3>
+              <div id="rtList"><div class="rt-kosong">Memuat riwayat tugas…</div></div>
+            </section>
+
+            <a class="rt-back" href="beranda.html">← Kembali ke Beranda</a>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="active" href="beranda.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+      Beranda
+    </a>
+    <a href="rapor-sts.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Rapor
+    </a>
+    <a href="capaian.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+      Capaian
+    </a>
+    <a href="tryout-tka.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
+      TKA
+    </a>
+    <a href="lima-besar.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
+      5 Besar
+    </a>
+    <button type="button" id="btnLogoutNav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+      Keluar
+    </button>
+  </nav>
+
+  <script type="module">
+    import {
+      currentSession,
+      logout,
+      loadSiswaByIds,
+      loadRiwayatTugasAnak,
+    } from './assets/firebase.js?v=20261126a';
+
+    const $ = (id) => document.getElementById(id);
+    const STATUS = {
+      dinilai: { label: 'Sudah dinilai', cls: 'badge-ok' },
+      perbaikan: { label: 'Perlu perbaikan', cls: 'badge-pending' },
+      belum: { label: 'Belum ada nilai', cls: 'badge-neutral' },
+    };
+    let semua = [];
+
+    $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    }).format(new Date());
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function inisial(nama) {
+      if (!nama) return '?';
+      const p = nama.trim().split(/\s+/);
+      return p.length === 1
+        ? p[0].slice(0, 2).toUpperCase()
+        : (p[0][0] + p[p.length - 1][0]).toUpperCase();
+    }
+    const fmtNilai = (n) => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(n);
+    const fmtTanggal = (ms) => ms
+      ? new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(ms))
+      : '';
+
+    async function doLogout() {
+      await logout();
+      location.href = 'index.html';
+    }
+    $('btnLogoutSide').onclick = doLogout;
+    $('btnLogoutTop').onclick = doLogout;
+    $('btnLogoutNav').onclick = doLogout;
+
+    function gambar() {
+      const mapel = $('rtMapel').value;
+      const daftar = mapel ? semua.filter((x) => x.mapel === mapel) : semua;
+      const box = $('rtList');
+      if (!semua.length) {
+        box.innerHTML = '<div class="rt-kosong">Belum ada tugas yang dibagikan guru.<br>Tugas akan muncul di sini setelah guru membagikannya.</div>';
+        return;
+      }
+      if (!daftar.length) {
+        box.innerHTML = '<div class="rt-kosong">Tidak ada tugas untuk mata pelajaran ini.</div>';
+        return;
+      }
+      box.innerHTML = daftar.map((x) => {
+        const st = STATUS[x.status] || STATUS.belum;
+        const adaNilai = typeof x.nilai === 'number';
+        const meta = [x.mapel, fmtTanggal(x.publishedAtMs)].filter(Boolean).map(escapeHtml).join(' · ');
+        return `<div class="rt-row">
+          <div class="rt-main">
+            <div class="rt-title">${escapeHtml(x.judul)}</div>
+            <div class="rt-meta">${meta}</div>
+          </div>
+          <div class="rt-side">
+            <div class="rt-skor">
+              <div class="rt-nilai">${adaNilai ? escapeHtml(fmtNilai(x.nilai)) : '—'}</div>
+              ${adaNilai && x.predikat ? `<div class="rt-pred">Predikat ${escapeHtml(x.predikat)}</div>` : ''}
+            </div>
+            <span class="badge ${st.cls}">${escapeHtml(st.label)}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function boot() {
+      const s = currentSession();
+      if (!s || s.role !== 'orangtua') {
+        location.href = 'index.html';
+        return;
+      }
+      $('sideNama').textContent = s.nama || 'Orang tua';
+      const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
+      if (!aktifId) {
+        $('rtList').innerHTML = '<div class="rt-kosong">Data anak tidak ditemukan. Silakan masuk kembali.</div>';
+        return;
+      }
+
+      try {
+        const list = await loadSiswaByIds([aktifId]);
+        const anak = list[0] || { nama: s.siswaNama || aktifId, kelas: s.siswaKelas || '', nis: '' };
+        const ini = inisial(anak.nama);
+        $('childAv').textContent = ini;
+        $('avatarInisial').textContent = ini;
+        $('profilNama').textContent = anak.nama || '—';
+        $('profilMeta').textContent = [
+          anak.kelas ? `Kelas ${anak.kelas}` : null,
+          anak.nis ? `NIS ${anak.nis}` : null,
+        ].filter(Boolean).join(' · ') || 'Data siswa';
+      } catch (_) {}
+
+      try {
+        const hasil = await loadRiwayatTugasAnak(aktifId);
+        semua = hasil.items || [];
+        $('statJumlah').textContent = String(semua.length);
+        $('statNilai').textContent = String(semua.filter((x) => typeof x.nilai === 'number').length);
+        const mapelList = [...new Set(semua.map((x) => x.mapel).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'id'));
+        if (mapelList.length > 1) {
+          $('rtMapel').innerHTML = '<option value="">Semua</option>' +
+            mapelList.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('');
+          $('rtFilter').hidden = false;
+          $('rtMapel').onchange = gambar;
+        }
+        gambar();
+      } catch (err) {
+        console.error(err);
+        $('statJumlah').textContent = '—';
+        $('statNilai').textContent = '—';
+        $('rtList').innerHTML = '<div class="rt-kosong">Riwayat tugas belum dapat dimuat. Coba lagi beberapa saat.</div>';
+      }
+    }
+    boot();
+  </script>
+</body>
+</html>

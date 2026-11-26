@@ -160,3 +160,14 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - `loadLimaBesarCapaian` meranking dari JUMLAH nilai akhir mapel (bukan rata-rata terbulat), hanya siswa dengan jumlah mapel terbanyak di kelas; seri = peringkat sama. Siswa yang belum lengkap tidak diperingkat dan jumlahnya ditampilkan (`infoKelas`).
 - Aturan ini harus identik dengan Leger STS (repo SDM01Penilaian, ANTIREGRESI §Peringkat-STS). Ubah keduanya sekaligus.
 - **Tes:** kelas dengan satu siswa kehilangan 1 mapel → siswa itu tidak masuk daftar walau rata-ratanya tertinggi; keterangan «n siswa belum diperingkat» tampil.
+
+## §19 Riwayat Tugas: hanya nilai dan status, hanya membaca salinan `lms_tugas_hasil_ortu`
+
+- `riwayat-tugas.html` + `loadRiwayatTugasAnak` hanya membaca `lms_tugas_hasil_ortu` (`siswaId == anak`, `published == true`). Jangan membaca `lms_nilai_tugas`, `lms_pengumpulan`, atau `lms_tugas` dari portal, dan jangan membuka rules koleksi itu untuk guest.
+- Hanya tampilkan nilai, predikat, status, judul, mapel, tanggal. Jangan menambah catatan guru, poin perbaikan, bukti, rata-rata, atau perbandingan antar siswa. Portal tidak menghitung nilai apa pun (sejalan dengan §8, §11, §15).
+- Label status ada di `STATUS` pada `riwayat-tugas.html` (`dinilai`, `perbaikan`, `belum`). Status tak dikenal dianggap `belum`. Bila LMS menambah status, ubah juga `loadRiwayatTugasAnak` dan `STATUS`. Status selalu berupa teks (bukan hanya warna).
+- Semua teks dinamis wajib lewat `escapeHtml` (judul tugas ditulis guru).
+- Halaman ini bukan item menu baru: dibuka dari baris hub di `beranda.html`. Sidebar dan bottom-nav (§16) JANGAN ditambah item ke-7; bottom-nav sudah berisi 6 item. Halaman memakai menu yang identik dengan «Beranda» aktif.
+- Kelas CSS halaman ini berawalan `.rt-*` dan hanya di `<style>` `riwayat-tugas.html`; `style.css` bersama tidak diubah.
+- `?v=` firebase.js dinaikkan hanya di `beranda.html` dan `riwayat-tugas.html` (`20261126a`) karena hanya keduanya yang memakai ekspor baru. Perubahan firebase.js ini murni menambah ekspor, jadi halaman lain yang masih memakai `?v=` lama tidak terpengaruh. Bila suatu saat ekspor lama diubah, naikkan `?v=` di semua halaman (§5).
+- **Tes:** (1) belum ada yang dibagikan → «Belum ada tugas yang dibagikan guru.», Beranda dan halaman lain normal; (2) guru membagikan → tugas muncul dengan nilai dan status; (3) guru menarik → tugas hilang; (4) dua mapel → filter muncul, satu mapel → filter tersembunyi; (5) lebar 320, 360, ≥768px tanpa scroll horizontal; (6) judul tugas berisi `<b>` tampil sebagai teks; (7) tombol Keluar di sidebar, header, dan bottom-nav kembali ke login (§13).

@@ -1496,3 +1496,57 @@ export function isKelasEnamTka(kelas) {
   const k = String(kelas || '').toUpperCase();
   return k === '6A' || k === '6B';
 }
+
+
+/* ========== Riwayat Tugas (snapshot nilai + status yang dibagikan guru) ========== */
+
+/**
+ * Muat riwayat tugas anak dari `lms_tugas_hasil_ortu` (ditulis LMS saat guru menekan «Bagikan ke orang tua»).
+ * Hanya dokumen `published === true` milik `siswaId`. Portal HANYA membaca: tidak menghitung nilai
+ * apa pun dan tidak menyentuh koleksi tugas mentah LMS (lms_nilai_tugas, lms_pengumpulan).
+ * Isi dokumen sengaja terbatas pada nilai dan status (ANTIREGRESI §19).
+ * @returns {Promise<{items: Array}>} items diurutkan dari yang terbaru dibagikan.
+ */
+export async function loadRiwayatTugasAnak(siswaId) {
+  if (!siswaId) return { items: [] };
+
+  if (DEMO_MODE) {
+    const now = Date.now();
+    return {
+      items: [
+        { id: 'demo1', tugasId: 'demo1', judul: 'Poster Daur Air', mapel: 'IPAS', kelas: '5A', nilai: 88, predikat: 'A-', status: 'dinilai', publishedAtMs: now - 86400000 },
+        { id: 'demo2', tugasId: 'demo2', judul: 'Menulis Teks Prosedur', mapel: 'Bahasa Indonesia', kelas: '5A', nilai: 72, predikat: 'B-', status: 'perbaikan', publishedAtMs: now - 3 * 86400000 },
+        { id: 'demo3', tugasId: 'demo3', judul: 'Latihan Pecahan', mapel: 'Matematika', kelas: '5A', nilai: null, predikat: '', status: 'belum', publishedAtMs: now - 5 * 86400000 },
+      ],
+    };
+  }
+
+  const { db, fsMod } = window.__fb;
+  const q = fsMod.query(
+    fsMod.collection(db, 'lms_tugas_hasil_ortu'),
+    fsMod.where('siswaId', '==', siswaId),
+    fsMod.where('published', '==', true)
+  );
+  const snap = await fsMod.getDocs(q);
+  const STATUS_OK = ['dinilai', 'perbaikan', 'belum'];
+  const items = snap.docs.map((d) => {
+    const x = d.data();
+    let ms = 0;
+    if (x.publishedAt) {
+      ms = typeof x.publishedAt.toMillis === 'function' ? x.publishedAt.toMillis() : Number(new Date(x.publishedAt)) || 0;
+    }
+    return {
+      id: d.id,
+      tugasId: String(x.tugasId || ''),
+      judul: String(x.judul || 'Tugas'),
+      mapel: String(x.mapel || ''),
+      kelas: String(x.kelas || ''),
+      nilai: typeof x.nilai === 'number' ? x.nilai : null,
+      predikat: typeof x.predikat === 'string' ? x.predikat : '',
+      status: STATUS_OK.includes(x.status) ? x.status : 'belum',
+      publishedAtMs: ms,
+    };
+  });
+  items.sort((a, b) => b.publishedAtMs - a.publishedAtMs || a.judul.localeCompare(b.judul, 'id'));
+  return { items };
+}

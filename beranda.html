@@ -130,6 +130,16 @@
                     <div class="hub-row-desc" id="tkaDesc">Khusus kelas 6 — nilai setelah wali mempublikasikan</div>
                   </div>
                 </a>
+                <a class="hub-row" href="riwayat-tugas.html" id="hubRiwayatTugas">
+                  <div class="icon-tile">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                  </div>
+                  <div class="hub-row-body">
+                    <div class="hub-row-title">Riwayat Tugas</div>
+                    <div class="hub-row-desc">Nilai dan status tugas yang dibagikan guru</div>
+                  </div>
+                  <span class="badge badge-brand">Tugas</span>
+                </a>
                 <a class="hub-row" href="capaian.html">
                   <div class="icon-tile">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
@@ -211,7 +221,7 @@
       logout,
       loadSiswaByIds,
       loadRaporStsResmi,
-    } from './assets/firebase.js?v=20261029r';
+    } from './assets/firebase.js?v=20261126a';
 
     const $ = (id) => document.getElementById(id);
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
