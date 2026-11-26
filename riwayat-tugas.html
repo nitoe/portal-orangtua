@@ -68,7 +68,7 @@
             <div class="sidebar-brand-sub">Portal Orang Tua</div>
           </div>
         </a>
-                <p class="sidebar-section">Menu</p>
+                        <p class="sidebar-section">Menu</p>
         <nav style="flex:1">
           <a class="side-link" href="beranda.html">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
@@ -82,7 +82,11 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
             SAS
           </a>
-          <a class="side-link" href="tryout-tka.html" id="navTryOutTka">
+          <a class="side-link active" href="riwayat-tugas.html" id="navRiwayatBelajar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+            Riwayat Belajar
+          </a>
+          <a class="side-link hidden" href="tryout-tka.html" id="navTryOutTka">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
             Try Out TKA
           </a>
@@ -160,8 +164,8 @@
     </div>
   </div>
 
-    <nav class="bottom-nav">
-    <a class="active" href="beranda.html">
+      <nav class="bottom-nav">
+    <a href="beranda.html">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
       Beranda
     </a>
@@ -169,7 +173,11 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       STS
     </a>
-    <a href="tryout-tka.html" id="navTryOutTkaBottom">
+    <a class="active" href="riwayat-tugas.html" id="navRiwayatBelajarBottom">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+      Riwayat
+    </a>
+    <a class="hidden" href="tryout-tka.html" id="navTryOutTkaBottom">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
       TKA
     </a>
@@ -255,11 +263,14 @@
     }
 
     
-    function hideTkaMenu() {
+    function showTkaMenu() {
       const nav = document.getElementById('navTryOutTka');
-      if (nav) nav.classList.add('hidden');
+      if (nav) nav.classList.remove('hidden');
       const navB = document.getElementById('navTryOutTkaBottom');
-      if (navB) navB.classList.add('hidden');
+      if (navB) navB.classList.remove('hidden');
+    }
+    function applyTkaVisibility(kelas) {
+      if (/^6[AB]$/i.test(String(kelas || ''))) showTkaMenu();
     }
 
     async function boot() {
@@ -269,6 +280,8 @@
         return;
       }
       $('sideNama').textContent = s.nama || 'Orang tua';
+      // Tampilkan TKA segera dari session (hindari FOUC)
+      applyTkaVisibility(s.siswaKelas);
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
         $('rtList').innerHTML = '<div class="rt-kosong">Data anak tidak ditemukan. Silakan masuk kembali.</div>';
@@ -278,8 +291,7 @@
       try {
         const list = await loadSiswaByIds([aktifId]);
         const anak = list[0] || { nama: s.siswaNama || aktifId, kelas: s.siswaKelas || '', nis: '' };
-        const isKelas6 = /^6[AB]$/i.test(String(anak.kelas || ''));
-        if (!isKelas6) hideTkaMenu();
+        applyTkaVisibility(anak.kelas || '');
 
         const ini = inisial(anak.nama);
         $('childAv').textContent = ini;

@@ -1,5 +1,14 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26d — TKA tanpa FOUC + menu Riwayat Belajar
+
+- **FOUC menu TKA diperbaiki.** Menu Try Out TKA (sidebar, bottom-nav, hub Beranda) sekarang **tersembunyi secara default** di HTML (`class="hidden"`). JS hanya *menampilkan* menu jika kelas anak 6A/6B (`showTkaMenu` / `applyTkaVisibility`), bukan menyembunyikan setelah tampil. Pengecekan pertama memakai `session.siswaKelas` secara sinkron agar tidak ada kedipan.
+- **Menu Riwayat Belajar** ditambahkan di sidebar (di bawah SAS) dan bottom-nav. Saat ini mengarah ke `riwayat-tugas.html` (nilai & status tugas). Nantinya menjadi payung tahsin/tahfizh, tugas, dan kuis.
+- Struktur menu: Beranda · STS · SAS (disabled) · Riwayat Belajar · Try Out TKA (hanya kelas 6).
+- File: `beranda.html`, `rapor-sts.html`, `capaian.html`, `lima-besar.html`, `riwayat-tugas.html`, `tryout-tka.html`.
+- Antiregresi: §20 diperbarui, §22.
+
+
 ## 2026-11-26c — Menu STS digabung + placeholder SAS
 
 - **Sidebar & bottom-nav disederhanakan.** Tiga item terpisah («Rapor STS», «Ringkasan Capaian», «5 Besar Capaian») diganti menjadi **satu menu STS**.

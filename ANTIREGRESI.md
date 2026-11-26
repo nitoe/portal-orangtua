@@ -174,7 +174,7 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 
 ## §20 Menu Try Out TKA hanya untuk kelas 6
 
-- Menu «Try Out TKA» (sidebar `#navTryOutTka`, bottom-nav `#navTryOutTkaBottom`, baris hub Beranda `#hubTryOutTka`) **wajib disembunyikan** bila kelas anak bukan `6A` atau `6B`.
+- Menu «Try Out TKA» (sidebar `#navTryOutTka`, bottom-nav `#navTryOutTkaBottom`, baris hub Beranda `#hubTryOutTka`) **wajib tersembunyi secara default** di HTML (`class="hidden"`). JS hanya *menampilkan* (`showTkaMenu` / `applyTkaVisibility`) bila kelas `6A`/`6B`. Jangan `hide` setelah render — itu menyebabkan FOUC (menu muncul sebentar lalu hilang).
 - Pengecekan: `/^6[AB]$/i.test(String(anak.kelas || ''))` setelah `loadSiswaByIds` (atau fallback dari session).
 - Fungsi `hideTkaMenu()` dipanggil di boot setiap halaman yang memuat menu: `beranda`, `rapor-sts`, `capaian`, `lima-besar`, `riwayat-tugas`, `tryout-tka`.
 - Jangan mengandalkan peringatan di dalam halaman saja — menu tidak boleh muncul sama sekali untuk non-kelas 6.
@@ -189,3 +189,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Menu **SAS** memakai kelas `side-link-disabled` + `aria-disabled="true"`; jangan diaktifkan sebelum halaman SAS siap.
 - Bottom-nav: Beranda, STS, TKA (id `navTryOutTkaBottom`), Keluar. Jangan menambah kembali item Capaian / 5 Besar di bottom-nav.
 - **Tes:** (1) sidebar hanya 3–4 item (TKA hilang di non-kelas 6); (2) buka Rapor → tab Rapor aktif, klik Capaian → pindah halaman, tab Capaian aktif, side-link STS tetap aktif; (3) SAS tidak bisa diklik; (4) bottom-nav tidak overflow di 360px.
+
+## §22 Menu Riwayat Belajar + urutan sidebar
+
+- Sidebar wajib berurutan: **Beranda → STS → SAS (disabled) → Riwayat Belajar → Try Out TKA (hidden by default)**.
+- «Riwayat Belajar» (`#navRiwayatBelajar`) mengarah ke `riwayat-tugas.html` untuk tahap ini. Jangan menghapus item ini dari sidebar/bottom-nav.
+- Bottom-nav: Beranda · STS · Riwayat · TKA (hidden by default) · Keluar.
+- Saat halaman `riwayat-tugas.html` aktif, side-link dan bottom-nav Riwayat memakai kelas `active`.
+- **Tes FOUC TKA:** hard-refresh sebagai orang tua kelas 5A → menu TKA tidak pernah terlihat (bahkan 1 frame). Kelas 6A → menu TKA muncul tanpa kedipan.
+- **Tes Riwayat:** klik «Riwayat Belajar» di sidebar → `riwayat-tugas.html`, item menu aktif.
