@@ -236,3 +236,9 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Padding `.main-body` mobile ~12–16px; desktop ~18–22px (bukan 28px+ yang membuat konten “mengambang”).
 - **Tes PC:** buka Riwayat → daftar tugas hampir full lebar kolom; sidebar gelap + konten sejajar tanpa lautan putih.
 - **Tes mobile (~390px):** filter+stat tidak overflow; baris tugas stack (judul lalu nilai/badge); bottom-nav tidak menutupi tombol terakhir (padding-bottom body ≥88px).
+
+## §28 Full-bleed — jangan center shell
+
+- Dilarang mengembalikan `max-width` + `margin: 0 auto` pada `.app-shell` / `.app-frame` yang membuat portal mengambang di tengah saat zoom-out atau monitor lebar.
+- Layout: sidebar tetap lebar tetap; `.main-col` + `.main-inner` mengisi sisa viewport (`max-width: none` kecuali `.main-inner--narrow` sengaja).
+- **Tes:** zoom browser 67% atau 50% di monitor lebar → konten tetap menempel kiri (setelah sidebar), tidak mengerucut ke tengah layar.

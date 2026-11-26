@@ -1,5 +1,14 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26j — Full-bleed layout (anti mengerucut saat zoom-out)
+
+- **Gejala:** semakin kecil zoom / layar lebar, UI semakin ke tengah dengan void kiri-kanan (shell `max-width` + `margin: auto` + frame padding).
+- **Perbaikan:** `.app-frame` / `.app-shell` full-bleed (`max-width: none`, tanpa card mengambang). `.main-inner` mengisi lebar kolom. Sidebar sticky full viewport height.
+- Cache CSS `?v=20261126j`.
+- File: `assets/style.css` + cache-bust semua HTML portal.
+- Antiregresi: §28.
+
+
 ## 2026-11-26i — Densitas layout + responsif PC/mobile
 
 - **Ruang kosong dikurangi.** Padding body/header diperketat; konten memakai lebar kolom penuh di desktop (bukan max 720px di tengah yang menyisakan void).
