@@ -112,9 +112,9 @@
 
         <main class="main-body">
           <div class="main-inner">
-            <div class="page-header">
-              <h2>Riwayat tugas</h2>
-              <p>Nilai dan status tugas ananda yang sudah dibagikan oleh guru.</p>
+            <div class="page-intro">
+              <h2>Riwayat Tugas</h2>
+              <p>Nilai dan status tugas yang dibagikan guru. Bagian dari menu Riwayat Belajar.</p>
             </div>
 
             <div class="child-line">
@@ -148,7 +148,7 @@
 
             <section class="card-soft hub-panel">
               <h3 class="hub-panel-title">Daftar tugas</h3>
-              <div id="rtList"><div class="rt-kosong">Memuat riwayat tugas…</div></div>
+              <div id="rtList"><div class="rt-kosong empty-state">Memuat riwayat tugas…</div></div>
             </section>
 
             <a class="rt-back" href="beranda.html">← Kembali ke Beranda</a>
@@ -188,9 +188,7 @@
       loadSiswaByIds,
       loadRiwayatTugasAnak,
     } from './assets/firebase.js?v=20261126a';
-    import { applyTkaVisibility } from './assets/shell-nav.js?v=20261126e';
-
-    const $ = (id) => document.getElementById(id);
+    import { initShell, applyTkaVisibility, inisial, $ } from './assets/shell-nav.js?v=20261126e';
     const STATUS = {
       dinilai: { label: 'Sudah dinilai', cls: 'badge-ok' },
       perbaikan: { label: 'Perlu perbaikan', cls: 'badge-pending' },
@@ -230,11 +228,19 @@
       const daftar = mapel ? semua.filter((x) => x.mapel === mapel) : semua;
       const box = $('rtList');
       if (!semua.length) {
-        box.innerHTML = '<div class="rt-kosong">Belum ada tugas yang dibagikan guru.<br>Tugas akan muncul di sini setelah guru membagikannya.</div>';
+        box.innerHTML = `<div class="empty-state">
+          <div class="empty-state-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <h2>Belum ada tugas</h2>
+          <p>Guru belum membagikan nilai tugas ke portal. Cek kembali nanti.</p>
+          <a class="empty-action" href="beranda.html">← Kembali ke Beranda</a>
+        </div>`;
         return;
       }
       if (!daftar.length) {
-        box.innerHTML = '<div class="rt-kosong">Tidak ada tugas untuk mata pelajaran ini.</div>';
+        box.innerHTML = `<div class="empty-state">
+          <h2>Tidak ada tugas</h2>
+          <p>Tidak ada tugas untuk mata pelajaran yang dipilih.</p>
+        </div>`;
         return;
       }
       box.innerHTML = daftar.map((x) => {
@@ -258,17 +264,11 @@
     }
 
     async function boot() {
-      const s = currentSession();
-      if (!s || s.role !== 'orangtua') {
-        location.href = 'index.html';
-        return;
-      }
-      $('sideNama').textContent = s.nama || 'Orang tua';
-      // Tampilkan TKA segera dari session (hindari FOUC)
-      applyTkaVisibility(s.siswaKelas);
+      const s = initShell();
+      if (!s) return;
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
-        $('rtList').innerHTML = '<div class="rt-kosong">Data anak tidak ditemukan. Silakan masuk kembali.</div>';
+        $('rtList').innerHTML = '<div class="rt-kosong empty-state">Data anak tidak ditemukan. Silakan masuk kembali.</div>';
         return;
       }
 
@@ -304,7 +304,7 @@
         console.error(err);
         $('statJumlah').textContent = '—';
         $('statNilai').textContent = '—';
-        $('rtList').innerHTML = '<div class="rt-kosong">Riwayat tugas belum dapat dimuat. Coba lagi beberapa saat.</div>';
+        $('rtList').innerHTML = '<div class="rt-kosong empty-state">Riwayat tugas belum dapat dimuat. Coba lagi beberapa saat.</div>';
       }
     }
     boot();

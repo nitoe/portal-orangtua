@@ -1,5 +1,16 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26g — Polish STS + Riwayat (selaras Beranda)
+
+- **Empty state seragam.** Rapor STS, Capaian, dan Riwayat Tugas memakai pola `.empty-state` (ikon, judul, teks, aksi kembali) di `assets/style.css`, bukan kotak generik.
+- **Boot shell:** `rapor-sts`, `capaian`, `lima-besar`, `riwayat-tugas` memakai `initShell` dari `shell-nav.js` (logout, tanggal, TKA anti-FOUC).
+- **Riwayat:** intro halaman dirapikan; empty «Belum ada tugas» lebih jelas.
+- **STS menunggu jadwal:** countdown tetap ada, dibungkus empty-state.
+- File: `rapor-sts.html`, `capaian.html`, `lima-besar.html`, `riwayat-tugas.html`, `assets/style.css`, CHANGELOG, ANTIREGRESI.
+- Tidak mengubah logika data/query rapor atau tugas.
+- Antiregresi: §25.
+
+
 ## 2026-11-26f — Polish Beranda (wajah portal)
 
 - **Beranda tidak lagi tampil generik.** Salam waktu (pagi/siang/sore/malam) + nama panggilan orang tua; kartu anak dengan aksen merek; kartu status Rapor STS (tersedia / menunggu) dengan aksi «Buka rapor».

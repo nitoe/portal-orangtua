@@ -257,7 +257,7 @@
             <a class="sts-tab active" href="lima-besar.html" role="tab" aria-selected="true">5 Besar</a>
           </div>
 <div class="main-inner" id="mainContent">
-            <p style="color:var(--muted);font-size:13px">Memuat…</p>
+            <div class="empty-state"><p class="empty-desc">Memuat 5 besar capaian…</p></div>
           </div>
         </main>
       </div>
@@ -294,9 +294,7 @@
       loadSiswaByIds,
       loadLimaBesarCapaian,
     } from './assets/firebase.js';
-    import { applyTkaVisibility } from './assets/shell-nav.js?v=20261126e';
-
-    const $ = (id) => document.getElementById(id);
+    import { initShell, applyTkaVisibility, inisial, $ } from './assets/shell-nav.js?v=20261126e';
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
     }).format(new Date());
@@ -540,14 +538,8 @@
     }
 
     async function boot() {
-      const s = currentSession();
-      if (!s || s.role !== 'orangtua') {
-        location.href = 'index.html';
-        return;
-      }
-      $('sideNama').textContent = s.nama || 'Orang tua';
-      // Tampilkan TKA segera dari session (hindari FOUC)
-      applyTkaVisibility(s.siswaKelas);
+      const s = initShell();
+      if (!s) return;
       anakId = s.siswaAktifId || (s.anakIds && s.anakIds[0]) || '';
       let namaAnak = s.siswaNama || '';
       anakKelas = s.siswaKelas || '';

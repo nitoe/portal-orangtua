@@ -214,3 +214,10 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Elemen identitas: `#salamHari`, `#salamNama`, `#childAv`, `#profilNama`, `#profilMeta`, `#statusCard` / `#statStatus` / `#statPeriode`, hub STS + capaian + 5 besar + (TKA conditional) + riwayat tugas.
 - Status rapor: kelas `is-ok` / `is-wait` / `is-neutral` pada `#statusCard` harus selaras dengan badge hub (`badge-ok` / `badge-pending`).
 - **Tes:** login ortu → salam sesuai waktu; kartu anak terisi; status STS hijau jika published, kuning jika belum; menu TKA tetap tanpa FOUC (§20/§22/§23).
+
+## §25 Empty state + initShell di halaman STS/Riwayat
+
+- Halaman `rapor-sts`, `capaian`, `lima-besar`, `riwayat-tugas` wajib memanggil `initShell()` (bukan hanya `applyTkaVisibility` manual + wiring logout sendiri).
+- Empty/waiting memakai kelas `.empty-state` dari `assets/style.css` (opsional `.empty-state-icon` / `.wait`). Jangan mengembalikan `.wait-box` generik untuk state kosong utama; countdown jadwal rilis STS boleh tetap di dalam empty-state.
+- Setelah `loadSiswaByIds`, panggil lagi `applyTkaVisibility(anak.kelas)` agar kelas aktual menang.
+- **Tes:** (1) rapor belum publish → empty-state + teks ramah + link Beranda; (2) ada jadwal → countdown tampil; (3) riwayat tanpa tugas → empty-state «Belum ada tugas»; (4) hard-refresh non-kelas 6 → TKA tidak kedip.

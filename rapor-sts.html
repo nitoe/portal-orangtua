@@ -195,7 +195,7 @@
             <a class="sts-tab" href="lima-besar.html" role="tab" aria-selected="false">5 Besar</a>
           </div>
 <div class="main-inner" id="mainContent">
-            <div class="wait-box"><p>Memuat rapor…</p></div>
+            <div class="empty-state"><p class="empty-desc">Memuat rapor STS…</p></div>
           </div>
         </main>
       </div>
@@ -232,10 +232,8 @@
       loadSiswaByIds,
       loadRaporStsResmi,
     } from './assets/firebase.js?v=20261029s';
-    import { applyTkaVisibility } from './assets/shell-nav.js?v=20261126e';
+    import { initShell, applyTkaVisibility, inisial, $ } from './assets/shell-nav.js?v=20261126e';
     import { dokumenRaporSts, cetakRaporSts } from './assets/rapor-resmi.js?v=20261029q';
-
-    const $ = (id) => document.getElementById(id);
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
     }).format(new Date());
@@ -254,9 +252,11 @@
     }
     function renderWaiting(pesan) {
       $('mainContent').innerHTML = `
-        <div class="wait-box">
+        <div class="empty-state">
+          <div class="empty-state-icon wait" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
           <h2>Rapor STS belum tersedia</h2>
           <p>${pesan}</p>
+          <a class="empty-action" href="beranda.html">← Kembali ke Beranda</a>
         </div>`;
     }
 
@@ -291,17 +291,11 @@
     document.getElementById('btnLogoutNav')?.addEventListener('click', doLogout);
 
     async function boot() {
-      const s = currentSession();
-      if (!s || s.role !== 'orangtua') {
-        location.href = 'index.html';
-        return;
-      }
-      $('sideNama').textContent = s.nama || 'Orang tua';
-      // Tampilkan TKA segera dari session (hindari FOUC)
-      applyTkaVisibility(s.siswaKelas);
+      const s = initShell();
+      if (!s) return;
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
-        $('mainContent').innerHTML = `<div class="wait-box"><h2>Data anak tidak ditemukan</h2></div>`;
+        $('mainContent').innerHTML = `<div class="empty-state"><div class="empty-state-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><h2>Data anak tidak ditemukan</h2><p>Silakan masuk kembali dari halaman login.</p><a class="empty-action" href="index.html">Ke login</a></div>`;
         return;
       }
       let anak = {
@@ -315,7 +309,6 @@
           anak = { id: list[0].id, nama: list[0].nama, kelas: list[0].kelas || '' };
         }
       } catch (_) {}
-      $('avatarInisial')
       $('avatarInisial').textContent = inisial(anak.nama);
       applyTkaVisibility(anak.kelas || '');
 
@@ -326,7 +319,8 @@
             const target = new Date(result.jadwalAt);
             const periode = result.periodeLabel ? ` ${result.periodeLabel}` : '';
             $('mainContent').innerHTML = `
-              <div class="wait-box">
+              <div class="empty-state">
+                <div class="empty-state-icon wait" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
                 <h2>Rapor STS belum tersedia</h2>
                 <p>Rapor STS${periode} dijadwalkan akan dibuka pada <strong>${escapeHtml(result.jadwalLabel)}</strong>.</p>
                 <div class="countdown">
@@ -363,7 +357,7 @@
         renderResmi(result.rapor);
       } catch (err) {
         console.error(err);
-        $('mainContent').innerHTML = `<div class="wait-box"><h2>Gagal memuat rapor</h2><p>Periksa koneksi. Jika baru saja diperbarui, pastikan rules Firestore koleksi rapor_sts_ortu sudah di-deploy.</p></div>`;
+        $('mainContent').innerHTML = `<div class="empty-state"><div class="empty-state-icon wait" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h2>Gagal memuat rapor</h2><p>Periksa koneksi. Jika baru saja diperbarui, pastikan rules Firestore sudah di-deploy.</p><a class="empty-action" href="beranda.html">← Kembali ke Beranda</a></div>`;
       }
     }
 

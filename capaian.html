@@ -257,7 +257,7 @@
             <a class="sts-tab" href="lima-besar.html" role="tab" aria-selected="false">5 Besar</a>
           </div>
 <div class="main-inner" id="mainContent">
-            <div class="wait-box"><p>Memuat ringkasan…</p></div>
+            <div class="empty-state"><p class="empty-desc">Memuat ringkasan capaian…</p></div>
           </div>
         </main>
       </div>
@@ -294,9 +294,7 @@
       loadSiswaByIds,
       loadRaporStsResmi,
     } from './assets/firebase.js?v=20261029p';
-    import { applyTkaVisibility } from './assets/shell-nav.js?v=20261126e';
-
-    const $ = (id) => document.getElementById(id);
+    import { initShell, applyTkaVisibility, inisial, $ } from './assets/shell-nav.js?v=20261126e';
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
     }).format(new Date());
@@ -344,10 +342,11 @@
 
     function renderWaiting(pesan) {
       $('mainContent').innerHTML = `
-        <div class="wait-box">
-          <h2>Ringkasan belum siap</h2>
+        <div class="empty-state">
+          <div class="empty-state-icon wait" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h2>Ringkasan belum tersedia</h2>
           <p>${pesan}</p>
-          <p style="margin-top:8px;font-size:13px;color:var(--muted)">Rapor STS resmi tetap dapat dilihat di halaman Rapor STS setelah dipublikasikan.</p>
+          <a class="empty-action" href="beranda.html">← Kembali ke Beranda</a>
         </div>`;
     }
 
@@ -472,17 +471,11 @@
     }
 
     async function boot() {
-      const s = currentSession();
-      if (!s || s.role !== 'orangtua') {
-        location.href = 'index.html';
-        return;
-      }
-      $('sideNama').textContent = s.nama || 'Orang tua';
-      // Tampilkan TKA segera dari session (hindari FOUC)
-      applyTkaVisibility(s.siswaKelas);
+      const s = initShell();
+      if (!s) return;
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
-        $('mainContent').innerHTML = `<div class="wait-box"><h2>Data ananda tidak ditemukan</h2></div>`;
+        $('mainContent').innerHTML = `<div class="empty-state"><h2>Data ananda tidak ditemukan</h2><p>Silakan masuk kembali dari halaman login.</p><a class="empty-action" href="index.html">Ke login</a></div>`;
         return;
       }
       let anak = {
