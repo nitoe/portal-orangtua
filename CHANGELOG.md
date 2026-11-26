@@ -1,5 +1,15 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26h — Overhaul visual (fondasi + Beranda)
+
+- **Bukan polish tipis.** `assets/style.css` diganti: sidebar gelap merek, shell berbingkai di desktop, tipografi lebih berat, bayangan/radius baru, tab STS solid, empty-state dengan CTA primer.
+- **Beranda dibangun ulang:** hero salam + kartu anak di panel merek; status rapor sebagai kartu aksi; grid kartu fitur (bukan daftar baris datar).
+- Logika data, `shell-nav.js`, filter TKA, dan alur login **tidak diubah**.
+- Halaman STS/Riwayat/TKA otomatis memakai chrome shell baru lewat CSS; konten dalamnya menyusul fase overhaul berikutnya.
+- File: `assets/style.css`, `beranda.html`, CHANGELOG, ANTIREGRESI.
+- Antiregresi: §26.
+
+
 ## 2026-11-26g1 — Hotfix: inisial double-declare di STS/Riwayat
 
 - **Gejala:** `rapor-sts.html` (dan halaman serupa) error `Identifier 'inisial' has already been declared` karena `inisial` diimpor dari `shell-nav.js` sekaligus didefinisikan lokal.

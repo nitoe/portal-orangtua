@@ -221,3 +221,10 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Empty/waiting memakai kelas `.empty-state` dari `assets/style.css` (opsional `.empty-state-icon` / `.wait`). Jangan mengembalikan `.wait-box` generik untuk state kosong utama; countdown jadwal rilis STS boleh tetap di dalam empty-state.
 - Setelah `loadSiswaByIds`, panggil lagi `applyTkaVisibility(anak.kelas)` agar kelas aktual menang.
 - **Tes:** (1) rapor belum publish → empty-state + teks ramah + link Beranda; (2) ada jadwal → countdown tampil; (3) riwayat tanpa tugas → empty-state «Belum ada tugas»; (4) hard-refresh non-kelas 6 → TKA tidak kedip.
+
+## §26 Overhaul visual — fondasi CSS + Beranda
+
+- `assets/style.css` overhaul: sidebar gelap (`--muh-900`/`--muh-800`), `.app-shell` max-width + radius desktop, token bayangan/radius baru. Jangan mengembalikan sidebar putih datar tanpa keputusan desain ulang.
+- Beranda: struktur hero (`.home-hero`), `.status-card`, `.feature-grid` / `.feature-card`. ID JS wajib tetap ada (`salamHari`, `salamNama`, `childAv`, `profilNama`, `statusCard`, `stsBadge`, `hubTryOutTka`, dll.).
+- Cache-bust: `style.css?v=20261126h` di Beranda; naikkan `?v=` di halaman lain saat mereka ikut overhaul.
+- **Tes:** desktop → sidebar gelap + shell berbingkai; mobile → bottom-nav; kelas 5A → TKA tetap hidden tanpa FOUC; rapor published → status hijau + badge Tersedia.
