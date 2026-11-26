@@ -207,3 +207,10 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - CSS `.side-link-disabled` dan `.sts-tabs` hanya di `assets/style.css`, bukan di `<style>` halaman.
 - Saat menambah halaman ortu baru: salin shell dari `beranda.html`, set `active` pada side-link/bottom-nav yang sesuai, impor `applyTkaVisibility`.
 - **Tes:** buka keenam halaman → sidebar dan bottom-nav sama urutannya; hard-refresh kelas 5A → TKA tidak kedip; kelas 6A → TKA muncul; pindah STS antar tab → side-link STS tetap aktif.
+
+## §24 Beranda sebagai wajah portal
+
+- `beranda.html` wajib memakai `initShell` dari `assets/shell-nav.js` (tanggal, logout, TKA dari session). Jangan mengembalikan wiring logout/TKA manual yang menduplikasi shell.
+- Elemen identitas: `#salamHari`, `#salamNama`, `#childAv`, `#profilNama`, `#profilMeta`, `#statusCard` / `#statStatus` / `#statPeriode`, hub STS + capaian + 5 besar + (TKA conditional) + riwayat tugas.
+- Status rapor: kelas `is-ok` / `is-wait` / `is-neutral` pada `#statusCard` harus selaras dengan badge hub (`badge-ok` / `badge-pending`).
+- **Tes:** login ortu → salam sesuai waktu; kartu anak terisi; status STS hijau jika published, kuning jika belum; menu TKA tetap tanpa FOUC (§20/§22/§23).

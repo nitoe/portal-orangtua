@@ -1,5 +1,14 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26f — Polish Beranda (wajah portal)
+
+- **Beranda tidak lagi tampil generik.** Salam waktu (pagi/siang/sore/malam) + nama panggilan orang tua; kartu anak dengan aksen merek; kartu status Rapor STS (tersedia / menunggu) dengan aksi «Buka rapor».
+- Hub dipisah dua panel: «Laporan & capaian» dan «Aktivitas belajar» agar hierarki jelas.
+- Boot memakai `initShell` + `inisial` dari `assets/shell-nav.js` (tanpa duplikasi logout/tanggal/TKA FOUC).
+- File: `beranda.html`. Shell di halaman lain tidak diubah pada langkah ini.
+- Antiregresi: §23.
+
+
 ## 2026-11-26e — Standarisasi template shell HTML
 
 - **Satu pola shell** di semua halaman ortu: `aside.sidebar` (brand → Menu → hero-banner → Keluar), `header.top-header` (judul + tanggal + avatar + logout), `nav.bottom-nav` (Beranda · STS · Riwayat · TKA · Keluar).
