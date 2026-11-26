@@ -1,5 +1,12 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26g1 — Hotfix: inisial double-declare di STS/Riwayat
+
+- **Gejala:** `rapor-sts.html` (dan halaman serupa) error `Identifier 'inisial' has already been declared` karena `inisial` diimpor dari `shell-nav.js` sekaligus didefinisikan lokal.
+- **Perbaikan:** hapus `function inisial` lokal di `rapor-sts`, `capaian`, `lima-besar`, `riwayat-tugas`; pakai ekspor shell saja. Hapus juga `doLogout` lokal yang redundan (sudah di-wire `initShell`).
+- File: empat HTML di atas.
+
+
 ## 2026-11-26g — Polish STS + Riwayat (selaras Beranda)
 
 - **Empty state seragam.** Rapor STS, Capaian, dan Riwayat Tugas memakai pola `.empty-state` (ikon, judul, teks, aksi kembali) di `assets/style.css`, bukan kotak generik.

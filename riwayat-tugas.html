@@ -203,27 +203,12 @@
     function escapeHtml(s) {
       return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
-    function inisial(nama) {
-      if (!nama) return '?';
-      const p = nama.trim().split(/\s+/);
-      return p.length === 1
-        ? p[0].slice(0, 2).toUpperCase()
-        : (p[0][0] + p[p.length - 1][0]).toUpperCase();
-    }
+
     const fmtNilai = (n) => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 }).format(n);
     const fmtTanggal = (ms) => ms
       ? new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(ms))
       : '';
-
-    async function doLogout() {
-      await logout();
-      location.href = 'index.html';
-    }
-    $('btnLogoutSide').onclick = doLogout;
-    $('btnLogoutTop').onclick = doLogout;
-    $('btnLogoutNav').onclick = doLogout;
-
-    function gambar() {
+function gambar() {
       const mapel = $('rtMapel').value;
       const daftar = mapel ? semua.filter((x) => x.mapel === mapel) : semua;
       const box = $('rtList');

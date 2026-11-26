@@ -299,13 +299,7 @@
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
     }).format(new Date());
 
-    function inisial(nama) {
-      if (!nama) return '?';
-      const p = nama.trim().split(/\s+/);
-      return p.length === 1
-        ? p[0].slice(0, 2).toUpperCase()
-        : (p[0][0] + p[p.length - 1][0]).toUpperCase();
-    }
+
     function escapeHtml(s) {
       return String(s || '')
         .replace(/&/g, '&').replace(/</g, '<')
@@ -526,15 +520,7 @@
       });
       render();
     }
-
-    async function doLogout() {
-      await logout();
-      location.href = 'index.html';
-    }
-    document.getElementById('btnLogoutSide')?.addEventListener('click', doLogout);
-    document.getElementById('btnLogoutTop')?.addEventListener('click', doLogout);
-    document.getElementById('btnLogoutNav')?.addEventListener('click', doLogout);
-    boot();
+boot();
   </script>
 </body>
 </html>
