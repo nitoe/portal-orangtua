@@ -248,3 +248,8 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Sidebar desktop: `min-height: 100vh` + `.sidebar-footer` membungkus hero-banner + tombol Keluar dengan `margin-top: auto`. Jangan biarkan blok «Masuk sebagai» mengambang di tengah tinggi nav.
 - Salam Beranda wajib memuat **Assalamu'alaikum** (sekolah Islam). Jangan menampilkan panggilan «Orang» dari string sesi «Orang tua · …».
 - **Tes:** viewport tinggi / konten pendek → sidebar gelap sampai bawah layar; footer sidebar di dasar. Login dengan nama sesi berisi «Orang tua · Fairel…» → judul «Selamat …, Fairel» (atau nama anak), bukan «Orang».
+
+### §29b Sidebar fixed (wajib)
+
+- Desktop (≥900px): `.sidebar` **wajib** `position: fixed; left: 0; top: 0; bottom: 0; height: 100dvh` (bukan hanya sticky/min-height). `.main-col` wajib `margin-left: var(--sidebar-w)`.
+- **Tes:** scroll atau konten pendek → tidak ada strip putih di bawah tombol Keluar; kolom kiri gelap sampai tepi bawah jendela browser.

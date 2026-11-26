@@ -1,5 +1,14 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26l — Sidebar fixed full-height (hilangkan strip putih)
+
+- **Gejala:** masih ada area putih di bawah blok «Masuk sebagai / Keluar» pada kolom sidebar.
+- **Perbaikan:** sidebar desktop `position: fixed; top/bottom: 0; height: 100dvh` — kolom gelap selalu menutupi tinggi viewport. `.main-col` mendapat `margin-left: var(--sidebar-w)`. Body desktop memakai warna merek di belakang agar tidak ada flash putih.
+- Cache `?v=20261126l`.
+- File: `assets/style.css` + cache-bust HTML.
+- Antiregresi: §29 dilengkapi.
+
+
 ## 2026-11-26k — Sidebar full-height + salam Islami
 
 - **Sidebar:** min-height 100vh, footer (Masuk sebagai + Keluar) dipin ke bawah lewat `.sidebar-footer { margin-top: auto }` — tidak ada strip putih di bawah sidebar.

@@ -111,15 +111,46 @@ a { color: inherit; }
   background: linear-gradient(180deg, var(--muh-900) 0%, var(--muh-800) 55%, #1a1a48 100%);
   color: #e8eaf8;
   padding: 20px 14px 16px;
-  position: sticky;
-  top: 0;
-  align-self: stretch;
-  min-height: 100vh;
-  max-height: 100vh;
+  overflow-x: hidden;
   overflow-y: auto;
+  box-sizing: border-box;
 }
+/* Desktop: fixed penuh tinggi viewport — tidak ada strip putih di bawah */
 @media (min-width: 900px) {
-  .sidebar { display: flex; }
+  .sidebar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    max-height: none;
+    z-index: 50;
+  }
+  .main-col {
+    margin-left: var(--sidebar-w);
+    width: calc(100% - var(--sidebar-w));
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .app-shell {
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  /* Cegah flash putih di kiri saat overscroll */
+  body {
+    background: var(--muh-900);
+  }
+  .app-frame {
+    background: var(--surface-2);
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
 }
 .sidebar-brand {
   display: flex;
@@ -250,6 +281,14 @@ a { color: inherit; }
   display: flex;
   flex-direction: column;
   background: var(--surface-2);
+}
+@media (min-width: 900px) {
+  .main-col {
+    margin-left: var(--sidebar-w);
+    width: calc(100% - var(--sidebar-w));
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
 }
 .top-header {
   position: sticky;
