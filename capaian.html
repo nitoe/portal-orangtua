@@ -272,7 +272,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
       Capaian
     </a>
-    <a href="tryout-tka.html">
+    <a href="tryout-tka.html" id="navTryOutTkaBottom">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
       TKA
     </a>
@@ -469,6 +469,14 @@
       });
     }
 
+    
+    function hideTkaMenu() {
+      const nav = document.getElementById('navTryOutTka');
+      if (nav) nav.classList.add('hidden');
+      const navB = document.getElementById('navTryOutTkaBottom');
+      if (navB) navB.classList.add('hidden');
+    }
+
     async function boot() {
       const s = currentSession();
       if (!s || s.role !== 'orangtua') {
@@ -493,6 +501,9 @@
         }
       } catch (_) {}
       $('avatarInisial').textContent = inisial(anak.nama);
+      const isKelas6 = /^6[AB]$/i.test(String(anak.kelas || ''));
+      if (!isKelas6) hideTkaMenu();
+
 
       const hasil = await loadRaporStsResmi(aktifId);
       if (!hasil.published) {

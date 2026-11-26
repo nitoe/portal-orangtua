@@ -1,5 +1,17 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26b — Menu Try Out TKA hanya untuk orang tua kelas 6 + polish Beranda
+
+- **Gejala:** menu «Try Out TKA» (sidebar, bottom-nav, baris hub di Beranda) selalu tampil untuk semua orang tua. Orang tua kelas non-6 yang membuka halaman mendapat peringatan kuning yang jelek («Khusus orang tua kelas 6… Anak Anda di kelas 5A»).
+- **Perbaikan:**
+  - Setelah kelas anak diketahui, menu TKA disembunyikan (`hidden`) di sidebar (`#navTryOutTka`), bottom-nav (`#navTryOutTkaBottom`), dan baris hub Beranda (`#hubTryOutTka`) bila kelas bukan 6A/6B.
+  - Empty-state di `tryout-tka.html` diganti menjadi kartu netral dengan tombol kembali ke Beranda (bukan banner kuning).
+  - Beranda diperhalus: kartu anak lebih jelas, stat-strip rapi, ikon hub konsisten SVG (bukan emoji), hierarki visual lebih baik.
+- **File:** `beranda.html`, `rapor-sts.html`, `capaian.html`, `lima-besar.html`, `riwayat-tugas.html`, `tryout-tka.html`.
+- Tidak mengubah data, query, atau `assets/firebase.js`. Logika kelas 6 tetap di `loadTryOutTkaAnak`.
+- Antiregresi: §20.
+
+
 ## 2026-11-26 — Riwayat Tugas: nilai dan status tugas yang dibagikan guru
 
 - **Baru:** halaman `riwayat-tugas.html`, dibuka dari baris «Riwayat Tugas» di Beranda (bagian «Yang dibagikan sekolah»). Menampilkan per tugas: judul, mata pelajaran, tanggal dibagikan, nilai, predikat, dan status («Sudah dinilai», «Perlu perbaikan», «Belum ada nilai»). Ada filter mata pelajaran bila lebih dari satu.

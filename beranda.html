@@ -8,18 +8,107 @@
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="stylesheet" href="assets/style.css">
   <style>
-    .child-line {
-      display: flex; align-items: center; gap: 12px;
+    .child-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
       margin-bottom: 16px;
+      box-shadow: 0 1px 2px rgba(23,23,57,.04);
     }
     .child-av {
-      width: 40px; height: 40px; border-radius: 8px;
+      width: 48px; height: 48px; border-radius: 12px;
+      background: linear-gradient(145deg, var(--muh-50), #e8eaf7);
+      color: var(--muh-700);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; flex-shrink: 0;
+      letter-spacing: -0.02em;
+    }
+    .child-name { font-size: 15px; font-weight: 700; color: #0f172a; letter-spacing: -0.01em; }
+    .child-meta { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+    .stat-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .stat-strip > div {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .stat-strip .label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+    }
+    .stat-strip .value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-top: 4px;
+      letter-spacing: -0.01em;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+      margin: 0 0 10px;
+    }
+    .hub-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(23,23,57,.04);
+    }
+    .hub-panel-title {
+      margin: 0;
+      padding: 12px 16px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .hub-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 1px solid var(--border);
+      transition: background .12s ease;
+    }
+    .hub-row:last-child { border-bottom: none; }
+    .hub-row:hover { background: var(--muh-50); }
+    .hub-row.disabled {
+      opacity: 0.55;
+      pointer-events: none;
+      cursor: default;
+    }
+    .hub-row.disabled:hover { background: transparent; }
+    .icon-tile {
+      width: 36px; height: 36px; border-radius: 10px;
       background: var(--muh-50); color: var(--muh-700);
       display: flex; align-items: center; justify-content: center;
-      font-weight: 600; font-size: 13px; flex-shrink: 0;
+      flex-shrink: 0;
     }
-    .child-name { font-size: 14px; font-weight: 600; color: #0f172a; }
-    .child-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .icon-tile.muted { background: #f1f5f9; color: #94a3b8; }
+    .hub-row-body { flex: 1; min-width: 0; }
+    .hub-row-title { font-size: 13.5px; font-weight: 600; color: #0f172a; }
+    .hub-row-desc { font-size: 12px; color: var(--muted); margin-top: 1px; line-height: 1.35; }
+    .page-header h2 { margin: 0 0 4px; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+    .page-header p { margin: 0 0 18px; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
   </style>
 </head>
 <body>
@@ -88,7 +177,7 @@
               <p>Pilih jenis laporan yang sudah dibagikan sekolah. Nantinya tidak hanya STS.</p>
             </div>
 
-            <div class="child-line">
+            <div class="child-card">
               <div class="child-av" id="childAv">—</div>
               <div>
                 <div class="child-name" id="profilNama">—</div>
@@ -99,18 +188,17 @@
             <div class="stat-strip" id="statStrip">
               <div>
                 <div class="label">Status rapor STS</div>
-                <div class="value" id="statStatus" style="font-size:16px;padding-top:4px">…</div>
+                <div class="value" id="statStatus">…</div>
               </div>
               <div>
                 <div class="label">Periode</div>
-                <div class="value" id="statPeriode" style="font-size:14px;padding-top:6px;font-weight:600">—</div>
+                <div class="value" id="statPeriode">—</div>
               </div>
             </div>
 
-            <p class="section-label" style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#64748b;margin:0 0 8px">
-              Yang dibagikan sekolah
-            </p>
-            <section class="card-soft hub-panel">
+            <p class="section-label">Yang dibagikan sekolah</p>
+
+            <section class="hub-panel">
               <h3 class="hub-panel-title">Laporan hasil belajar</h3>
               <div>
                 <a class="hub-row" href="rapor-sts.html" id="rowSts">
@@ -124,11 +212,14 @@
                   <span class="badge badge-neutral" id="stsBadge">…</span>
                 </a>
                 <a class="hub-row" href="tryout-tka.html" id="hubTryOutTka">
-                  <div class="hub-row-icon" aria-hidden="true">📊</div>
-                  <div>
-                    <div class="hub-row-title">Hasil Try Out TKA</div>
-                    <div class="hub-row-desc" id="tkaDesc">Khusus kelas 6 — nilai setelah wali mempublikasikan</div>
+                  <div class="icon-tile">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
                   </div>
+                  <div class="hub-row-body">
+                    <div class="hub-row-title">Hasil Try Out TKA</div>
+                    <div class="hub-row-desc" id="tkaDesc">Nilai BI · Matematika · IPA setelah wali mempublikasikan</div>
+                  </div>
+                  <span class="badge badge-brand">Kelas 6</span>
                 </a>
                 <a class="hub-row" href="riwayat-tugas.html" id="hubRiwayatTugas">
                   <div class="icon-tile">
@@ -152,7 +243,7 @@
                 </a>
                 <a class="hub-row" href="lima-besar.html">
                   <div class="icon-tile">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
                   </div>
                   <div class="hub-row-body">
                     <div class="hub-row-title">5 Besar Capaian</div>
@@ -201,7 +292,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
       Capaian
     </a>
-    <a href="tryout-tka.html">
+    <a href="tryout-tka.html" id="navTryOutTkaBottom">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
       TKA
     </a>
@@ -236,6 +327,15 @@
         : (p[0][0] + p[p.length - 1][0]).toUpperCase();
     }
 
+    function hideTkaMenu() {
+      const nav = $('navTryOutTka');
+      if (nav) nav.classList.add('hidden');
+      const navB = $('navTryOutTkaBottom');
+      if (navB) navB.classList.add('hidden');
+      const hub = $('hubTryOutTka');
+      if (hub) hub.classList.add('hidden');
+    }
+
     async function doLogout() {
       await logout();
       location.href = 'index.html';
@@ -254,22 +354,28 @@
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) return;
 
+      let anak = {
+        nama: s.siswaNama || aktifId,
+        kelas: s.siswaKelas || '',
+        nis: '',
+      };
       try {
         const list = await loadSiswaByIds([aktifId]);
-        const anak = list[0] || {
-          nama: s.siswaNama || aktifId,
-          kelas: s.siswaKelas || '',
-          nis: '',
-        };
-        const ini = inisial(anak.nama);
-        $('childAv').textContent = ini;
-        $('avatarInisial').textContent = ini;
-        $('profilNama').textContent = anak.nama || '—';
-        $('profilMeta').textContent = [
-          anak.kelas ? `Kelas ${anak.kelas}` : null,
-          anak.nis ? `NIS ${anak.nis}` : null,
-        ].filter(Boolean).join(' · ') || 'Data siswa';
+        if (list[0]) anak = list[0];
       } catch (_) {}
+
+      const ini = inisial(anak.nama);
+      $('childAv').textContent = ini;
+      $('avatarInisial').textContent = ini;
+      $('profilNama').textContent = anak.nama || '—';
+      $('profilMeta').textContent = [
+        anak.kelas ? `Kelas ${anak.kelas}` : null,
+        anak.nis ? `NIS ${anak.nis}` : null,
+      ].filter(Boolean).join(' · ') || 'Data siswa';
+
+      // Sembunyikan menu TKA untuk non-kelas 6
+      const isKelas6 = /^6[AB]$/i.test(String(anak.kelas || ''));
+      if (!isKelas6) hideTkaMenu();
 
       try {
         const result = await loadRaporStsResmi(aktifId);

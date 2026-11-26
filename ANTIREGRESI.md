@@ -171,3 +171,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Kelas CSS halaman ini berawalan `.rt-*` dan hanya di `<style>` `riwayat-tugas.html`; `style.css` bersama tidak diubah.
 - `?v=` firebase.js dinaikkan hanya di `beranda.html` dan `riwayat-tugas.html` (`20261126a`) karena hanya keduanya yang memakai ekspor baru. Perubahan firebase.js ini murni menambah ekspor, jadi halaman lain yang masih memakai `?v=` lama tidak terpengaruh. Bila suatu saat ekspor lama diubah, naikkan `?v=` di semua halaman (§5).
 - **Tes:** (1) belum ada yang dibagikan → «Belum ada tugas yang dibagikan guru.», Beranda dan halaman lain normal; (2) guru membagikan → tugas muncul dengan nilai dan status; (3) guru menarik → tugas hilang; (4) dua mapel → filter muncul, satu mapel → filter tersembunyi; (5) lebar 320, 360, ≥768px tanpa scroll horizontal; (6) judul tugas berisi `<b>` tampil sebagai teks; (7) tombol Keluar di sidebar, header, dan bottom-nav kembali ke login (§13).
+
+## §20 Menu Try Out TKA hanya untuk kelas 6
+
+- Menu «Try Out TKA» (sidebar `#navTryOutTka`, bottom-nav `#navTryOutTkaBottom`, baris hub Beranda `#hubTryOutTka`) **wajib disembunyikan** bila kelas anak bukan `6A` atau `6B`.
+- Pengecekan: `/^6[AB]$/i.test(String(anak.kelas || ''))` setelah `loadSiswaByIds` (atau fallback dari session).
+- Fungsi `hideTkaMenu()` dipanggil di boot setiap halaman yang memuat menu: `beranda`, `rapor-sts`, `capaian`, `lima-besar`, `riwayat-tugas`, `tryout-tka`.
+- Jangan mengandalkan peringatan di dalam halaman saja — menu tidak boleh muncul sama sekali untuk non-kelas 6.
+- Empty-state di `tryout-tka.html` (jika URL dibuka langsung) harus netral (bukan banner kuning/oranye) dan menyediakan tautan kembali ke Beranda.
+- **Tes:** login sebagai orang tua kelas 5A → sidebar dan bottom-nav tidak menampilkan TKA; baris «Hasil Try Out TKA» di Beranda hilang. Login kelas 6A → menu tetap ada. Buka `tryout-tka.html` langsung dari kelas non-6 → kartu netral + tombol kembali, tanpa menu TKA.

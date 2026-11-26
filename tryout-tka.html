@@ -160,8 +160,11 @@
     .to-kosong-ikon{width:52px;height:52px;border-radius:16px;background:var(--muh-50);color:var(--muh-600);display:grid;place-items:center;margin-bottom:4px}
     .to-kosong h2{margin:0;font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
     .to-kosong p{margin:0;max-width:34rem;font-size:13px;line-height:1.6;color:var(--muted)}
-    .to-wait{font-size:13px;color:#92400e;background:var(--attention-tint);border:1px solid #fde68a;border-radius:12px;padding:12px 14px;line-height:1.5}
-    .to-wait strong{display:block;margin-bottom:4px}
+    .to-wait{font-size:13.5px;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 22px;line-height:1.55;text-align:center;box-shadow:0 1px 3px rgba(23,23,57,.04)}
+    .to-wait strong{display:block;margin-bottom:8px;font-size:15px;font-weight:700;color:var(--muh-700)}
+    .to-wait p{margin:0 0 16px;color:var(--muted);font-size:13.5px}
+    .to-wait a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muh-700);text-decoration:none;padding:8px 14px;border-radius:8px;background:var(--muh-50);border:1px solid var(--muh-200)}
+    .to-wait a:hover{background:var(--muh-100)}
     .to-footer{margin:14px 0 24px;font-size:12px;color:var(--muted);line-height:1.5;text-align:center}
     @media(prefers-reduced-motion:reduce){.to-tile,.to-det>summary .chev,.to-top>summary .chev{transition:none}.to-tile:hover{transform:none}}
   </style>
@@ -239,7 +242,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
       Capaian
     </a>
-    <a class="active" href="tryout-tka.html">
+    <a class="active" href="tryout-tka.html" id="navTryOutTkaBottom">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
       TKA
     </a>
@@ -522,8 +525,12 @@
 
     function render(anak, data) {
       if (!data.khususKelas6) {
-        $('mainContent').innerHTML = `<div class="to-wait"><strong>Khusus orang tua kelas 6</strong>
-          Hasil Try Out TKA untuk siswa kelas 6A dan 6B. Anak Anda di kelas <strong>${escapeHtml(anak.kelas || '—')}</strong>.</div>`;
+        $('mainContent').innerHTML = `<div class="to-wait">
+          <strong>Fitur khusus kelas 6</strong>
+          <p>Hasil Try Out TKA hanya tersedia untuk siswa kelas 6A dan 6B.<br>
+          Ananda saat ini di <strong>kelas ${escapeHtml(anak.kelas || '—')}</strong>.</p>
+          <a href="beranda.html">← Kembali ke Beranda</a>
+        </div>`;
         return;
       }
 
@@ -574,6 +581,14 @@
     $('btnLogoutTop')?.addEventListener('click', doLogout);
     $('btnLogoutNav')?.addEventListener('click', doLogout);
 
+    
+    function hideTkaMenu() {
+      const nav = document.getElementById('navTryOutTka');
+      if (nav) nav.classList.add('hidden');
+      const navB = document.getElementById('navTryOutTkaBottom');
+      if (navB) navB.classList.add('hidden');
+    }
+
     async function boot() {
       const s = currentSession();
       if (!s || s.role !== 'orangtua') { location.href='index.html'; return; }
@@ -589,6 +604,8 @@
         if (list[0]) anak = { id: list[0].id, nama: list[0].nama, kelas: list[0].kelas||'' };
       } catch(_){}
       $('subAnak').textContent = `${anak.nama} · ${anak.kelas||'—'}`;
+      const isKelas6 = /^6[AB]$/i.test(String(anak.kelas || ''));
+      if (!isKelas6) hideTkaMenu();
       $('avatarInisial').textContent = inisial(anak.nama);
       try {
         const data = await loadTryOutTkaAnak(anak.id, anak.kelas);
