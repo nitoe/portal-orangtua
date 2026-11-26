@@ -1,5 +1,18 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26c — Menu STS digabung + placeholder SAS
+
+- **Sidebar & bottom-nav disederhanakan.** Tiga item terpisah («Rapor STS», «Ringkasan Capaian», «5 Besar Capaian») diganti menjadi **satu menu STS**.
+- Di dalam halaman STS (`rapor-sts.html`, `capaian.html`, `lima-besar.html`) ditambahkan **tab bar** (Rapor | Capaian | 5 Besar) agar orang tua bisa berpindah tanpa kembali ke sidebar.
+- Menu **SAS** ditambahkan sebagai placeholder disabled («Segera hadir»).
+- Bottom-nav mobile: `Beranda · STS · TKA (jika kelas 6) · Keluar` — lebih lega.
+- Try Out TKA tetap conditional kelas 6 (§20).
+- **Belum** menambah menu Riwayat Belajar (akan menyusul setelah kerangka STS stabil).
+- File: `beranda.html`, `rapor-sts.html`, `capaian.html`, `lima-besar.html`, `riwayat-tugas.html`, `tryout-tka.html`.
+- Tidak mengubah data, query, atau `assets/firebase.js`.
+- Antiregresi: §21.
+
+
 ## 2026-11-26b — Menu Try Out TKA hanya untuk orang tua kelas 6 + polish Beranda
 
 - **Gejala:** menu «Try Out TKA» (sidebar, bottom-nav, baris hub di Beranda) selalu tampil untuk semua orang tua. Orang tua kelas non-6 yang membuka halaman mendapat peringatan kuning yang jelek («Khusus orang tua kelas 6… Anak Anda di kelas 5A»).

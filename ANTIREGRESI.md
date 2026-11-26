@@ -180,3 +180,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Jangan mengandalkan peringatan di dalam halaman saja — menu tidak boleh muncul sama sekali untuk non-kelas 6.
 - Empty-state di `tryout-tka.html` (jika URL dibuka langsung) harus netral (bukan banner kuning/oranye) dan menyediakan tautan kembali ke Beranda.
 - **Tes:** login sebagai orang tua kelas 5A → sidebar dan bottom-nav tidak menampilkan TKA; baris «Hasil Try Out TKA» di Beranda hilang. Login kelas 6A → menu tetap ada. Buka `tryout-tka.html` langsung dari kelas non-6 → kartu netral + tombol kembali, tanpa menu TKA.
+
+## §21 Menu STS digabung; SAS placeholder; tab bar wajib
+
+- Sidebar hanya punya: **Beranda**, **STS**, **SAS** (disabled), **Try Out TKA** (conditional kelas 6). Jangan mengembalikan link terpisah «Rapor STS» / «Ringkasan Capaian» / «5 Besar Capaian» di sidebar atau bottom-nav.
+- Ketiga halaman STS (`rapor-sts.html`, `capaian.html`, `lima-besar.html`) **wajib** menampilkan tab bar `.sts-tabs` di atas konten (`Rapor | Capaian | 5 Besar`), di **luar** `#mainContent` agar tidak terhapus saat JS mengisi konten.
+- Menu STS di sidebar mengarah ke `rapor-sts.html` (tab default = Rapor). Kelas `active` pada side-link STS dipakai di ketiga halaman tersebut.
+- Menu **SAS** memakai kelas `side-link-disabled` + `aria-disabled="true"`; jangan diaktifkan sebelum halaman SAS siap.
+- Bottom-nav: Beranda, STS, TKA (id `navTryOutTkaBottom`), Keluar. Jangan menambah kembali item Capaian / 5 Besar di bottom-nav.
+- **Tes:** (1) sidebar hanya 3–4 item (TKA hilang di non-kelas 6); (2) buka Rapor → tab Rapor aktif, klik Capaian → pindah halaman, tab Capaian aktif, side-link STS tetap aktif; (3) SAS tidak bisa diklik; (4) bottom-nav tidak overflow di 360px.

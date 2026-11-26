@@ -190,6 +190,40 @@
       color: #0f172a;
     }
 
+  
+    /* STS tab bar */
+    .sts-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+    .sts-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background .12s, color .12s;
+    }
+    .sts-tab:hover { color: var(--ink); background: rgba(255,255,255,.7); }
+    .sts-tab.active {
+      background: var(--surface);
+      color: var(--muh-700);
+      box-shadow: 0 1px 2px rgba(23,23,57,.08);
+    }
+    .side-link-disabled {
+      opacity: 0.45;
+      pointer-events: none;
+      cursor: default;
+    }
+
   </style>
 </head>
 <body>
@@ -203,27 +237,23 @@
             <div class="sidebar-brand-sub">Portal Orang Tua</div>
           </div>
         </a>
-        <p class="sidebar-section">Menu</p>
+                <p class="sidebar-section">Menu</p>
         <nav style="flex:1">
           <a class="side-link" href="beranda.html">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
             Beranda
           </a>
-          <a class="side-link" href="rapor-sts.html">
+          <a class="side-link active" href="rapor-sts.html">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            Rapor STS
+            STS
           </a>
-          <a class="side-link" href="capaian.html">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
-            Ringkasan Capaian
+          <a class="side-link side-link-disabled" href="#" aria-disabled="true" title="Segera hadir">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg>
+            SAS
           </a>
           <a class="side-link" href="tryout-tka.html" id="navTryOutTka">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
             Try Out TKA
-          </a>
-          <a class="side-link active" href="lima-besar.html">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
-            5 Besar Capaian
           </a>
         </nav>
         <div class="hero-banner">
@@ -252,6 +282,11 @@
         </header>
 
         <main class="main-body">
+          <div class="sts-tabs" role="tablist" aria-label="Bagian STS">
+            <a class="sts-tab" href="rapor-sts.html" role="tab" aria-selected="false">Rapor</a>
+            <a class="sts-tab" href="capaian.html" role="tab" aria-selected="false">Capaian</a>
+            <a class="sts-tab active" href="lima-besar.html" role="tab" aria-selected="true">5 Besar</a>
+          </div>
           <div class="main-inner" id="mainContent">
             <p style="color:var(--muted);font-size:13px">Memuat…</p>
           </div>
@@ -260,26 +295,18 @@
     </div>
   </div>
 
-  <nav class="bottom-nav">
+    <nav class="bottom-nav">
     <a href="beranda.html">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
       Beranda
     </a>
-    <a href="rapor-sts.html">
+    <a class="active" href="rapor-sts.html">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      Rapor
-    </a>
-    <a href="capaian.html">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
-      Capaian
+      STS
     </a>
     <a href="tryout-tka.html" id="navTryOutTkaBottom">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5M4 19h16M8 17V9M12 17v-5M16 17V7" stroke-linecap="round"/></svg>
       TKA
-    </a>
-    <a class="active" href="lima-besar.html">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10l-1 7H8L7 4z"/><path d="M5 4h14"/><path d="M9 11v2a3 3 0 0 0 6 0v-2"/></svg>
-      5 Besar
     </a>
     <button type="button" id="btnLogoutNav">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
