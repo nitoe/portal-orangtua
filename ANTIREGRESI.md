@@ -242,3 +242,9 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Dilarang mengembalikan `max-width` + `margin: 0 auto` pada `.app-shell` / `.app-frame` yang membuat portal mengambang di tengah saat zoom-out atau monitor lebar.
 - Layout: sidebar tetap lebar tetap; `.main-col` + `.main-inner` mengisi sisa viewport (`max-width: none` kecuali `.main-inner--narrow` sengaja).
 - **Tes:** zoom browser 67% atau 50% di monitor lebar → konten tetap menempel kiri (setelah sidebar), tidak mengerucut ke tengah layar.
+
+## §29 Sidebar pin bawah + salam
+
+- Sidebar desktop: `min-height: 100vh` + `.sidebar-footer` membungkus hero-banner + tombol Keluar dengan `margin-top: auto`. Jangan biarkan blok «Masuk sebagai» mengambang di tengah tinggi nav.
+- Salam Beranda wajib memuat **Assalamu'alaikum** (sekolah Islam). Jangan menampilkan panggilan «Orang» dari string sesi «Orang tua · …».
+- **Tes:** viewport tinggi / konten pendek → sidebar gelap sampai bawah layar; footer sidebar di dasar. Login dengan nama sesi berisi «Orang tua · Fairel…» → judul «Selamat …, Fairel» (atau nama anak), bukan «Orang».

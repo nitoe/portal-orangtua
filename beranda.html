@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#15153a">
   <title>Beranda — Portal Orang Tua</title>
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
-  <link rel="stylesheet" href="assets/style.css?v=20261126j">
+  <link rel="stylesheet" href="assets/style.css?v=20261126k">
   <style>
     /* —— Beranda overhaul —— */
     .home-hero {
@@ -283,6 +283,7 @@
             Try Out TKA
           </a>
         </nav>
+        <div class="sidebar-footer">
         <div class="hero-banner">
           <div class="hb-label">Masuk sebagai</div>
           <div class="hb-name" id="sideNama">—</div>
@@ -292,6 +293,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
           Keluar
         </button>
+        </div>
       </aside>
 
       <div class="main-col">
@@ -311,8 +313,8 @@
         <main class="main-body">
           <div class="main-inner">
             <section class="home-hero">
-              <p class="home-greet" id="salamHari">Selamat datang</p>
-              <h2 class="home-title" id="salamNama">Portal Orang Tua</h2>
+              <p class="home-greet" id="salamHari">Assalamu&apos;alaikum</p>
+              <h2 class="home-title" id="salamNama">Selamat datang</h2>
               <p class="home-sub">Laporan belajar ananda dari SD Muhammadiyah 01 Kukusan — hanya data yang sudah dibagikan sekolah.</p>
               <div class="child-hero">
                 <div class="child-av" id="childAv">—</div>
@@ -470,15 +472,34 @@
       return 'Selamat malam';
     }
 
+    /** Ambil nama panggilan yang manusiawi (hindari "Orang" dari "Orang tua · …"). */
+    function namaPanggilanOrtu(s) {
+      let n = String(s.nama || '').trim();
+      // Buang awalan peran
+      n = n.replace(/^orang\s*tua\s*[·\-–:,|]+\s*/i, '').trim();
+      n = n.replace(/^orang\s*tua\s+/i, '').trim();
+      if (!n || /^orang$/i.test(n) || /^tua$/i.test(n)) {
+        const anak = String(s.siswaNama || '').trim();
+        if (anak) n = anak;
+        else return 'Bapak/Ibu';
+      }
+      // Satu kata pertama yang bermakna
+      const parts = n.split(/\s+/).filter(Boolean);
+      if (!parts.length) return 'Bapak/Ibu';
+      // Jangan pakai gelar pendek aneh
+      if (/^(bapak|ibu|bpk|ibu\/?bapak)$/i.test(parts[0]) && parts[1]) {
+        return parts[1];
+      }
+      return parts[0];
+    }
+
     async function boot() {
       const s = initShell();
       if (!s) return;
 
-      const namaOrtu = (s.nama || '').trim();
-      $('salamHari').textContent = salamWaktu();
-      $('salamNama').textContent = namaOrtu
-        ? namaOrtu.split(/\s+/)[0]
-        : 'Orang tua';
+      const panggilan = namaPanggilanOrtu(s);
+      $('salamHari').textContent = "Assalamu'alaikum";
+      $('salamNama').textContent = salamWaktu() + ', ' + panggilan;
 
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) return;

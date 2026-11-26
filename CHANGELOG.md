@@ -1,5 +1,15 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26k — Sidebar full-height + salam Islami
+
+- **Sidebar:** min-height 100vh, footer (Masuk sebagai + Keluar) dipin ke bawah lewat `.sidebar-footer { margin-top: auto }` — tidak ada strip putih di bawah sidebar.
+- **Salam Beranda:** baris atas `Assalamu'alaikum`; judul `Selamat pagi/siang/sore/malam, {panggilan}`.
+- **Nama panggilan:** tidak lagi mengambil kata pertama mentah dari `"Orang tua · …"` (jadi "Orang"). Membersihkan awalan peran; fallback nama anak / «Bapak/Ibu».
+- Cache CSS `?v=20261126k`.
+- File: `style.css`, semua HTML shell (footer), `beranda.html`.
+- Antiregresi: §29.
+
+
 ## 2026-11-26j — Full-bleed layout (anti mengerucut saat zoom-out)
 
 - **Gejala:** semakin kecil zoom / layar lebar, UI semakin ke tengah dengan void kiri-kanan (shell `max-width` + `margin: auto` + frame padding).
