@@ -198,3 +198,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Saat halaman `riwayat-tugas.html` aktif, side-link dan bottom-nav Riwayat memakai kelas `active`.
 - **Tes FOUC TKA:** hard-refresh sebagai orang tua kelas 5A → menu TKA tidak pernah terlihat (bahkan 1 frame). Kelas 6A → menu TKA muncul tanpa kedipan.
 - **Tes Riwayat:** klik «Riwayat Belajar» di sidebar → `riwayat-tugas.html`, item menu aktif.
+
+## §23 Template shell HTML wajib identik
+
+- Struktur shell (sidebar, top-header, bottom-nav, id elemen) **wajib sama** di: `beranda`, `rapor-sts`, `capaian`, `lima-besar`, `riwayat-tugas`, `tryout-tka`.
+- ID yang tidak boleh diubah/dihapus: `sideNama`, `avatarInisial`, `tanggalHari`, `btnLogoutSide`, `btnLogoutTop`, `btnLogoutNav`, `navTryOutTka`, `navTryOutTkaBottom`, `navRiwayatBelajar`, `navRiwayatBelajarBottom`.
+- Try Out TKA selalu `class="… hidden"` di HTML; tampilkan hanya lewat `applyTkaVisibility` dari `assets/shell-nav.js` (jangan salin fungsi hide/show ke halaman).
+- CSS `.side-link-disabled` dan `.sts-tabs` hanya di `assets/style.css`, bukan di `<style>` halaman.
+- Saat menambah halaman ortu baru: salin shell dari `beranda.html`, set `active` pada side-link/bottom-nav yang sesuai, impor `applyTkaVisibility`.
+- **Tes:** buka keenam halaman → sidebar dan bottom-nav sama urutannya; hard-refresh kelas 5A → TKA tidak kedip; kelas 6A → TKA muncul; pindah STS antar tab → side-link STS tetap aktif.

@@ -1,5 +1,16 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26e — Standarisasi template shell HTML
+
+- **Satu pola shell** di semua halaman ortu: `aside.sidebar` (brand → Menu → hero-banner → Keluar), `header.top-header` (judul + tanggal + avatar + logout), `nav.bottom-nav` (Beranda · STS · Riwayat · TKA · Keluar).
+- Urutan menu sidebar tetap: Beranda → STS → SAS (disabled) → Riwayat Belajar → Try Out TKA (`hidden` by default).
+- Judul header diseragamkan: halaman STS memakai judul **STS** + tab bar; Riwayat memakai **Riwayat Belajar**; TKA memakai **Try Out TKA**.
+- CSS utilitas shell (`.side-link-disabled`, `.sts-tabs`) dipindah ke `assets/style.css` agar tidak diduplikasi di `<style>` per halaman.
+- Modul baru `assets/shell-nav.js`: `applyTkaVisibility` / `showTkaMenu` (anti-FOUC) sebagai sumber bersama; halaman mengimpor fungsi ini, tidak menyalin logika hide/show.
+- File: keenam HTML di atas + `assets/style.css` + `assets/shell-nav.js` + CHANGELOG + ANTIREGRESI.
+- Antiregresi: §23.
+
+
 ## 2026-11-26d — TKA tanpa FOUC + menu Riwayat Belajar
 
 - **FOUC menu TKA diperbaiki.** Menu Try Out TKA (sidebar, bottom-nav, hub Beranda) sekarang **tersembunyi secara default** di HTML (`class="hidden"`). JS hanya *menampilkan* menu jika kelas anak 6A/6B (`showTkaMenu` / `applyTkaVisibility`), bukan menyembunyikan setelah tampil. Pengecekan pertama memakai `session.siswaKelas` secara sinkron agar tidak ada kedipan.

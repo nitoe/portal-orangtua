@@ -167,18 +167,12 @@
     .to-wait a:hover{background:var(--muh-100)}
     .to-footer{margin:14px 0 24px;font-size:12px;color:var(--muted);line-height:1.5;text-align:center}
     @media(prefers-reduced-motion:reduce){.to-tile,.to-det>summary .chev,.to-top>summary .chev{transition:none}.to-tile:hover{transform:none}}
-  
-    .side-link-disabled {
-      opacity: 0.45;
-      pointer-events: none;
-      cursor: default;
-    }
-  </style>
+</style>
 </head>
 <body>
   <div class="app-frame">
     <div class="app-shell">
-      <aside class="sidebar">
+            <aside class="sidebar">
         <a class="sidebar-brand" href="beranda.html">
           <img src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
           <div>
@@ -186,8 +180,8 @@
             <div class="sidebar-brand-sub">Portal Orang Tua</div>
           </div>
         </a>
-                        <p class="sidebar-section">Menu</p>
-        <nav style="flex:1">
+        <p class="sidebar-section">Menu</p>
+        <nav class="sidebar-nav" style="flex:1">
           <a class="side-link" href="beranda.html">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
             Beranda
@@ -220,14 +214,16 @@
         </button>
       </aside>
       <div class="main-col">
-        <header class="top-header">
+                <header class="top-header">
           <div>
-            <h1>Hasil Try Out TKA</h1>
-            <p class="date" id="subAnak">—</p>
+            <h1>Try Out TKA</h1>
+            <p class="date" id="tanggalHari">—</p>
           </div>
           <div class="top-actions">
             <div class="avatar-btn" id="avatarInisial">—</div>
-            <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
+            <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            </button>
           </div>
         </header>
         <main class="main-body">
@@ -235,7 +231,7 @@
         </main>
       </div>
     </div>
-      <nav class="bottom-nav">
+        <nav class="bottom-nav">
     <a href="beranda.html">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
       Beranda
@@ -260,6 +256,7 @@
   </div>
   <script type="module">
     import { currentSession, logout, loadSiswaByIds, loadTryOutTkaAnak } from './assets/firebase.js';
+    import { applyTkaVisibility } from './assets/shell-nav.js?v=20261126e';
     const $ = (id) => document.getElementById(id);
     const LABEL = { BI: 'Bahasa Indonesia', MTK: 'Matematika', IPA: 'IPA' };
 
@@ -583,16 +580,9 @@
     $('btnLogoutTop')?.addEventListener('click', doLogout);
     $('btnLogoutNav')?.addEventListener('click', doLogout);
 
-    
-    function showTkaMenu() {
-      const nav = document.getElementById('navTryOutTka');
-      if (nav) nav.classList.remove('hidden');
-      const navB = document.getElementById('navTryOutTkaBottom');
-      if (navB) navB.classList.remove('hidden');
-    }
-    function applyTkaVisibility(kelas) {
-      if (/^6[AB]$/i.test(String(kelas || ''))) showTkaMenu();
-    }
+    $('tanggalHari') && ($('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    }).format(new Date()));
 
     async function boot() {
       const s = currentSession();
@@ -610,7 +600,7 @@
         const list = await loadSiswaByIds([aktifId]);
         if (list[0]) anak = { id: list[0].id, nama: list[0].nama, kelas: list[0].kelas||'' };
       } catch(_){}
-      $('subAnak').textContent = `${anak.nama} · ${anak.kelas||'—'}`;
+      // nama/kelas ditampilkan di hero konten
       applyTkaVisibility(anak.kelas || '');
       $('avatarInisial').textContent = inisial(anak.nama);
       try {

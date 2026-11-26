@@ -189,47 +189,12 @@
       font-size: 15px;
       color: #0f172a;
     }
-
-  
-    /* STS tab bar */
-    .sts-tabs {
-      display: flex;
-      gap: 4px;
-      padding: 4px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 16px;
-    }
-    .sts-tab {
-      flex: 1;
-      text-align: center;
-      padding: 8px 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--muted);
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background .12s, color .12s;
-    }
-    .sts-tab:hover { color: var(--ink); background: rgba(255,255,255,.7); }
-    .sts-tab.active {
-      background: var(--surface);
-      color: var(--muh-700);
-      box-shadow: 0 1px 2px rgba(23,23,57,.08);
-    }
-    .side-link-disabled {
-      opacity: 0.45;
-      pointer-events: none;
-      cursor: default;
-    }
-
-  </style>
+</style>
 </head>
 <body>
   <div class="app-frame">
     <div class="app-shell">
-      <aside class="sidebar">
+            <aside class="sidebar">
         <a class="sidebar-brand" href="beranda.html">
           <img src="assets/logo.png" alt="" onerror="this.style.visibility='hidden'">
           <div>
@@ -237,8 +202,8 @@
             <div class="sidebar-brand-sub">Portal Orang Tua</div>
           </div>
         </a>
-                        <p class="sidebar-section">Menu</p>
-        <nav style="flex:1">
+        <p class="sidebar-section">Menu</p>
+        <nav class="sidebar-nav" style="flex:1">
           <a class="side-link" href="beranda.html">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
             Beranda
@@ -272,9 +237,9 @@
       </aside>
 
       <div class="main-col">
-        <header class="top-header">
+                <header class="top-header">
           <div>
-            <h1>5 Besar Capaian</h1>
+            <h1>STS</h1>
             <p class="date" id="tanggalHari">—</p>
           </div>
           <div class="top-actions">
@@ -286,12 +251,12 @@
         </header>
 
         <main class="main-body">
-          <div class="sts-tabs" role="tablist" aria-label="Bagian STS">
+                    <div class="sts-tabs" role="tablist" aria-label="Bagian STS">
             <a class="sts-tab" href="rapor-sts.html" role="tab" aria-selected="false">Rapor</a>
             <a class="sts-tab" href="capaian.html" role="tab" aria-selected="false">Capaian</a>
             <a class="sts-tab active" href="lima-besar.html" role="tab" aria-selected="true">5 Besar</a>
           </div>
-          <div class="main-inner" id="mainContent">
+<div class="main-inner" id="mainContent">
             <p style="color:var(--muted);font-size:13px">Memuat…</p>
           </div>
         </main>
@@ -299,7 +264,7 @@
     </div>
   </div>
 
-      <nav class="bottom-nav">
+        <nav class="bottom-nav">
     <a href="beranda.html">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
       Beranda
@@ -329,6 +294,7 @@
       loadSiswaByIds,
       loadLimaBesarCapaian,
     } from './assets/firebase.js';
+    import { applyTkaVisibility } from './assets/shell-nav.js?v=20261126e';
 
     const $ = (id) => document.getElementById(id);
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
@@ -571,17 +537,6 @@
           render();
         });
       });
-    }
-
-    
-    function showTkaMenu() {
-      const nav = document.getElementById('navTryOutTka');
-      if (nav) nav.classList.remove('hidden');
-      const navB = document.getElementById('navTryOutTkaBottom');
-      if (navB) navB.classList.remove('hidden');
-    }
-    function applyTkaVisibility(kelas) {
-      if (/^6[AB]$/i.test(String(kelas || ''))) showTkaMenu();
     }
 
     async function boot() {
