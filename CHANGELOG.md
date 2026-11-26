@@ -1,5 +1,16 @@
 # Changelog — Portal Orang Tua
 
+## 2026-11-26i — Densitas layout + responsif PC/mobile
+
+- **Ruang kosong dikurangi.** Padding body/header diperketat; konten memakai lebar kolom penuh di desktop (bukan max 720px di tengah yang menyisakan void).
+- **Grid statistik** 2 kolom padat (`stat-strip`); callout & chip anak lebih compact.
+- **Riwayat Tugas** disusun ulang: toolbar (stat + filter), daftar tugas full-width, tipografi list lebih rapat; mobile stack nilai/status dengan rapi.
+- **Beranda:** hero & kartu fitur lebih padat; di PC grid fitur 3 kolom.
+- Shell max-width 1320px. Cache CSS `?v=20261126i`.
+- File: `assets/style.css`, `beranda.html`, `riwayat-tugas.html`, + cache-bust di halaman STS/TKA.
+- Antiregresi: §27.
+
+
 ## 2026-11-26h — Overhaul visual (fondasi + Beranda)
 
 - **Bukan polish tipis.** `assets/style.css` diganti: sidebar gelap merek, shell berbingkai di desktop, tipografi lebih berat, bayangan/radius baru, tab STS solid, empty-state dengan CTA primer.

@@ -6,50 +6,76 @@
   <meta name="theme-color" content="#313083">
   <title>Riwayat Tugas — Portal Orang Tua</title>
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v=20261126i">
   <style>
-    .child-line { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .child-av {
-      width: 40px; height: 40px; border-radius: 8px;
-      background: var(--muh-50); color: var(--muh-700);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 600; font-size: 13px; flex-shrink: 0;
+    .rt-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 16px;
+      margin-bottom: 12px;
     }
-    .child-name { font-size: 14px; font-weight: 600; color: #0f172a; }
-    .child-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
-
-    .rt-note {
-      background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius-card);
-      padding: 10px 12px; font-size: 12.5px; color: var(--muted); line-height: 1.45; margin-bottom: 14px;
+    .rt-toolbar .stat-strip {
+      margin: 0;
+      flex: 1 1 200px;
     }
-    .rt-note strong { color: #0f172a; }
-    .rt-filter { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-    .rt-filter label { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+    .rt-filter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .rt-filter label { font-size: 12.5px; font-weight: 650; color: var(--muted); }
     .rt-filter select {
-      border: 1px solid var(--border); border-radius: var(--radius-control);
-      padding: 7px 10px; background: var(--surface); color: var(--ink); min-width: 12rem; max-width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      background: var(--surface);
+      color: var(--ink);
+      min-width: 10rem;
+      max-width: 100%;
     }
     .rt-row {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 12px 14px; border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 14px;
+      align-items: center;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
     }
     .rt-row:last-child { border-bottom: none; }
-    .rt-main { min-width: 0; flex: 1; }
-    .rt-title { font-size: 14px; font-weight: 600; color: #0f172a; overflow-wrap: anywhere; }
+    .rt-title { font-size: 14px; font-weight: 700; color: var(--ink); overflow-wrap: anywhere; }
     .rt-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .rt-side { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .rt-skor { text-align: right; min-width: 3.2rem; }
-    .rt-nilai { font-size: 18px; font-weight: 700; color: var(--muh-700); line-height: 1.1; }
-    .rt-pred { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
-    .rt-kosong { padding: 22px 14px; text-align: center; font-size: 13px; color: var(--muted); line-height: 1.5; }
-    .rt-back { display: inline-block; margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--muh-700); text-decoration: none; }
+    .rt-side {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .rt-skor { text-align: right; min-width: 2.8rem; }
+    .rt-nilai { font-size: 18px; font-weight: 800; color: var(--muh-700); line-height: 1.1; }
+    .rt-pred { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .rt-back {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--muh-700);
+      text-decoration: none;
+    }
     .rt-back:hover { text-decoration: underline; }
-    @media (max-width: 480px) {
-      .rt-row { align-items: flex-start; flex-direction: column; gap: 8px; }
-      .rt-side { width: 100%; justify-content: space-between; }
+    @media (max-width: 520px) {
+      .rt-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .rt-side { justify-content: space-between; width: 100%; }
       .rt-skor { text-align: left; }
     }
-</style>
+    @media (min-width: 900px) {
+      .rt-list-panel { max-width: 100%; }
+    }
+  </style>
 </head>
 <body>
   <div class="app-frame">
@@ -114,41 +140,41 @@
           <div class="main-inner">
             <div class="page-intro">
               <h2>Riwayat Tugas</h2>
-              <p>Nilai dan status tugas yang dibagikan guru. Bagian dari menu Riwayat Belajar.</p>
+              <p>Nilai dan status tugas yang dibagikan guru.</p>
             </div>
 
-            <div class="child-line">
-              <div class="child-av" id="childAv">—</div>
+            <div class="child-chip">
+              <div class="child-chip-av" id="childAv">—</div>
               <div>
-                <div class="child-name" id="profilNama">—</div>
-                <div class="child-meta" id="profilMeta">—</div>
+                <div class="child-chip-name" id="profilNama">—</div>
+                <div class="child-chip-meta" id="profilMeta">—</div>
               </div>
             </div>
 
-            <div class="rt-note">
-              <strong>Yang tampil di sini:</strong> hanya nilai dan status tugas. Tugas baru muncul setelah guru membagikannya,
-              dan nilai bisa berubah bila guru membagikan ulang. Rapor resmi tetap di halaman Rapor STS.
+            <div class="info-callout">
+              <strong>Catatan:</strong> hanya nilai &amp; status. Muncul setelah guru membagikan. Rapor resmi ada di menu STS.
             </div>
 
-            <div class="stat-strip" id="statStrip">
-              <div>
-                <div class="label">Tugas dibagikan</div>
-                <div class="value" id="statJumlah" style="font-size:16px;padding-top:4px">…</div>
+            <div class="rt-toolbar">
+              <div class="stat-strip stat-strip--2" id="statStrip">
+                <div>
+                  <div class="label">Tugas dibagikan</div>
+                  <div class="value" id="statJumlah">…</div>
+                </div>
+                <div>
+                  <div class="label">Sudah ada nilai</div>
+                  <div class="value" id="statNilai">…</div>
+                </div>
               </div>
-              <div>
-                <div class="label">Sudah ada nilai</div>
-                <div class="value" id="statNilai" style="font-size:16px;padding-top:4px">…</div>
+              <div class="rt-filter" id="rtFilter" hidden>
+                <label for="rtMapel">Mapel</label>
+                <select id="rtMapel"><option value="">Semua</option></select>
               </div>
             </div>
 
-            <div class="rt-filter" id="rtFilter" hidden>
-              <label for="rtMapel">Mata pelajaran</label>
-              <select id="rtMapel"><option value="">Semua</option></select>
-            </div>
-
-            <section class="card-soft hub-panel">
+            <section class="card-soft hub-panel rt-list-panel">
               <h3 class="hub-panel-title">Daftar tugas</h3>
-              <div id="rtList"><div class="rt-kosong empty-state">Memuat riwayat tugas…</div></div>
+              <div id="rtList"><div class="empty-state"><p class="empty-desc">Memuat riwayat tugas…</p></div></div>
             </section>
 
             <a class="rt-back" href="beranda.html">← Kembali ke Beranda</a>

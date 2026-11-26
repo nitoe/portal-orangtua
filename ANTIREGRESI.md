@@ -228,3 +228,11 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 - Beranda: struktur hero (`.home-hero`), `.status-card`, `.feature-grid` / `.feature-card`. ID JS wajib tetap ada (`salamHari`, `salamNama`, `childAv`, `profilNama`, `statusCard`, `stsBadge`, `hubTryOutTka`, dll.).
 - Cache-bust: `style.css?v=20261126h` di Beranda; naikkan `?v=` di halaman lain saat mereka ikut overhaul.
 - **Tes:** desktop → sidebar gelap + shell berbingkai; mobile → bottom-nav; kelas 5A → TKA tetap hidden tanpa FOUC; rapor published → status hijau + badge Tersedia.
+
+## §27 Densitas & lebar konten
+
+- Di desktop (≥900px) `.main-inner` **tidak** dibatasi 720px di tengah — konten mengisi kolom utama agar tidak ada void putih besar.
+- `.stat-strip` default 2 kolom; gunakan `.stat-strip--2` bila hanya dua metrik. Jangan menumpuk metrik vertikal satu-satu dengan margin besar.
+- Padding `.main-body` mobile ~12–16px; desktop ~18–22px (bukan 28px+ yang membuat konten “mengambang”).
+- **Tes PC:** buka Riwayat → daftar tugas hampir full lebar kolom; sidebar gelap + konten sejajar tanpa lautan putih.
+- **Tes mobile (~390px):** filter+stat tidak overflow; baris tugas stack (judul lalu nilai/badge); bottom-nav tidak menutupi tombol terakhir (padding-bottom body ≥88px).

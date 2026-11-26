@@ -6,13 +6,13 @@
   <meta name="theme-color" content="#15153a">
   <title>Beranda — Portal Orang Tua</title>
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
-  <link rel="stylesheet" href="assets/style.css?v=20261126h">
+  <link rel="stylesheet" href="assets/style.css?v=20261126i">
   <style>
     /* —— Beranda overhaul —— */
     .home-hero {
-      margin: -4px 0 20px;
-      padding: 22px 20px 20px;
-      border-radius: 20px;
+      margin: 0 0 14px;
+      padding: 16px 16px 14px;
+      border-radius: 16px;
       background:
         radial-gradient(ellipse 90% 80% at 100% 0%, rgba(255,255,255,.14), transparent 50%),
         linear-gradient(145deg, #1f1f50 0%, #313083 48%, #3d3c9a 100%);
@@ -39,14 +39,14 @@
       opacity: 0.75;
     }
     .home-title {
-      margin: 6px 0 0;
-      font-size: 26px;
+      margin: 4px 0 0;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.035em;
       line-height: 1.15;
     }
     .home-sub {
-      margin: 8px 0 0;
+      margin: 6px 0 0;
       font-size: 13.5px;
       line-height: 1.45;
       opacity: 0.82;
@@ -56,9 +56,9 @@
     .child-hero {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-top: 18px;
-      padding: 12px 14px;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 10px 12px;
       border-radius: 14px;
       background: rgba(0,0,0,.18);
       border: 1px solid rgba(255,255,255,.12);
@@ -99,12 +99,12 @@
     .status-card {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 16px 16px;
-      border-radius: 16px;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
       border: 1px solid var(--border);
       background: var(--surface);
-      margin-bottom: 22px;
+      margin-bottom: 14px;
       box-shadow: var(--shadow-sm);
     }
     .status-card.is-ok {
@@ -168,7 +168,7 @@
       align-items: baseline;
       justify-content: space-between;
       gap: 12px;
-      margin: 0 0 12px;
+      margin: 0 0 8px;
     }
     .section-head h3 {
       margin: 0;
@@ -182,25 +182,28 @@
     .feature-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
     @media (min-width: 520px) {
       .feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 900px) {
+      .feature-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
     }
     .feature-card {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding: 16px;
-      border-radius: 16px;
+      padding: 14px;
+      border-radius: 14px;
       background: var(--surface);
       border: 1px solid var(--border);
       text-decoration: none;
       color: inherit;
       box-shadow: var(--shadow-sm);
       transition: border-color 0.12s, box-shadow 0.12s, transform 0.12s;
-      min-height: 124px;
+      min-height: 0;
     }
     .feature-card:hover {
       border-color: var(--muh-200);
