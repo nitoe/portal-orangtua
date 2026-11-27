@@ -253,3 +253,12 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 
 - Desktop (≥900px): `.sidebar` **wajib** `position: fixed; left: 0; top: 0; bottom: 0; height: 100dvh` (bukan hanya sticky/min-height). `.main-col` wajib `margin-left: var(--sidebar-w)`.
 - **Tes:** scroll atau konten pendek → tidak ada strip putih di bawah tombol Keluar; kolom kiri gelap sampai tepi bawah jendela browser.
+
+## §30 Riwayat Tugas: tenggat & status pengumpulan (2026-11-27)
+
+1. Sumber data tetap **hanya** `lms_tugas_hasil_ortu` yang `published == true`. Jangan query `lms_tugas` / `lms_pengumpulan` dari portal (rules tidak membuka akses guest).
+2. Field baru opsional: `tenggat` (timestamp|null), `statusKumpul` (`belum_kumpul`|`sudah_kumpul`). Dokumen lama tanpa field ini wajib tetap tampil (fallback label «Belum ada nilai»).
+3. Rules `hasOnly` di `lms_tugas_hasil_ortu` harus memuat kedua field; deploy rules **sebelum** LMS menulis field baru.
+4. Portal tidak menghitung nilai; tenggat relatif hanya untuk tampilan. Jangan menampilkan catatan guru / bukti.
+5. **Tes:** demo mode menampilkan 5 baris dengan campuran status; filter tab «Perlu perhatian» mengisolasi belum kumpul + perbaikan; chip tenggat berwarna untuk lewat/hari ini/segera.
+

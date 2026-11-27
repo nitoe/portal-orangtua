@@ -17,8 +17,17 @@
     }
     .rt-toolbar .stat-strip {
       margin: 0;
-      flex: 1 1 200px;
+      flex: 1 1 240px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
     }
+    .rt-toolbar .stat-strip .stat {
+      padding: 10px 12px;
+      min-width: 0;
+    }
+    .rt-toolbar .stat-strip .label { font-size: 11px; }
+    .rt-toolbar .stat-strip .value { font-size: 18px; }
     .rt-filter {
       display: flex;
       align-items: center;
@@ -35,26 +44,100 @@
       min-width: 10rem;
       max-width: 100%;
     }
+    .rt-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .rt-tab {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 650;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+    .rt-tab[aria-selected="true"] {
+      background: var(--muh-700);
+      border-color: var(--muh-700);
+      color: #fff;
+    }
+    .rt-tab .n {
+      display: inline-block;
+      min-width: 1.25rem;
+      margin-left: 4px;
+      opacity: 0.85;
+      font-variant-numeric: tabular-nums;
+    }
     .rt-row {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 8px 14px;
-      align-items: center;
-      padding: 12px 14px;
+      gap: 10px 16px;
+      align-items: start;
+      padding: 14px 14px;
       border-bottom: 1px solid var(--border);
     }
     .rt-row:last-child { border-bottom: none; }
-    .rt-title { font-size: 14px; font-weight: 700; color: var(--ink); overflow-wrap: anywhere; }
-    .rt-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .rt-row.is-urgent {
+      background: linear-gradient(90deg, rgba(185, 28, 28, 0.06), transparent 55%);
+    }
+    .rt-row.is-attention {
+      background: linear-gradient(90deg, rgba(180, 120, 20, 0.07), transparent 55%);
+    }
+    .rt-title {
+      font-size: 14.5px;
+      font-weight: 750;
+      color: var(--ink);
+      overflow-wrap: anywhere;
+      line-height: 1.3;
+    }
+    .rt-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      align-items: center;
+    }
+    .rt-meta-dot::before {
+      content: "·";
+      margin-right: 10px;
+      color: var(--border);
+    }
+    .rt-deadline {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 650;
+      margin-top: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #374151;
+      width: fit-content;
+    }
+    .rt-deadline svg { flex-shrink: 0; opacity: 0.85; }
+    .rt-deadline.is-soon { background: #fff7ed; color: #c2410c; }
+    .rt-deadline.is-today { background: #fef3c7; color: #b45309; }
+    .rt-deadline.is-over { background: #fef2f2; color: #b91c1c; }
+    .rt-deadline.is-ok { background: #ecfdf5; color: #047857; }
     .rt-side {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: flex-end;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      min-width: 7.5rem;
     }
-    .rt-skor { text-align: right; min-width: 2.8rem; }
-    .rt-nilai { font-size: 18px; font-weight: 800; color: var(--muh-700); line-height: 1.1; }
-    .rt-pred { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .rt-skor { text-align: right; }
+    .rt-nilai { font-size: 20px; font-weight: 800; color: var(--muh-700); line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .rt-pred { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .rt-side .badge { white-space: nowrap; }
     .rt-back {
       display: inline-block;
       margin-top: 12px;
@@ -64,16 +147,28 @@
       text-decoration: none;
     }
     .rt-back:hover { text-decoration: underline; }
+    .rt-intro {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 12px;
+      line-height: 1.45;
+    }
+    @media (max-width: 640px) {
+      .rt-toolbar .stat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
     @media (max-width: 520px) {
       .rt-row {
         grid-template-columns: 1fr;
-        gap: 8px;
+        gap: 10px;
       }
-      .rt-side { justify-content: space-between; width: 100%; }
+      .rt-side {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-width: 0;
+      }
       .rt-skor { text-align: left; }
-    }
-    @media (min-width: 900px) {
-      .rt-list-panel { max-width: 100%; }
     }
   </style>
 </head>
@@ -125,46 +220,45 @@
       </aside>
 
       <div class="main-col">
-                <header class="top-header">
+        <header class="top-header">
           <div>
-            <h1>Riwayat Belajar</h1>
-            <p class="date" id="tanggalHari">—</p>
+            <div class="top-title">Riwayat Belajar</div>
+            <div class="top-sub" id="tanggalHari">—</div>
           </div>
           <div class="top-actions">
-            <div class="avatar-btn" id="avatarInisial">—</div>
-            <button type="button" class="icon-btn mobile-only" id="btnLogoutTop" aria-label="Keluar">
+            <div class="top-child">
+              <div class="avatar" id="childAv">—</div>
+              <div>
+                <div class="top-child-name" id="profilNama">—</div>
+                <div class="top-child-meta" id="profilMeta">—</div>
+              </div>
+            </div>
+            <button type="button" class="icon-btn" id="btnLogoutTop" title="Keluar" aria-label="Keluar">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
             </button>
           </div>
         </header>
 
-        <main class="main-body">
-          <div class="main-inner">
-            <div class="page-intro">
-              <h2>Riwayat Tugas</h2>
-              <p>Nilai dan status tugas yang dibagikan guru.</p>
-            </div>
-
-            <div class="child-chip">
-              <div class="child-chip-av" id="childAv">—</div>
-              <div>
-                <div class="child-chip-name" id="profilNama">—</div>
-                <div class="child-chip-meta" id="profilMeta">—</div>
-              </div>
-            </div>
-
-            <div class="info-callout">
-              <strong>Catatan:</strong> hanya nilai &amp; status. Muncul setelah guru membagikan. Rapor resmi ada di menu STS.
-            </div>
+        <main class="main-inner">
+          <div class="page-pad">
+            <p class="rt-intro">Nilai, status pengumpulan, dan tenggat tugas yang dibagikan guru. Prioritas menampilkan tugas yang masih perlu perhatian ananda.</p>
 
             <div class="rt-toolbar">
-              <div class="stat-strip stat-strip--2" id="statStrip">
-                <div>
-                  <div class="label">Tugas dibagikan</div>
-                  <div class="value" id="statJumlah">…</div>
+              <div class="stat-strip">
+                <div class="stat">
+                  <div class="label">Semua</div>
+                  <div class="value" id="statSemua">…</div>
                 </div>
-                <div>
-                  <div class="label">Sudah ada nilai</div>
+                <div class="stat">
+                  <div class="label">Perlu perhatian</div>
+                  <div class="value" id="statPerlu">…</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Menunggu nilai</div>
+                  <div class="value" id="statTunggu">…</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Sudah dinilai</div>
                   <div class="value" id="statNilai">…</div>
                 </div>
               </div>
@@ -172,6 +266,13 @@
                 <label for="rtMapel">Mapel</label>
                 <select id="rtMapel"><option value="">Semua</option></select>
               </div>
+            </div>
+
+            <div class="rt-tabs" role="tablist" aria-label="Filter status tugas">
+              <button type="button" class="rt-tab" data-tab="semua" aria-selected="true">Semua<span class="n" id="tabNSemua"></span></button>
+              <button type="button" class="rt-tab" data-tab="perlu" aria-selected="false">Perlu perhatian<span class="n" id="tabNPerlu"></span></button>
+              <button type="button" class="rt-tab" data-tab="tunggu" aria-selected="false">Menunggu nilai<span class="n" id="tabNTunggu"></span></button>
+              <button type="button" class="rt-tab" data-tab="selesai" aria-selected="false">Sudah dinilai<span class="n" id="tabNSelesai"></span></button>
             </div>
 
             <section class="card-soft hub-panel rt-list-panel">
@@ -211,18 +312,13 @@
 
   <script type="module">
     import {
-      currentSession,
-      logout,
       loadSiswaByIds,
       loadRiwayatTugasAnak,
-    } from './assets/firebase.js?v=20261126a';
+    } from './assets/firebase.js?v=20261127a';
     import { initShell, applyTkaVisibility, inisial, $ } from './assets/shell-nav.js?v=20261126e';
-    const STATUS = {
-      dinilai: { label: 'Sudah dinilai', cls: 'badge-ok' },
-      perbaikan: { label: 'Perlu perbaikan', cls: 'badge-pending' },
-      belum: { label: 'Belum ada nilai', cls: 'badge-neutral' },
-    };
+
     let semua = [];
+    let tabAktif = 'semua';
 
     $('tanggalHari').textContent = new Intl.DateTimeFormat('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
@@ -236,34 +332,118 @@
     const fmtTanggal = (ms) => ms
       ? new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(ms))
       : '';
-function gambar() {
+
+    /** Klasifikasi tampilan satu baris tugas. */
+    function klasifikasi(x) {
+      const now = Date.now();
+      const lewat = x.tenggatMs > 0 && x.tenggatMs < now;
+      if (x.status === 'perbaikan') {
+        return { key: 'perbaikan', label: 'Perlu perbaikan', cls: 'badge-pending', grup: 'perlu', row: 'is-attention' };
+      }
+      if (x.status === 'dinilai') {
+        return { key: 'dinilai', label: 'Sudah dinilai', cls: 'badge-ok', grup: 'selesai', row: '' };
+      }
+      // status === 'belum'
+      if (x.statusKumpul === 'sudah_kumpul') {
+        return { key: 'tunggu', label: 'Menunggu penilaian', cls: 'badge-neutral', grup: 'tunggu', row: '' };
+      }
+      if (x.statusKumpul === 'belum_kumpul') {
+        return {
+          key: 'belum_kumpul',
+          label: lewat ? 'Belum dikumpulkan · lewat tenggat' : 'Belum dikumpulkan',
+          cls: lewat ? 'badge-pending' : 'badge-neutral',
+          grup: 'perlu',
+          row: lewat ? 'is-urgent' : 'is-attention',
+        };
+      }
+      return { key: 'belum', label: 'Belum ada nilai', cls: 'badge-neutral', grup: 'tunggu', row: '' };
+    }
+
+    function infoTenggat(ms) {
+      if (!ms) return null;
+      const now = Date.now();
+      const startToday = new Date();
+      startToday.setHours(0, 0, 0, 0);
+      const startTarget = new Date(ms);
+      startTarget.setHours(0, 0, 0, 0);
+      const hari = Math.round((startTarget - startToday) / 86400000);
+      const tgl = fmtTanggal(ms);
+      if (hari < 0) {
+        const n = Math.abs(hari);
+        return { text: n === 1 ? `Lewat 1 hari · ${tgl}` : `Lewat ${n} hari · ${tgl}`, cls: 'is-over' };
+      }
+      if (hari === 0) return { text: `Hari ini · ${tgl}`, cls: 'is-today' };
+      if (hari === 1) return { text: `Besok · ${tgl}`, cls: 'is-soon' };
+      if (hari <= 3) return { text: `${hari} hari lagi · ${tgl}`, cls: 'is-soon' };
+      if (hari <= 7) return { text: `${hari} hari lagi · ${tgl}`, cls: 'is-ok' };
+      return { text: tgl, cls: 'is-ok' };
+    }
+
+    function hitungKelompok(list) {
+      let perlu = 0, tunggu = 0, selesai = 0;
+      for (const x of list) {
+        const k = klasifikasi(x).grup;
+        if (k === 'perlu') perlu += 1;
+        else if (k === 'tunggu') tunggu += 1;
+        else selesai += 1;
+      }
+      return { semua: list.length, perlu, tunggu, selesai };
+    }
+
+    function filterDaftar() {
       const mapel = $('rtMapel').value;
-      const daftar = mapel ? semua.filter((x) => x.mapel === mapel) : semua;
+      let daftar = mapel ? semua.filter((x) => x.mapel === mapel) : semua.slice();
+      if (tabAktif === 'perlu') daftar = daftar.filter((x) => klasifikasi(x).grup === 'perlu');
+      else if (tabAktif === 'tunggu') daftar = daftar.filter((x) => klasifikasi(x).grup === 'tunggu');
+      else if (tabAktif === 'selesai') daftar = daftar.filter((x) => klasifikasi(x).grup === 'selesai');
+      return daftar;
+    }
+
+    function gambar() {
+      const h = hitungKelompok(semua);
+      $('statSemua').textContent = String(h.semua);
+      $('statPerlu').textContent = String(h.perlu);
+      $('statTunggu').textContent = String(h.tunggu);
+      $('statNilai').textContent = String(h.selesai);
+      $('tabNSemua').textContent = h.semua ? String(h.semua) : '';
+      $('tabNPerlu').textContent = h.perlu ? String(h.perlu) : '';
+      $('tabNTunggu').textContent = h.tunggu ? String(h.tunggu) : '';
+      $('tabNSelesai').textContent = h.selesai ? String(h.selesai) : '';
+
+      const daftar = filterDaftar();
       const box = $('rtList');
       if (!semua.length) {
         box.innerHTML = `<div class="empty-state">
           <div class="empty-state-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
           <h2>Belum ada tugas</h2>
-          <p>Guru belum membagikan nilai tugas ke portal. Cek kembali nanti.</p>
+          <p>Guru belum membagikan tugas atau nilai ke portal. Cek kembali nanti.</p>
           <a class="empty-action" href="beranda.html">← Kembali ke Beranda</a>
         </div>`;
         return;
       }
       if (!daftar.length) {
         box.innerHTML = `<div class="empty-state">
-          <h2>Tidak ada tugas</h2>
-          <p>Tidak ada tugas untuk mata pelajaran yang dipilih.</p>
+          <h2>Tidak ada di filter ini</h2>
+          <p>Coba pilih tab atau mata pelajaran lain.</p>
         </div>`;
         return;
       }
+
+      const iconJam = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+
       box.innerHTML = daftar.map((x) => {
-        const st = STATUS[x.status] || STATUS.belum;
+        const st = klasifikasi(x);
         const adaNilai = typeof x.nilai === 'number';
-        const meta = [x.mapel, fmtTanggal(x.publishedAtMs)].filter(Boolean).map(escapeHtml).join(' · ');
-        return `<div class="rt-row">
-          <div class="rt-main">
+        const tenggat = infoTenggat(x.tenggatMs);
+        const metaParts = [];
+        if (x.mapel) metaParts.push(escapeHtml(x.mapel));
+        if (x.publishedAtMs) metaParts.push('Dibagikan ' + escapeHtml(fmtTanggal(x.publishedAtMs)));
+        const meta = metaParts.map((p, i) => i === 0 ? p : `<span class="rt-meta-dot">${p}</span>`).join('');
+        return `<div class="rt-row ${st.row}">
+          <div>
             <div class="rt-title">${escapeHtml(x.judul)}</div>
             <div class="rt-meta">${meta}</div>
+            ${tenggat ? `<div class="rt-deadline ${tenggat.cls}">${iconJam}<span>${escapeHtml(tenggat.text)}</span></div>` : ''}
           </div>
           <div class="rt-side">
             <div class="rt-skor">
@@ -276,12 +456,20 @@ function gambar() {
       }).join('');
     }
 
+    document.querySelectorAll('.rt-tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tabAktif = btn.getAttribute('data-tab') || 'semua';
+        document.querySelectorAll('.rt-tab').forEach((b) => b.setAttribute('aria-selected', b === btn ? 'true' : 'false'));
+        gambar();
+      });
+    });
+
     async function boot() {
       const s = initShell();
       if (!s) return;
       const aktifId = s.siswaAktifId || (s.anakIds && s.anakIds[0]);
       if (!aktifId) {
-        $('rtList').innerHTML = '<div class="rt-kosong empty-state">Data anak tidak ditemukan. Silakan masuk kembali.</div>';
+        $('rtList').innerHTML = '<div class="empty-state"><p>Data anak tidak ditemukan. Silakan masuk kembali.</p></div>';
         return;
       }
 
@@ -292,19 +480,20 @@ function gambar() {
 
         const ini = inisial(anak.nama);
         $('childAv').textContent = ini;
-        $('avatarInisial').textContent = ini;
+        const avTop = document.getElementById('avatarInisial');
+        if (avTop) avTop.textContent = ini;
         $('profilNama').textContent = anak.nama || '—';
         $('profilMeta').textContent = [
           anak.kelas ? `Kelas ${anak.kelas}` : null,
           anak.nis ? `NIS ${anak.nis}` : null,
         ].filter(Boolean).join(' · ') || 'Data siswa';
+        const side = document.getElementById('sideNama');
+        if (side && s.namaOrtu) side.textContent = s.namaOrtu;
       } catch (_) {}
 
       try {
         const hasil = await loadRiwayatTugasAnak(aktifId);
         semua = hasil.items || [];
-        $('statJumlah').textContent = String(semua.length);
-        $('statNilai').textContent = String(semua.filter((x) => typeof x.nilai === 'number').length);
         const mapelList = [...new Set(semua.map((x) => x.mapel).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'id'));
         if (mapelList.length > 1) {
           $('rtMapel').innerHTML = '<option value="">Semua</option>' +
@@ -315,9 +504,11 @@ function gambar() {
         gambar();
       } catch (err) {
         console.error(err);
-        $('statJumlah').textContent = '—';
+        $('statSemua').textContent = '—';
+        $('statPerlu').textContent = '—';
+        $('statTunggu').textContent = '—';
         $('statNilai').textContent = '—';
-        $('rtList').innerHTML = '<div class="rt-kosong empty-state">Riwayat tugas belum dapat dimuat. Coba lagi beberapa saat.</div>';
+        $('rtList').innerHTML = '<div class="empty-state"><p>Riwayat tugas belum dapat dimuat. Coba lagi beberapa saat.</p></div>';
       }
     }
     boot();

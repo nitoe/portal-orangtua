@@ -1,5 +1,16 @@
 # Changelog — Portal Orang Tua
 
+
+## 2026-11-27 — Riwayat Tugas: tenggat, status pengumpulan, prioritas perhatian
+
+- **Masalah:** halaman hanya menampilkan nilai/status setelah guru membagikan; tidak ada tenggat waktu dan tidak membedakan «belum dikumpulkan» vs «menunggu penilaian».
+- **Data:** `loadRiwayatTugasAnak` membaca field opsional `tenggat` dan `statusKumpul` dari `lms_tugas_hasil_ortu` (ditulis LMS saat «Bagikan ke orang tua»). Dokumen lama tanpa field ini tetap valid.
+- **Tampilan:** chip tenggat relatif (Hari ini / Besok / N hari lagi / Lewat N hari) berwarna sesuai urgensi; badge status lebih jelas (Belum dikumpulkan, Menunggu penilaian, Perlu perbaikan, Sudah dinilai); baris yang perlu perhatian diberi aksen; tab filter + ringkasan statistik.
+- **Urutan:** prioritas perbaikan → belum kumpul lewat tenggat → belum kumpul → menunggu nilai → sudah dinilai.
+- File: `assets/firebase.js` (`?v=20261127a`), `riwayat-tugas.html`.
+- **Deploy:** deploy `firestore.rules` terbaru dulu (field `tenggat` + `statusKumpul` di `lms_tugas_hasil_ortu`), deploy LMS (payload bagikan), lalu hosting portal.
+- Antiregresi: §30.
+
 ## 2026-11-26l — Sidebar fixed full-height (hilangkan strip putih)
 
 - **Gejala:** masih ada area putih di bawah blok «Masuk sebagai / Keluar» pada kolom sidebar.

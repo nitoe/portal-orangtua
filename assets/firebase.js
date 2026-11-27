@@ -1498,25 +1498,50 @@ export function isKelasEnamTka(kelas) {
 }
 
 
-/* ========== Riwayat Tugas (snapshot nilai + status yang dibagikan guru) ========== */
+/* ========== Riwayat Tugas (snapshot nilai + status + tenggat yang dibagikan guru) ========== */
 
 /**
  * Muat riwayat tugas anak dari `lms_tugas_hasil_ortu` (ditulis LMS saat guru menekan «Bagikan ke orang tua»).
  * Hanya dokumen `published === true` milik `siswaId`. Portal HANYA membaca: tidak menghitung nilai
  * apa pun dan tidak menyentuh koleksi tugas mentah LMS (lms_nilai_tugas, lms_pengumpulan).
- * Isi dokumen sengaja terbatas pada nilai dan status (ANTIREGRESI §19).
- * @returns {Promise<{items: Array}>} items diurutkan dari yang terbaru dibagikan.
+ * Field tambahan (opsional, dokumen lama tanpa field ini tetap valid):
+ *  - tenggat (Timestamp) — tenggat tugas
+ *  - statusKumpul: 'belum_kumpul' | 'sudah_kumpul'
+ * @returns {Promise<{items: Array}>} items diurutkan: prioritas perlu perhatian dulu, lalu terbaru.
  */
 export async function loadRiwayatTugasAnak(siswaId) {
   if (!siswaId) return { items: [] };
 
   if (DEMO_MODE) {
     const now = Date.now();
+    const day = 86400000;
     return {
       items: [
-        { id: 'demo1', tugasId: 'demo1', judul: 'Poster Daur Air', mapel: 'IPAS', kelas: '5A', nilai: 88, predikat: 'A-', status: 'dinilai', publishedAtMs: now - 86400000 },
-        { id: 'demo2', tugasId: 'demo2', judul: 'Menulis Teks Prosedur', mapel: 'Bahasa Indonesia', kelas: '5A', nilai: 72, predikat: 'B-', status: 'perbaikan', publishedAtMs: now - 3 * 86400000 },
-        { id: 'demo3', tugasId: 'demo3', judul: 'Latihan Pecahan', mapel: 'Matematika', kelas: '5A', nilai: null, predikat: '', status: 'belum', publishedAtMs: now - 5 * 86400000 },
+        {
+          id: 'demo1', tugasId: 'demo1', judul: 'Poster Daur Air', mapel: 'IPAS', kelas: '5A',
+          nilai: 88, predikat: 'A-', status: 'dinilai', statusKumpul: 'sudah_kumpul',
+          tenggatMs: now - 2 * day, publishedAtMs: now - day,
+        },
+        {
+          id: 'demo2', tugasId: 'demo2', judul: 'Menulis Teks Prosedur', mapel: 'Bahasa Indonesia', kelas: '5A',
+          nilai: 72, predikat: 'B-', status: 'perbaikan', statusKumpul: 'sudah_kumpul',
+          tenggatMs: now + 2 * day, publishedAtMs: now - 3 * day,
+        },
+        {
+          id: 'demo3', tugasId: 'demo3', judul: 'Latihan Pecahan', mapel: 'Matematika', kelas: '5A',
+          nilai: null, predikat: '', status: 'belum', statusKumpul: 'belum_kumpul',
+          tenggatMs: now + day, publishedAtMs: now - 5 * day,
+        },
+        {
+          id: 'demo4', tugasId: 'demo4', judul: 'Laporan Pengamatan Tumbuhan', mapel: 'IPAS', kelas: '5A',
+          nilai: null, predikat: '', status: 'belum', statusKumpul: 'sudah_kumpul',
+          tenggatMs: now - day, publishedAtMs: now - 6 * day,
+        },
+        {
+          id: 'demo5', tugasId: 'demo5', judul: 'Membaca Cerita Rakyat', mapel: 'Bahasa Indonesia', kelas: '5A',
+          nilai: null, predikat: '', status: 'belum', statusKumpul: 'belum_kumpul',
+          tenggatMs: now - 3 * day, publishedAtMs: now - 7 * day,
+        },
       ],
     };
   }
@@ -1529,12 +1554,19 @@ export async function loadRiwayatTugasAnak(siswaId) {
   );
   const snap = await fsMod.getDocs(q);
   const STATUS_OK = ['dinilai', 'perbaikan', 'belum'];
+  const KUMPUL_OK = ['belum_kumpul', 'sudah_kumpul'];
+
+  function tsMs(v) {
+    if (!v) return 0;
+    if (typeof v.toMillis === 'function') return v.toMillis();
+    if (typeof v.seconds === 'number') return v.seconds * 1000;
+    const n = Number(new Date(v));
+    return Number.isFinite(n) ? n : 0;
+  }
+
   const items = snap.docs.map((d) => {
     const x = d.data();
-    let ms = 0;
-    if (x.publishedAt) {
-      ms = typeof x.publishedAt.toMillis === 'function' ? x.publishedAt.toMillis() : Number(new Date(x.publishedAt)) || 0;
-    }
+    const statusKumpul = KUMPUL_OK.includes(x.statusKumpul) ? x.statusKumpul : '';
     return {
       id: d.id,
       tugasId: String(x.tugasId || ''),
@@ -1544,9 +1576,28 @@ export async function loadRiwayatTugasAnak(siswaId) {
       nilai: typeof x.nilai === 'number' ? x.nilai : null,
       predikat: typeof x.predikat === 'string' ? x.predikat : '',
       status: STATUS_OK.includes(x.status) ? x.status : 'belum',
-      publishedAtMs: ms,
+      statusKumpul,
+      tenggatMs: tsMs(x.tenggat),
+      publishedAtMs: tsMs(x.publishedAt),
     };
   });
-  items.sort((a, b) => b.publishedAtMs - a.publishedAtMs || a.judul.localeCompare(b.judul, 'id'));
+
+  // Prioritas tampil: butuh perhatian (belum kumpul / lewat tenggat / perbaikan) → lalu terbaru
+  function prioritas(x) {
+    const now = Date.now();
+    const lewat = x.tenggatMs > 0 && x.tenggatMs < now;
+    if (x.status === 'perbaikan') return 0;
+    if (x.status === 'belum' && x.statusKumpul === 'belum_kumpul' && lewat) return 1;
+    if (x.status === 'belum' && x.statusKumpul === 'belum_kumpul') return 2;
+    if (x.status === 'belum' && x.statusKumpul === 'sudah_kumpul') return 3;
+    if (x.status === 'belum') return 4;
+    return 5;
+  }
+  items.sort((a, b) => {
+    const pa = prioritas(a);
+    const pb = prioritas(b);
+    if (pa !== pb) return pa - pb;
+    return (b.publishedAtMs || 0) - (a.publishedAtMs || 0) || a.judul.localeCompare(b.judul, 'id');
+  });
   return { items };
 }
