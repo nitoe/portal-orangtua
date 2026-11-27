@@ -455,9 +455,16 @@
       return { key: 'belum', label: 'Belum ada nilai', cls: 'badge-neutral', grup: 'tunggu', row: '' };
     }
 
-    function infoTenggat(ms) {
+    /**
+     * Label tenggat relatif.
+     * @param {number} ms  timestamp tenggat
+     * @param {boolean} masihBerlaku  true hanya bila ananda masih perlu mengumpulkan
+     *   (statusKumpul === 'belum_kumpul'). Bila sudah kumpul / sudah dinilai / menunggu
+     *   penilaian, jangan pakai bahasa «Lewat …» — itu menyesatkan (seolah ananda telat
+     *   padahal yang belakangan adalah publikasi nilai guru). ANTIREGRESI §30.
+     */
+    function infoTenggat(ms, masihBerlaku) {
       if (!ms) return null;
-      const now = Date.now();
       const startToday = new Date();
       startToday.setHours(0, 0, 0, 0);
       const startTarget = new Date(ms);
@@ -465,8 +472,17 @@
       const hari = Math.round((startTarget - startToday) / 86400000);
       const tgl = fmtTanggal(ms);
       if (hari < 0) {
+        // Sudah lewat tenggat tugas
+        if (!masihBerlaku) {
+          // Sudah dikumpulkan / sudah dinilai → hanya info historis, bukan alarm keterlambatan
+          return { text: `Tenggat · ${tgl}`, cls: 'is-ok' };
+        }
         const n = Math.abs(hari);
         return { text: n === 1 ? `Lewat 1 hari · ${tgl}` : `Lewat ${n} hari · ${tgl}`, cls: 'is-over' };
+      }
+      if (!masihBerlaku) {
+        // Belum lewat tapi ananda sudah tidak perlu bertindak → info netral
+        return { text: `Tenggat · ${tgl}`, cls: 'is-ok' };
       }
       if (hari === 0) return { text: `Hari ini · ${tgl}`, cls: 'is-today' };
       if (hari === 1) return { text: `Besok · ${tgl}`, cls: 'is-soon' };
@@ -530,7 +546,10 @@
       box.innerHTML = daftar.map((x) => {
         const st = klasifikasi(x);
         const adaNilai = typeof x.nilai === 'number';
-        const tenggat = infoTenggat(x.tenggatMs);
+        // «Lewat tenggat» hanya bila ananda belum mengumpulkan. Sudah kumpul / sudah dinilai
+        // → teks netral «Tenggat · tgl» (publikasi nilai sering belakangan dari tenggat tugas).
+        const masihBerlaku = x.statusKumpul === 'belum_kumpul';
+        const tenggat = infoTenggat(x.tenggatMs, masihBerlaku);
         const metaParts = [];
         if (x.mapel) metaParts.push(escapeHtml(x.mapel));
         if (x.publishedAtMs) metaParts.push('Dibagikan ' + escapeHtml(fmtTanggal(x.publishedAtMs)));

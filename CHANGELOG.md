@@ -1,6 +1,14 @@
 # Changelog — Portal Orang Tua
 
 
+## 2026-11-27f — Riwayat Tugas: jangan tampilkan «Lewat tenggat» bila sudah dinilai/terkumpul
+
+- **Masalah:** chip tenggat merah «Lewat N hari» muncul juga pada tugas yang **sudah dinilai** atau sudah dikumpulkan. Orang tua mengira ananda telat mengumpulkan, padahal yang belakangan adalah waktu guru membagikan nilai (setelah tenggat tugas).
+- **Perbaikan:** bahasa relatif «Lewat / Hari ini / Besok / N hari lagi» hanya dipakai bila `statusKumpul === 'belum_kumpul'`. Selain itu (sudah dinilai, menunggu penilaian, perbaikan, sudah kumpul) → teks netral `Tenggat · {tanggal}` dengan gaya biasa.
+- File: `riwayat-tugas.html`.
+- Antiregresi: §30 butir 5–6.
+
+
 ## 2026-11-27e — Logo terlihat, hilangkan rembesan, spacing header
 
 - **Logo sidebar:** logo ungu hampir tak terlihat di latar gelap; kini berlatar putih + padding agar jelas. Hapus `onerror=visibility:hidden` yang bisa menyembunyikan logo permanen.
