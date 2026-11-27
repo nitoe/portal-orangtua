@@ -1,6 +1,16 @@
 # Changelog — Portal Orang Tua
 
 
+## 2026-11-27e — Logo terlihat, hilangkan rembesan, spacing header
+
+- **Logo sidebar:** logo ungu hampir tak terlihat di latar gelap; kini berlatar putih + padding agar jelas. Hapus `onerror=visibility:hidden` yang bisa menyembunyikan logo permanen.
+- **Rembesan ungu di atas header:** `body` desktop tidak lagi full `muh-900`; memakai gradient kiri (sidebar) / kanan (canvas). `.main-col` solid `surface-2`; header solid + penutup celah subpixel.
+- **Spacing:** padding header dan `.page-pad` diperlonggar; Riwayat: gap kartu/statistik ditambah.
+- Cache CSS `?v=20261127e`.
+- File: `assets/style.css` + HTML shell (logo + cache-bust) + `riwayat-tugas.html`.
+- Antiregresi: §33.
+
+
 ## 2026-11-27d — Hotfix: satu versi modul firebase (halaman blank)
 
 - **Gejala:** setelah update Riwayat/tenggat, beberapa halaman tidak termuat (layar kosong) di sesi asli (bukan demo).

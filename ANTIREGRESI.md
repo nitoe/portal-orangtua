@@ -277,3 +277,11 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 4. Jangan mengimpor `./assets/firebase.js` tanpa `?v=` di satu halaman sementara halaman lain memakai `?v=…` — itu modul ketiga.
 5. **Gejala regresi:** layar kosong / putih setelah login; Console: `FirebaseError: Firebase App named '[DEFAULT]' already exists` atau modul gagal evaluate.
 6. **Tes:** login ortu nyata (bukan demo) → buka Beranda, Riwayat, STS, TKA; Console bersih dari error Firebase App.
+
+## §33 Logo sidebar & anti-rembesan header (2026-11-27)
+
+1. Logo portal berwarna ungu/gelap: di sidebar gelap **wajib** latar kontras (putih) + padding. Jangan mengandalkan `background: rgba(255,255,255,0.12)` saja — logo tampak hilang.
+2. Jangan `onerror="this.style.visibility='hidden'"` pada logo — kegagalan sementara membuat logo hilang permanen sampai hard refresh.
+3. `body` desktop **jangan** `background: var(--muh-900)` penuh. Itu merembes di atas/bawah area konten (sticky header, overscroll). Pakai gradient horizontal: kiri `muh-900` selebar `--sidebar-w`, kanan `surface-2`. `.main-col` solid `surface-2`.
+4. `.top-header` solid (bukan rgba + backdrop-filter).
+5. **Tes:** desktop — logo sekolah terbaca di sidebar; tidak ada garis ungu di atas header saat scroll; hard refresh setelah deploy CSS.

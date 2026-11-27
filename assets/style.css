@@ -142,11 +142,21 @@ a { color: inherit; }
     min-height: 100vh;
     min-height: 100dvh;
   }
-  /* Cegah flash putih di kiri saat overscroll */
+  /* Kiri gelap (sidebar), kanan canvas — tanpa rembesan ungu di atas konten */
   body {
-    background: var(--muh-900);
+    background: linear-gradient(
+      90deg,
+      var(--muh-900) 0,
+      var(--muh-900) var(--sidebar-w),
+      var(--surface-2) var(--sidebar-w)
+    );
   }
   .app-frame {
+    background: transparent;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .main-col {
     background: var(--surface-2);
     min-height: 100vh;
     min-height: 100dvh;
@@ -163,10 +173,16 @@ a { color: inherit; }
   margin-bottom: 18px;
 }
 .sidebar-brand img {
-  width: 36px; height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   object-fit: contain;
-  background: rgba(255, 255, 255, 0.12);
+  /* Logo ungu hampir tak terlihat di sidebar gelap — pakai latar putih */
+  background: #fff;
+  padding: 4px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: block;
 }
 .sidebar-brand-title {
   font-size: 14px;
@@ -297,12 +313,13 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 16px;
-  /* Solid — hindari rembesan warna body (muh-900) lewat header transparan */
+  gap: 14px;
+  padding: 14px 20px;
   background: var(--surface-2);
   border-bottom: 1px solid var(--border);
   isolation: isolate;
+  /* Tutup celah subpixel di atas sticky agar body gelap tidak merembes */
+  box-shadow: 0 -1px 0 var(--surface-2);
 }
 .top-header h1 {
   margin: 0;
@@ -317,7 +334,7 @@ a { color: inherit; }
   color: var(--muted);
   font-weight: 500;
 }
-.top-actions { display: flex; align-items: center; gap: 8px; }
+.top-actions { display: flex; align-items: center; gap: 12px; }
 .avatar-btn {
   width: 36px; height: 36px;
   border-radius: 10px;
@@ -772,4 +789,15 @@ a { color: inherit; }
   .page-intro { margin-bottom: 12px; }
   .page-intro h2 { font-size: 18px; }
   .hub-panel-title { padding: 10px 14px; }
+}
+
+
+/* Padding konten halaman */
+.page-pad {
+  padding: 18px 20px 28px;
+}
+@media (min-width: 900px) {
+  .page-pad {
+    padding: 20px 24px 32px;
+  }
 }
