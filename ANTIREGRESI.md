@@ -262,3 +262,10 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 4. Portal tidak menghitung nilai; tenggat relatif hanya untuk tampilan. Jangan menampilkan catatan guru / bukti.
 5. **Tes:** demo mode menampilkan 5 baris dengan campuran status; filter tab «Perlu perhatian» mengisolasi belum kumpul + perbaikan; chip tenggat berwarna untuk lewat/hari ini/segera.
 
+## §31 Header: logout selalu terlihat; jangan header transparan di atas body merek (2026-11-27)
+
+1. `btnLogoutTop` **jangan** memakai kelas `mobile-only`. Di desktop sidebar punya Keluar, tetapi avatar inisial di pojok kanan tampak seperti tombol — pengguna mengkliknya. Logout header harus selalu ada dan di-wire oleh `initShell` (§13).
+2. `.top-header` wajib **latar solid** (`var(--surface-2)` atau setara). Jangan `rgba(..., 0.9)` + `backdrop-filter` di atas `body { background: var(--muh-900) }` (desktop) — menghasilkan garis/rembesan ungu di tepi atas saat sticky.
+3. Avatar inisial (`.avatar-btn`) **bukan** kontrol aksi; jangan memasang handler logout di avatar. Logout = `#btnLogoutTop` / sidebar / bottom-nav.
+4. **Tes:** desktop ≥900px buka Beranda dan Riwayat → ikon keluar di header terlihat dan mengalihkan ke `index.html`; tidak ada garis ungu di atas header saat scroll.
+

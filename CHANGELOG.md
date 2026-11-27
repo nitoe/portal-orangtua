@@ -1,13 +1,16 @@
 # Changelog — Portal Orang Tua
 
 
-## 2026-11-27b — Riwayat Tugas: spacing lega (anti-dempet)
+## 2026-11-27c — Header: tombol Keluar selalu aktif + hilangkan rembesan
 
-- Kartu statistik lebih lapang (padding & gap), tab filter tidak menempel toolbar.
-- Daftar tugas memakai **kartu terpisah** (bukan baris border tipis dempet): padding 16–18px, gap antar kartu, sudut 12px.
-- Hierarki tipografi dirapikan: judul 15px, meta longgar, nilai 22px, badge tidak menempel skor.
-- Mobile: skor + badge dipisah garis halus di bawah konten.
-- File: `riwayat-tugas.html` saja (CSS halaman).
+- **Gejala:** pojok kanan atas hanya menampilkan avatar inisial (mis. «FC») yang tidak bisa diklik; di desktop tombol Keluar disembunyikan (`mobile-only`). Garis/rembesan ungu gelap di atas header karena `background` transparan + `body` desktop `muh-900`.
+- **Perbaikan:**
+  - `btnLogoutTop` tampil di **semua** lebar layar (hapus `mobile-only`) di Beranda, STS, Capaian, 5 Besar, TKA, Riwayat.
+  - Header solid `var(--surface-2)` + `isolation: isolate` (tanpa backdrop transparan).
+  - `.icon-btn` lebih jelas (hover merek); utilitas `.top-child` / `.top-title` distandarkan di CSS.
+- Cache CSS `?v=20261127c`.
+- File: `assets/style.css` + keenam HTML shell + `index.html`/`admin.html` (cache-bust).
+- Antiregresi: §31.
 
 
 ## 2026-11-27 — Riwayat Tugas: tenggat, status pengumpulan, prioritas perhatian
