@@ -269,3 +269,11 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 3. Avatar inisial (`.avatar-btn`) **bukan** kontrol aksi; jangan memasang handler logout di avatar. Logout = `#btnLogoutTop` / sidebar / bottom-nav.
 4. **Tes:** desktop ≥900px buka Beranda dan Riwayat → ikon keluar di header terlihat dan mengalihkan ke `index.html`; tidak ada garis ungu di atas header saat scroll.
 
+## §32 Satu URL modul firebase.js di seluruh portal (2026-11-27)
+
+1. Query string `?v=` pada import ES module **adalah bagian dari identitas modul**. `firebase.js?v=A` dan `firebase.js?v=B` = dua salinan terpisah.
+2. `assets/shell-nav.js` mengimpor `firebase.js`. Setiap halaman yang mengimpor `shell-nav` **dan** `firebase.js` langsung wajib memakai **string `?v=` yang sama** dengan `shell-nav.js`.
+3. Setelah mengubah `firebase.js`, naikkan `?v=` di **semua** HTML **dan** di `shell-nav.js` sekaligus. Jangan hanya di satu halaman.
+4. Jangan mengimpor `./assets/firebase.js` tanpa `?v=` di satu halaman sementara halaman lain memakai `?v=…` — itu modul ketiga.
+5. **Gejala regresi:** layar kosong / putih setelah login; Console: `FirebaseError: Firebase App named '[DEFAULT]' already exists` atau modul gagal evaluate.
+6. **Tes:** login ortu nyata (bukan demo) → buka Beranda, Riwayat, STS, TKA; Console bersih dari error Firebase App.

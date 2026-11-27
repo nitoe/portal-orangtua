@@ -1,6 +1,15 @@
 # Changelog — Portal Orang Tua
 
 
+## 2026-11-27d — Hotfix: satu versi modul firebase (halaman blank)
+
+- **Gejala:** setelah update Riwayat/tenggat, beberapa halaman tidak termuat (layar kosong) di sesi asli (bukan demo).
+- **Akar:** `shell-nav.js` mengimpor `firebase.js?v=20261126a` sementara halaman lain memakai `?v=20261127a` / tanpa query / versi lama. Browser memperlakukan URL berbeda sebagai modul terpisah → `initializeApp` dipanggil dua kali → error Firebase, modul gagal.
+- **Perbaikan:** seluruh import `firebase.js` dan `shell-nav.js` diseragamkan ke `?v=20261127d`.
+- File: `assets/shell-nav.js` + semua HTML shell (`beranda`, `rapor-sts`, `capaian`, `lima-besar`, `tryout-tka`, `riwayat-tugas`, `index`, `admin`).
+- Antiregresi: §32.
+
+
 ## 2026-11-27c — Header: tombol Keluar selalu aktif + hilangkan rembesan
 
 - **Gejala:** pojok kanan atas hanya menampilkan avatar inisial (mis. «FC») yang tidak bisa diklik; di desktop tombol Keluar disembunyikan (`mobile-only`). Garis/rembesan ungu gelap di atas header karena `background` transparan + `body` desktop `muh-900`.

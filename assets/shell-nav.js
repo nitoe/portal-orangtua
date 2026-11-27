@@ -3,7 +3,7 @@
  * Satu sumber kebenaran untuk TKA visibility, tanggal, logout, inisial.
  * Jangan duplikasi logika ini di halaman individual.
  */
-import { currentSession, logout } from './firebase.js?v=20261126a';
+import { currentSession, logout } from './firebase.js?v=20261127d';
 
 const $ = (id) => document.getElementById(id);
 
