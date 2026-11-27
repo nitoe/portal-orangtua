@@ -8,59 +8,99 @@
   <link rel="icon" type="image/png" href="assets/favicon-32.png">
   <link rel="stylesheet" href="assets/style.css?v=20261126l">
   <style>
+    /* —— Riwayat Tugas: spacing lega, anti-dempet —— */
+    .rt-page {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .rt-intro {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.55;
+      max-width: 52rem;
+    }
+
+    /* Ringkasan + filter mapel */
     .rt-toolbar {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
-      gap: 10px 16px;
-      margin-bottom: 12px;
+      align-items: stretch;
+      gap: 14px 18px;
     }
     .rt-toolbar .stat-strip {
       margin: 0;
-      flex: 1 1 240px;
+      flex: 1 1 280px;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
+      gap: 12px;
     }
     .rt-toolbar .stat-strip .stat {
-      padding: 10px 12px;
+      padding: 14px 16px;
       min-width: 0;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: none;
     }
-    .rt-toolbar .stat-strip .label { font-size: 11px; }
-    .rt-toolbar .stat-strip .value { font-size: 18px; }
+    .rt-toolbar .stat-strip .label {
+      font-size: 11.5px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .rt-toolbar .stat-strip .value {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
     .rt-filter {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
+      align-self: center;
     }
-    .rt-filter label { font-size: 12.5px; font-weight: 650; color: var(--muted); }
+    .rt-filter label {
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--muted);
+    }
     .rt-filter select {
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 7px 10px;
+      border-radius: 10px;
+      padding: 10px 12px;
       background: var(--surface);
       color: var(--ink);
-      min-width: 10rem;
+      min-width: 11rem;
       max-width: 100%;
+      font-size: 13.5px;
     }
+
+    /* Tab filter */
     .rt-tabs {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 12px;
+      gap: 8px;
     }
     .rt-tab {
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--ink);
       border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 12.5px;
+      padding: 9px 16px;
+      font-size: 13px;
       font-weight: 650;
       cursor: pointer;
-      line-height: 1.2;
+      line-height: 1.25;
+      transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
     }
+    .rt-tab:hover { border-color: var(--muh-700); }
     .rt-tab[aria-selected="true"] {
       background: var(--muh-700);
       border-color: var(--muh-700);
@@ -68,55 +108,84 @@
     }
     .rt-tab .n {
       display: inline-block;
-      min-width: 1.25rem;
-      margin-left: 4px;
-      opacity: 0.85;
+      min-width: 1.2rem;
+      margin-left: 5px;
+      opacity: 0.9;
       font-variant-numeric: tabular-nums;
     }
+
+    /* Panel daftar */
+    .rt-list-panel {
+      padding: 4px 0 8px;
+    }
+    .rt-list-panel .hub-panel-title {
+      padding: 16px 18px 8px;
+      margin: 0;
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    #rtList {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 8px 14px 16px;
+    }
+    #rtList > .empty-state {
+      margin: 8px 4px 12px;
+    }
+
+    /* Kartu tugas (bukan baris dempet) */
     .rt-row {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 10px 16px;
-      align-items: start;
-      padding: 14px 14px;
-      border-bottom: 1px solid var(--border);
+      gap: 14px 20px;
+      align-items: center;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
     }
-    .rt-row:last-child { border-bottom: none; }
     .rt-row.is-urgent {
-      background: linear-gradient(90deg, rgba(185, 28, 28, 0.06), transparent 55%);
+      border-color: rgba(185, 28, 28, 0.28);
+      background: linear-gradient(90deg, rgba(185, 28, 28, 0.05), #fff 42%);
     }
     .rt-row.is-attention {
-      background: linear-gradient(90deg, rgba(180, 120, 20, 0.07), transparent 55%);
+      border-color: rgba(180, 120, 20, 0.28);
+      background: linear-gradient(90deg, rgba(180, 120, 20, 0.06), #fff 42%);
     }
     .rt-title {
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 750;
       color: var(--ink);
       overflow-wrap: anywhere;
-      line-height: 1.3;
+      line-height: 1.4;
     }
     .rt-meta {
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--muted);
-      margin-top: 3px;
+      margin-top: 6px;
       display: flex;
       flex-wrap: wrap;
-      gap: 4px 10px;
+      gap: 2px 4px;
       align-items: center;
+      line-height: 1.4;
     }
     .rt-meta-dot::before {
       content: "·";
-      margin-right: 10px;
-      color: var(--border);
+      margin: 0 8px;
+      color: #c4c4cc;
     }
     .rt-deadline {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      font-size: 12px;
+      gap: 6px;
+      font-size: 12.5px;
       font-weight: 650;
-      margin-top: 6px;
-      padding: 3px 8px;
+      margin-top: 10px;
+      padding: 5px 10px;
       border-radius: 999px;
       background: #f3f4f6;
       color: #374151;
@@ -127,39 +196,60 @@
     .rt-deadline.is-today { background: #fef3c7; color: #b45309; }
     .rt-deadline.is-over { background: #fef2f2; color: #b91c1c; }
     .rt-deadline.is-ok { background: #ecfdf5; color: #047857; }
+
     .rt-side {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 8px;
-      min-width: 7.5rem;
+      justify-content: center;
+      gap: 10px;
+      min-width: 8rem;
+      padding-left: 8px;
     }
     .rt-skor { text-align: right; }
-    .rt-nilai { font-size: 20px; font-weight: 800; color: var(--muh-700); line-height: 1.1; font-variant-numeric: tabular-nums; }
-    .rt-pred { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .rt-side .badge { white-space: nowrap; }
+    .rt-nilai {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--muh-700);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+    .rt-pred {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .rt-side .badge {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+
     .rt-back {
       display: inline-block;
-      margin-top: 12px;
-      font-size: 13px;
+      margin-top: 4px;
+      font-size: 13.5px;
       font-weight: 650;
       color: var(--muh-700);
       text-decoration: none;
     }
     .rt-back:hover { text-decoration: underline; }
-    .rt-intro {
-      font-size: 13px;
-      color: var(--muted);
-      margin: 0 0 12px;
-      line-height: 1.45;
-    }
-    @media (max-width: 640px) {
-      .rt-toolbar .stat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    @media (max-width: 900px) {
+      .rt-toolbar .stat-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
     @media (max-width: 520px) {
+      .rt-page { gap: 14px; }
+      .rt-toolbar .stat-strip { gap: 10px; }
+      .rt-toolbar .stat-strip .stat { padding: 12px 14px; }
+      .rt-toolbar .stat-strip .value { font-size: 20px; }
       .rt-row {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 12px;
+        padding: 14px 14px;
       }
       .rt-side {
         flex-direction: row;
@@ -167,8 +257,12 @@
         justify-content: space-between;
         width: 100%;
         min-width: 0;
+        padding-left: 0;
+        padding-top: 4px;
+        border-top: 1px solid var(--border);
       }
       .rt-skor { text-align: left; }
+      #rtList { padding: 6px 10px 14px; gap: 8px; }
     }
   </style>
 </head>
@@ -241,6 +335,7 @@
 
         <main class="main-inner">
           <div class="page-pad">
+            <div class="rt-page">
             <p class="rt-intro">Nilai, status pengumpulan, dan tenggat tugas yang dibagikan guru. Prioritas menampilkan tugas yang masih perlu perhatian ananda.</p>
 
             <div class="rt-toolbar">
@@ -281,6 +376,7 @@
             </section>
 
             <a class="rt-back" href="beranda.html">← Kembali ke Beranda</a>
+            </div>
           </div>
         </main>
       </div>

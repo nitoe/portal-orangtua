@@ -1,6 +1,15 @@
 # Changelog — Portal Orang Tua
 
 
+## 2026-11-27b — Riwayat Tugas: spacing lega (anti-dempet)
+
+- Kartu statistik lebih lapang (padding & gap), tab filter tidak menempel toolbar.
+- Daftar tugas memakai **kartu terpisah** (bukan baris border tipis dempet): padding 16–18px, gap antar kartu, sudut 12px.
+- Hierarki tipografi dirapikan: judul 15px, meta longgar, nilai 22px, badge tidak menempel skor.
+- Mobile: skor + badge dipisah garis halus di bawah konten.
+- File: `riwayat-tugas.html` saja (CSS halaman).
+
+
 ## 2026-11-27 — Riwayat Tugas: tenggat, status pengumpulan, prioritas perhatian
 
 - **Masalah:** halaman hanya menampilkan nilai/status setelah guru membagikan; tidak ada tenggat waktu dan tidak membedakan «belum dikumpulkan» vs «menunggu penilaian».
