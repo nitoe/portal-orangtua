@@ -1,10 +1,18 @@
 # Changelog — Portal Orang Tua
 
 
+## 2026-11-27g — Riwayat Tugas: «Lewat tenggat» tetap muncul di tugas lama yang sudah dinilai (perketat)
+
+- **Masalah lanjutan:** setelah 27f, tugas lama yang baru dibagikan (mis. tenggat 1 Sep, bagikan 27 Nov, status «Sudah dinilai») masih bisa menampilkan chip merah «Lewat 87 hari». Sebab: `statusKumpul` bisa tertulis `belum_kumpul` (tugas kelompok / nilai manual / map pengumpulan tidak punya id siswa) sementara `status === 'dinilai'`.
+- **Perbaikan:** alarm «Lewat …» hanya bila klasifikasi baris benar-benar `belum_kumpul` **dan** tidak ada nilai **dan** status bukan `dinilai`/`perbaikan`. Selain itu → teks netral `Tenggat · {tanggal}`.
+- File: `riwayat-tugas.html`.
+- Antiregresi: §30 butir 5–6 diperbarui.
+
+
 ## 2026-11-27f — Riwayat Tugas: jangan tampilkan «Lewat tenggat» bila sudah dinilai/terkumpul
 
 - **Masalah:** chip tenggat merah «Lewat N hari» muncul juga pada tugas yang **sudah dinilai** atau sudah dikumpulkan. Orang tua mengira ananda telat mengumpulkan, padahal yang belakangan adalah waktu guru membagikan nilai (setelah tenggat tugas).
-- **Perbaikan:** bahasa relatif «Lewat / Hari ini / Besok / N hari lagi» hanya dipakai bila `statusKumpul === 'belum_kumpul'`. Selain itu (sudah dinilai, menunggu penilaian, perbaikan, sudah kumpul) → teks netral `Tenggat · {tanggal}` dengan gaya biasa.
+- **Perbaikan:** bahasa relatif «Lewat / Hari ini / Besok / N hari lagi» hanya dipakai bila ananda masih perlu mengumpulkan. Selain itu → teks netral `Tenggat · {tanggal}`.
 - File: `riwayat-tugas.html`.
 - Antiregresi: §30 butir 5–6.
 

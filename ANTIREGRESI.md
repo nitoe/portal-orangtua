@@ -260,8 +260,8 @@ Aturan agar perbaikan tidak rusak lagi. Append-only.
 2. Field baru opsional: `tenggat` (timestamp|null), `statusKumpul` (`belum_kumpul`|`sudah_kumpul`). Dokumen lama tanpa field ini wajib tetap tampil (fallback label «Belum ada nilai»).
 3. Rules `hasOnly` di `lms_tugas_hasil_ortu` harus memuat kedua field; deploy rules **sebelum** LMS menulis field baru.
 4. Portal tidak menghitung nilai; tenggat relatif hanya untuk tampilan. Jangan menampilkan catatan guru / bukti.
-5. **Bahasa «Lewat N hari» hanya bila `statusKumpul === 'belum_kumpul'`.** Bila sudah dikumpulkan, sudah dinilai, menunggu penilaian, atau perbaikan — tampilkan teks netral `Tenggat · {tgl}` dengan kelas `is-ok`, jangan `is-over`. Publikasi nilai guru sering belakangan dari tenggat tugas; chip merah «Lewat …» menyesatkan orang tua seolah ananda telat mengumpulkan.
-6. **Tes:** (a) demo mode 5 baris campuran status; (b) tab «Perlu perhatian» = belum kumpul + perbaikan; (c) baris «Sudah dinilai» dengan tenggat lewat → teks «Tenggat · …» netral, bukan «Lewat …»; (d) baris «Belum dikumpulkan» + tenggat lewat → «Lewat N hari» + badge merah.
+5. **Bahasa «Lewat N hari» hanya bila klasifikasi baris = `belum_kumpul`** (ananda masih perlu mengumpulkan: `statusKumpul === 'belum_kumpul'` **dan** belum ada nilai / status bukan `dinilai`|`perbaikan`). Jangan andalkan `statusKumpul` saja — saat bagikan tugas lama atau kelompok, field itu bisa tetap `belum_kumpul` padahal `status === 'dinilai'`. Bila sudah dinilai / perbaikan / menunggu penilaian → teks netral `Tenggat · {tgl}` kelas `is-ok`, jangan `is-over`. Publikasi nilai sering belakangan dari tenggat tugas.
+6. **Tes:** (a) demo mode 5 baris campuran status; (b) tab «Perlu perhatian» = belum kumpul + perbaikan; (c) baris «Sudah dinilai» + tenggat lewat (termasuk tugas Sep yang dibagikan Nov) → «Tenggat · …» netral, **bukan** «Lewat …»; (d) baris dengan `statusKumpul=belum_kumpul` **dan** `status=dinilai` → tetap netral; (e) benar-benar belum kumpul + lewat → «Lewat N hari» + badge merah.
 
 ## §31 Header: logout selalu terlihat; jangan header transparan di atas body merek (2026-11-27)
 

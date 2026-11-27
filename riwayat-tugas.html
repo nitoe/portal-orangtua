@@ -458,10 +458,11 @@
     /**
      * Label tenggat relatif.
      * @param {number} ms  timestamp tenggat
-     * @param {boolean} masihBerlaku  true hanya bila ananda masih perlu mengumpulkan
-     *   (statusKumpul === 'belum_kumpul'). Bila sudah kumpul / sudah dinilai / menunggu
-     *   penilaian, jangan pakai bahasa «Lewat …» — itu menyesatkan (seolah ananda telat
-     *   padahal yang belakangan adalah publikasi nilai guru). ANTIREGRESI §30.
+     * @param {boolean} masihBerlaku  true HANYA untuk baris klasifikasi «belum_kumpul»
+     *   (ananda masih perlu mengumpulkan). Jangan andalkan statusKumpul mentah: tugas lama/
+     *   kelompok bisa statusKumpul=belum_kumpul meski status sudah dinilai. Bila sudah
+     *   dinilai / perbaikan / menunggu penilaian → teks netral, bukan «Lewat …».
+     *   ANTIREGRESI §30.
      */
     function infoTenggat(ms, masihBerlaku) {
       if (!ms) return null;
@@ -546,9 +547,11 @@
       box.innerHTML = daftar.map((x) => {
         const st = klasifikasi(x);
         const adaNilai = typeof x.nilai === 'number';
-        // «Lewat tenggat» hanya bila ananda belum mengumpulkan. Sudah kumpul / sudah dinilai
-        // → teks netral «Tenggat · tgl» (publikasi nilai sering belakangan dari tenggat tugas).
-        const masihBerlaku = x.statusKumpul === 'belum_kumpul';
+        // Alarm «Lewat tenggat» HANYA untuk baris yang benar-benar «Belum dikumpulkan».
+        // Jangan andalkan statusKumpul saja: saat bagikan tugas lama/kelompok, field itu
+        // bisa masih 'belum_kumpul' padahal status sudah 'dinilai' (nilai ikut ketua/manual).
+        // Sudah dinilai / perbaikan / menunggu penilaian → teks netral «Tenggat · tgl».
+        const masihBerlaku = st.key === 'belum_kumpul' && !adaNilai && x.status !== 'dinilai' && x.status !== 'perbaikan';
         const tenggat = infoTenggat(x.tenggatMs, masihBerlaku);
         const metaParts = [];
         if (x.mapel) metaParts.push(escapeHtml(x.mapel));
